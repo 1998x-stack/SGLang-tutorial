@@ -35,6 +35,14 @@ class ToyPagedAllocator:
         if token_count < 0:
             raise ValueError("token_count cannot be negative")
         row = self.requests[request_id]
+        required_pages = (
+            (len(row.slots) + token_count + self.page_size - 1) // self.page_size
+            - len(row.page_ids)
+        )
+        # Preflight capacity so an exhausted append does not partially mutate
+        # the request row or consume a subset of the required pages.
+        if required_pages > len(self.free_pages):
+            raise MemoryError("KV page pool exhausted")
         added = []
         for _ in range(token_count):
             logical_pos = len(row.slots)

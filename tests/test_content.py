@@ -97,7 +97,10 @@ class ArticleTest(unittest.TestCase):
                 self.assertTrue(root.get("viewBox"))
                 self.assertTrue(root.find(ns + "title").text.strip())
                 self.assertTrue(root.find(ns + "desc").text.strip())
-                self.assertGreaterEqual(len(root.findall(".//" + ns + "text")), 5)
+                text_nodes = root.findall(".//" + ns + "text")
+                self.assertGreaterEqual(len(text_nodes), 5)
+                font_sizes = [float(node.get("font-size", "16")) for node in text_nodes]
+                self.assertGreaterEqual(min(font_sizes), 14)
                 self.assertFalse(root.findall(".//" + ns + "script"))
 
     def test_evidence_revision_and_claims(self):
@@ -160,6 +163,9 @@ class PageAllocatorTest(unittest.TestCase):
             pool.create_request("A")
         with self.assertRaises(MemoryError):
             pool.append("A", 3)
+        self.assertEqual(pool.row("A").slots, [])
+        self.assertEqual(pool.row("A").page_ids, [])
+        self.assertEqual(pool.free_pages, [2])
 
 
 class ChunkBudgetTest(unittest.TestCase):
