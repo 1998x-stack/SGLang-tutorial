@@ -1,0 +1,61 @@
+{
+  "article": "09.html",
+  "source_revision": "6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd",
+  "review_date": "2026-11-23",
+  "claims": [
+    {
+      "id": "resolver",
+      "claim": "SGLang resolves prefill and decode attention backend strings independently",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/model_executor/model_runner_components/attention_backend_setup.py#L153-L188",
+      "locator": "resolve_attention_backend_strs",
+      "status": "verified",
+      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+    },
+    {
+      "id": "hybrid",
+      "claim": "When resolved prefill and decode backend differ, setup constructs a hybrid wrapper",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/model_executor/model_runner_components/attention_backend_setup.py#L188-L254",
+      "locator": "_build_resolved_backend",
+      "status": "verified",
+      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+    },
+    {
+      "id": "metadata",
+      "claim": "FlashInfer init_forward_metadata branches for decode, target verify and extend",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/layers/attention/flashinfer_backend.py#L1138-L1220",
+      "locator": "init_forward_metadata",
+      "status": "verified",
+      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+    },
+    {
+      "id": "forward",
+      "claim": "FlashInfer forward_extend and forward_decode store/read KV and call wrappers",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/layers/attention/flashinfer_backend.py#L1520-L1790",
+      "locator": "forward_extend / forward_decode",
+      "status": "verified",
+      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+    },
+    {
+      "id": "online-softmax",
+      "claim": "Online softmax block recurrence is an exact stable way to combine partial attention statistics",
+      "kind": "paper",
+      "source_url": "https://arxiv.org/abs/2307.08691",
+      "locator": "FlashAttention-2 algorithm",
+      "status": "verified",
+      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+    },
+    {
+      "id": "toy-numeric",
+      "claim": "Python online softmax example compares tiled accumulation against full softmax",
+      "kind": "illustrative",
+      "source_url": "https://arxiv.org/abs/2307.08691",
+      "locator": "CPU-only numeric experiment",
+      "status": "illustrative",
+      "notes": "Teaching example only; not a GPU measurement"
+    }
+  ]
+}

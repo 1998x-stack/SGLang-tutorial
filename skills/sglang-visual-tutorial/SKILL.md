@@ -39,3 +39,31 @@ description: Deep source-grounded Chinese visual explainers on SGLang inference,
 
 ## Gate 7 发布
 PR 比较文件并检查 CI；仅在检查通过后合并。用实际 GitHub Pages URL + 资源 URL 验证部署，不允许因 push 成功声称线上已发布。
+
+
+## Gate 0.5 · 第二批源码基线
+- Chapters 01–05 保留原 evidence 快照 `0a8693fbe3a2e46ccc06470a461a2b85865672fd`。
+- Chapters 06–10 以 `sgl-project/sglang@6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd` 为固定快照。关键路径：`memory_pool.py`、`allocator/paged.py`、`radix_cache.py`、`schedule_policy.py`、`scheduler.py`、`schedule_batch.py`、`attention_backend_setup.py`、`flashinfer_backend.py`、`speculative/eagle_worker_v2.py`。
+
+## Gate 2.5 · 五个高级机制的正确性
+- **KV address:** request row 是逻辑映射；physical slot 由 allocator 提供；每层 K/V buffer 再解释 slot。页号与 offset 展开为 `slot = page_id * P + offset`。toy allocator 必须测试 page boundary、free/reuse、double allocation 与 pool exhaustion。
+- **Radix internals:** `match_prefix` 可能触发 edge split；split 的 key/value index slices 不等于复制底层 KV tensor。lock_ref 从 0→1 将路径长度从 evictable 移入 protected；eviction 由策略选择可回收 leaf，并通过 allocator 释放。
+- **Chunked prefill:** 仅用 `min(remaining, token budget, memory budget, policy cap)` 作为教学上界，不宣称是实现的完整单公式。解释 `available_chunk_tokens`、`fit_chunk`、alignment、continuation/stash 和 mixed forward。注意模型/后端可能禁用 chunking。
+- **Attention:** 画出 resolver → prefill/decode backend (or hybrid) → metadata → kernel。把 paged KV index traversal 与 attention math 分开。Online softmax 只作为算法教学，必须注明 backend-specific implementation differences。
+- **Speculative:** 标准 chain sampling 的 `alpha=min(1,p/q)` 与 residual distribution 只适用于对应 token-wise chain；EAGLE draft topology、token-wise rejection 与 block verification 是不同维度。当前官方文档所述 stochastic EAGLE/EAGLE3/NEXTN block-verification 路径要求 `--speculative-eagle-topk 1`，不得写成 `topk>1` 的树验证。支持设备、DFlash/DSpark proposal 条件和 correction 规则以固定版本官方文档为准。
+- 数值例子全部标为 toy/derived；不把论文 speedup 或某个 GPU 的结果移植为仓库自己的 benchmark。
+
+## Gate 5.5 · 第二批 CPU 实验
+运行：
+```bash
+python3 examples/page_allocator.py
+python3 examples/chunk_budget.py
+python3 examples/online_softmax.py
+python3 examples/speculative_sampling.py
+```
+每个示例都要有确定输出、可复现断言和负面边界测试；它们验证概念，不声称运行 SGLang GPU serving。
+
+## Gate 6.5 · 扩展课程回归
+- 10 篇章节、20 个 SVG、10 个 evidence JSON、首页 10 张卡片与 11 个分类筛选项。
+- Chromium 1440/768/390/360 × 11 pages = 44 个 viewport；验证 lazy SVG 实际加载、MathML namespace/geometry、stepper 状态、搜索/筛选、JS error、请求失败与页面横向溢出。
+- 所有内部章节链接、examples 链接和图资源均应解析；独立 SVG 通过 XML 解析，标题/描述非空。

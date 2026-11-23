@@ -1,0 +1,61 @@
+{
+  "article": "06.html",
+  "source_revision": "6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd",
+  "review_date": "2026-11-23",
+  "claims": [
+    {
+      "id": "request-row",
+      "claim": "ReqToTokenPool stores a request-to-token location table with request rows and token-position columns",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/mem_cache/memory_pool.py#L382-L435",
+      "locator": "ReqToTokenPool.__init__/alloc/write",
+      "status": "verified",
+      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+    },
+    {
+      "id": "allocator",
+      "claim": "PagedTokenToKVPoolAllocator allocates page-aligned slot indices by expanding page IDs",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/mem_cache/allocator/paged.py#L133-L219",
+      "locator": "alloc / alloc_extend",
+      "status": "verified",
+      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+    },
+    {
+      "id": "decode",
+      "claim": "alloc_decode allocates decode slots and can fuse req_to_token writes in supported path",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/mem_cache/allocator/paged.py#L293-L365",
+      "locator": "alloc_decode",
+      "status": "verified",
+      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+    },
+    {
+      "id": "staged-free",
+      "claim": "Freed pages may be staged and guarded before reuse",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/mem_cache/allocator/paged.py#L365-L465",
+      "locator": "free / _release_page_ids / reuse guard",
+      "status": "verified",
+      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+    },
+    {
+      "id": "page-formula",
+      "claim": "slot = page_id * page_size + offset is the physical page expansion used by the toy model",
+      "kind": "derived",
+      "source_url": "https://arxiv.org/abs/2309.06180",
+      "locator": "paged slot arithmetic; explicit teaching model",
+      "status": "derived",
+      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+    },
+    {
+      "id": "mha-layout",
+      "claim": "MHA KV pool supports multiple physical layouts and quantization variants",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/mem_cache/memory_pool.py#L2282-L2533",
+      "locator": "MHATokenToKVPool initialization and _create_buffers",
+      "status": "verified",
+      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+    }
+  ]
+}

@@ -34,3 +34,14 @@ python3 examples/prefix_match.py
 # 浏览器 QA：1440、768、390、360；验证图示、按键、MathML、控制台、溢出
 \`\`\`
 将快照与测试报告放 PR，不要事后编造。先 CI 后合并；主分支 Pages 需要独立核验。
+
+
+## 第二批专属工程约束（06–10）
+- **KV Pool：**严格区分 request row、logical token position、physical slot ID、page ID/offset 和每层 K/V tensor。页号与 token ID 不是同一概念；公式 `slot = page_id * page_size + offset` 仅描述页内展开。
+- **Allocator：**分别说明 alloc / extend / decode / free；涉及 staged pages、reuse guard 时必须讲清异步写入与过早复用的风险。教学 allocator 必须标为 toy，不能称为 SGLang 实现。
+- **RadixCache：**节点 value 是 KV slot 索引；_split_node 拆的是压缩边与索引片段，不是复制 K/V tensor。lock_ref 影响 protected/evictable，eviction strategy 不可一概写成 LRU。
+- **Chunked Prefill：**chunk 由剩余输入、token budget、KV memory budget、策略上限及页/状态对齐共同决定。mixed batch 只在启用且满足约束时出现；不能将可变 chunk 画成固定等长切片。
+- **Attention Backend：**拆分 resolver、metadata planner 和 kernel。Prefill/Decode 可用不同 backend；兼容矩阵随模型、设备、page size、quantization 和 speculative mode 变化。Online softmax 教学算法不代表每个 backend 的实现完全相同。
+- **Speculative Decoding：**区分 EAGLE draft topology、target verification、accepted-prefix commit、token-wise rejection sampling 与 block verification。当前官方文档所述 stochastic EAGLE/EAGLE3/NEXTN block-verification 路径要求 `--speculative-eagle-topk 1`；不能将 block verification 误画成 `topk>1` 树。链式 acceptance/residual 公式不能冒充 EAGLE tree 的完整算法；所有 speedup 必须有受控 benchmark。
+- 新增 CPU-only 示例：`page_allocator.py`、`chunk_budget.py`、`online_softmax.py`、`speculative_sampling.py`；验证正常、空预算、页耗尽、对齐、概率归一化等边界。
+- 第二批实现快照：`sgl-project/sglang@6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd`。第一批 evidence 仍保留其原始快照，不要无证据地批量重写历史 claim。

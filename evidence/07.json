@@ -1,0 +1,61 @@
+{
+  "article": "07.html",
+  "source_revision": "6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd",
+  "review_date": "2026-11-23",
+  "claims": [
+    {
+      "id": "key-namespace",
+      "claim": "RadixKey matching accounts for token IDs and optional extra namespace key",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/mem_cache/radix_cache.py#L60-L150",
+      "locator": "RadixKey fields and matching",
+      "status": "verified",
+      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+    },
+    {
+      "id": "partial-match",
+      "claim": "match_prefix can split a compressed edge when a match ends inside it",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/mem_cache/radix_cache.py#L369-L432",
+      "locator": "match_prefix / _match_prefix_helper",
+      "status": "verified",
+      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+    },
+    {
+      "id": "split-index",
+      "claim": "_split_node splits key and cached index values into prefix and suffix segments",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/mem_cache/radix_cache.py#L684-L712",
+      "locator": "_split_node",
+      "status": "verified",
+      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+    },
+    {
+      "id": "lock-path",
+      "claim": "inc_lock_ref and dec_lock_ref update protected/evictable sizes along ancestor path",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/mem_cache/radix_cache.py#L589-L627",
+      "locator": "lock ref methods",
+      "status": "verified",
+      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+    },
+    {
+      "id": "evict-leaf",
+      "claim": "evict chooses evictable leaves and frees their KV segment through allocator",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/mem_cache/radix_cache.py#L559-L588",
+      "locator": "evict",
+      "status": "verified",
+      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+    },
+    {
+      "id": "toy-split",
+      "claim": "Example edge split is a constructed token-ID demonstration, not a live tree dump",
+      "kind": "illustrative",
+      "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/mem_cache/radix_cache.py#L684-L740",
+      "locator": "hand-built before/after example",
+      "status": "illustrative",
+      "notes": "Teaching example only; not a GPU measurement"
+    }
+  ]
+}

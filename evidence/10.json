@@ -1,0 +1,70 @@
+{
+  "article": "10.html",
+  "source_revision": "6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd",
+  "review_date": "2026-11-23",
+  "claims": [
+    {
+      "id": "eagle-draft",
+      "claim": "EagleDraftWorker builds draft candidates and parent topology before verification input",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/speculative/eagle_worker_v2.py#L738-L865",
+      "locator": "draft / build_eagle_verify_input",
+      "status": "verified",
+      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+    },
+    {
+      "id": "eagle-verify",
+      "claim": "EAGLEWorkerV2.verify invokes target-side tree verification",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/speculative/eagle_worker_v2.py#L2283-L2306",
+      "locator": "verify",
+      "status": "verified",
+      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+    },
+    {
+      "id": "eagle2",
+      "claim": "EAGLE-2 uses context-aware dynamic draft trees",
+      "kind": "paper",
+      "source_url": "https://arxiv.org/abs/2406.16858",
+      "locator": "EAGLE-2 paper",
+      "status": "verified",
+      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+    },
+    {
+      "id": "eagle3",
+      "claim": "EAGLE-3 removes the feature-prediction objective, incorporates low- and mid-layer features, and is trained on-policy",
+      "kind": "paper",
+      "source_url": "https://arxiv.org/abs/2503.01840",
+      "locator": "EAGLE-3 paper and SGLang speculative decoding documentation",
+      "status": "verified",
+      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+    },
+    {
+      "id": "chain-sampling",
+      "claim": "Token-wise speculative sampling acceptance and residual distribution preserve target distribution",
+      "kind": "paper",
+      "source_url": "https://arxiv.org/abs/2211.17192",
+      "locator": "speculative decoding algorithm",
+      "status": "verified",
+      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+    },
+    {
+      "id": "block-vs-chain",
+      "claim": "SGLang documents token-wise rejection and block verification as distinct modes; the documented stochastic EAGLE/EAGLE3/NEXTN block path requires topk=1",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/docs/docs/advanced_features/speculative_decoding.mdx#L414-L440",
+      "locator": "Block verification mode, topk=1 constraint, every-prefix check and correction distribution",
+      "status": "verified",
+      "notes": "Compatibility is model/device/path-specific; this must not be represented as topk>1 tree verification"
+    },
+    {
+      "id": "toy-reject",
+      "claim": "Two-token p/q example illustrates one rejected proposal and normalized residual",
+      "kind": "illustrative",
+      "source_url": "https://arxiv.org/abs/2211.17192",
+      "locator": "exact Fraction toy example",
+      "status": "illustrative",
+      "notes": "Teaching example only; not a GPU measurement"
+    }
+  ]
+}

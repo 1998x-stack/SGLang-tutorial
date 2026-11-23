@@ -4,8 +4,13 @@ import time
 from urllib.request import urlopen
 from urllib.parse import urljoin
 
-FILES = ["index.html", "01.html", "05.html", "assets/css/site.css",
-         "assets/js/site.js", "assets/diagrams/02-radix-tree.svg"]
+FILES = [
+    "index.html", "01.html", "05.html", "06.html", "10.html",
+    "assets/css/site.css", "assets/js/site.js",
+    "assets/diagrams/06-memory-mapping.svg",
+    "assets/diagrams/10-eagle-draft-tree.svg",
+    "evidence/06.json", "evidence/10.json",
+]
 
 
 def verify(base_url):
@@ -26,6 +31,6 @@ def verify(base_url):
 
 
 if __name__ == "__main__":
-    p = argparse.ArgumentParser()
-    p.add_argument("--base-url", required=True)
-    verify(p.parse_args().base_url)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--base-url", required=True)
+    verify(parser.parse_args().base_url)
