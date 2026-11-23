@@ -49,7 +49,16 @@ jobs:
           mkdir -p _site
           cp ./*.html _site/
           cp -R assets _site/assets
+          cp -R examples _site/examples
+          cp -R evidence _site/evidence
           touch _site/.nojekyll
+          test -f _site/examples/page_allocator.py
+          test -f _site/examples/chunk_budget.py
+          test -f _site/examples/online_softmax.py
+          test -f _site/examples/speculative_sampling.py
+          test -f _site/evidence/01.json
+          test -f _site/evidence/06.json
+          test -f _site/evidence/10.json
       - uses: actions/upload-pages-artifact@v4
         with:
           path: _site

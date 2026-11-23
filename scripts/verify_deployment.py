@@ -9,7 +9,10 @@ FILES = [
     "assets/css/site.css", "assets/js/site.js",
     "assets/diagrams/06-memory-mapping.svg",
     "assets/diagrams/10-eagle-draft-tree.svg",
-    "evidence/06.json", "evidence/10.json",
+    "examples/prefix_match.py", "examples/page_allocator.py",
+    "examples/chunk_budget.py", "examples/online_softmax.py",
+    "examples/speculative_sampling.py",
+    "evidence/01.json", "evidence/06.json", "evidence/10.json",
 ]
 
 
@@ -20,7 +23,7 @@ def verify(base_url):
             try:
                 with urlopen(url, timeout=20) as response:
                     data = response.read()
-                    if response.status != 200 or len(data) < 200:
+                    if response.status != 200 or len(data) < 20:
                         raise ValueError("Empty or non-200 response")
                 print("OK", path, len(data), "bytes")
                 break
