@@ -1,68 +1,69 @@
 # SGLang Tutorial · 从源码到可视化推理系统
 
-**读懂 SGLang：请求如何执行、共享前缀如何复用、调度如何让 GPU 忙起来，以及生产系统为什么要分离 Prefill 与 Decode。**
+**读懂 SGLang：请求如何执行、KV 如何分配与复用、调度如何组织 Prefill/Decode，以及 GPU attention 和推测解码如何工作。**
 
 [开始阅读](https://1998x-stack.github.io/SGLang-tutorial/) · [官方 SGLang](https://github.com/sgl-project/sglang) · [官方文档](https://docs.sglang.io/) · [原始论文](https://arxiv.org/abs/2312.07104)
 
 > 本仓库是独立编写的中文源码导读教程，并非 SGLang 官方文档。内容以可追溯的论文与上游源码为依据；与运行版本相关的细节必须重新核对。
 
-## 课程设计
+## 课程地图
 
 | 章 | 核心问题 | 机制图 / 实验 | 证据 |
-| --- | --- | --- | --- |
-| [01 · 请求生命周期](01.html) | 一次生成请求经历哪些阶段？ | Prefill / Decode token 路径 + KV 显存公式 | SGLang 官方文档、源码 |
-| [02 · RadixAttention](02.html) | 多个请求如何共享一段已计算的前缀？ | 压缩基数树 + 最长公共前缀交互 | NeurIPS 2024 论文、radix_cache.py |
-| [03 · 调度与重叠](03.html) | CPU 与 GPU 如何在迭代间并发工作？ | 动态批次 + overlap timeline | scheduler.py |
-| [04 · 前端编程与约束输出](04.html) | fork / join 与 grammar 如何改变生成过程？ | 分支 DAG + 有限状态机 | 官方前端教程、原始论文 |
-| [05 · Prefill–Decode 分离](05.html) | 为什么把输入处理与逐 token 生成拆到不同实例？ | KV 传输拓扑 + 延迟成本模型 | 官方 P/D 文档 |
+|---|---|---|---|
+| [01 · 请求生命周期](01.html) | 一次生成请求经历哪些阶段？ | 两幅独立 SVG + MathML + 交互 / CPU 实验 | 论文、官方文档、固定 commit 源码 |
+| [02 · RadixAttention](02.html) | 多请求如何共享一段已计算的前缀？ | 两幅独立 SVG + MathML + 交互 / CPU 实验 | 论文、官方文档、固定 commit 源码 |
+| [03 · 动态调度与 overlap](03.html) | CPU 与 GPU 如何在迭代间并发工作？ | 两幅独立 SVG + MathML + 交互 / CPU 实验 | 论文、官方文档、固定 commit 源码 |
+| [04 · Frontend 与结构化生成](04.html) | fork/join 与 grammar 如何改变生成？ | 两幅独立 SVG + MathML + 交互 / CPU 实验 | 论文、官方文档、固定 commit 源码 |
+| [05 · Prefill–Decode 分离](05.html) | Prefill/Decode 分离引入哪些成本？ | 两幅独立 SVG + MathML + 交互 / CPU 实验 | 论文、官方文档、固定 commit 源码 |
+| [06 · KV Pool 与物理页](06.html) | 请求行如何映射物理 KV 页？ | 两幅独立 SVG + MathML + 交互 / CPU 实验 | 论文、官方文档、固定 commit 源码 |
+| [07 · RadixCache 内部机制](07.html) | RadixCache 如何匹配、拆分、锁定和淘汰？ | 两幅独立 SVG + MathML + 交互 / CPU 实验 | 论文、官方文档、固定 commit 源码 |
+| [08 · Chunked Prefill](08.html) | 长 Prompt 如何根据预算切成 chunk？ | 两幅独立 SVG + MathML + 交互 / CPU 实验 | 论文、官方文档、固定 commit 源码 |
+| [09 · Attention Backend](09.html) | 后端如何把页索引送进 attention kernel？ | 两幅独立 SVG + MathML + 交互 / CPU 实验 | 论文、官方文档、固定 commit 源码 |
+| [10 · EAGLE 推测解码](10.html) | Draft Tree 如何被 Target 验证？ | 两幅独立 SVG + MathML + 交互 / CPU 实验 | 论文、官方文档、固定 commit 源码 |
 
-后续专题路线：KV pool / page 分配、chunked prefill、attention backend、speculative decoding、TP/DP/EP、MoE、量化、HiCache、多模态、Router、可观测性、基准测试与安全部署。严格遵守 **先证据、后扩篇**，避免无意义重复。
+## 第二批源码基线
 
-## 可视化工程规范
+第二批（06–10）以 SGLang 上游 `sgl-project/sglang@6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd` 为实现快照。该 SHA 仅表示核查时的主分支状态，不代表后续版本的默认行为。
 
-- 每图回答一个明确问题。图形先定义数据依赖，再定义形状、边和颜色，不允许仅为了美观添加假箭头。
-- **蓝绿色 = 有效数据/命中；紫色 = 缓存与复用；橙色 = 新计算；灰色 = 未采用或等待**。图形的文字与线型应能在黑白打印和色觉差异下区分语义。
-- SVG 均以可独立打开的文件存放在 `assets/diagrams/`，有 `viewBox/title/desc`；文章使用 `img + figcaption`，交互是渐进增强，不依赖 JS 才能理解。
-- 每篇先写直觉、示意图，再给数学推导、具体例子、源码位置、误区、限制和参考资料。公式采用原生 MathML，离线可读。
-- 所有演示数值是 **toy/derived**，不得标成真实 GPU 基准测试数据；论文结果必须定位表格/实验条件。
-- 支持 1440、768、390、360px；不使用 CDN、外部字体或遥测；缩放与键盘聚焦可用。
+关键源码入口：
+- [ReqToTokenPool / KVCache / MHA pool](https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/mem_cache/memory_pool.py)
+- [PagedTokenToKVPoolAllocator](https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/mem_cache/allocator/paged.py)
+- [RadixCache](https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/mem_cache/radix_cache.py)
+- [PrefillAdder / SchedulePolicy](https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/managers/schedule_policy.py)
+- [Scheduler](https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/managers/scheduler.py)
+- [Attention backend resolver](https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/model_executor/model_runner_components/attention_backend_setup.py)
+- [EAGLE worker](https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/speculative/eagle_worker_v2.py)
 
-## 目录
+## 可视化规范
 
-```text
-index.html                       课程首页与主题检索
-01.html ... 05.html              首批章节
-assets/css/site.css              首页与正文通用样式
-assets/js/site.js                 无依赖交互
-assets/diagrams/*.svg            独立、可复用的机制图
-evidence/01.json ... 05.json     claim → 原始来源定位
-examples/prefix_match.py         CPU-only 最长公共前缀教学实验
-tests/test_content.py            HTML/SVG/证据/离线约束静态检查
-.github/workflows/validate.yml   CI 与发布准备
-AGENTS.md                        仓库内容生产合同
-skills/sglang-visual-tutorial/SKILL.md  课程专用工作流
-docs/visual-storyboard.md        SVG 一图一问设计稿
-```
+- 每图回答一个明确问题；图形先定义数据依赖，再定义形状、边和颜色。
+- 蓝绿色表示有效路径 / 输出，紫色表示缓存与复用，橙色表示计算 / 新分配，灰色表示等待 / 未采用。颜色必须与文字、线型同时表达语义。
+- SVG 均以独立文件存放在 `assets/diagrams/`，包含 `viewBox/title/desc`；文章用 `img + figcaption`，默认状态无需 JS 也能理解。
+- 公式使用原生 MathML；离线可读。交互必须改变真实教学状态，不仅改变颜色。
+- 示例数值均为 **toy/derived**；性能数字必须给出模型、硬件、工作负载、指标和原始来源。
 
-## 本地阅读与验证
+## 本地验证
 
 ```bash
 python3 -m http.server 8000
-# 浏览 http://localhost:8000/
 python3 -m unittest discover -s tests -v
-python3 examples/prefix_match.py
+python3 examples/page_allocator.py
+python3 examples/chunk_budget.py
+python3 examples/online_softmax.py
+python3 examples/speculative_sampling.py
+python3 scripts/browser_qa.py --out reports/browser-qa
 ```
 
-浏览器截图、交互和移动端检查采用 [Olah-style-posts](https://github.com/1998x-stack/Olah-style-posts/tree/main/skills/olah-style-paper-posts) 的浏览器 QA 规约。只有实际完成的测试才能标记通过。Pages 启用方式与部署状态请以 GitHub Actions 和 Pages 设置为准。
-
-## 研究资料（按可信度优先级）
+## 研究资料
 
 1. Zheng et al., [SGLang: Efficient Execution of Structured Language Model Programs](https://arxiv.org/abs/2312.07104), NeurIPS 2024.
-2. [SGLang 官方仓库](https://github.com/sgl-project/sglang) 及 [官方文档](https://docs.sglang.io/)；版本敏感的 API/路径以具体 commit 为准。
-3. [SGLang 调度器](https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/managers/scheduler.py)，[RadixCache](https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/mem_cache/radix_cache.py)。
-4. [SGLang 官方 P/D Disaggregation 文档](https://github.com/sgl-project/sglang/blob/main/docs/docs/advanced_features/pd_disaggregation.mdx)，[Frontend DSL](https://github.com/sgl-project/sglang/blob/main/docs/docs/references/frontend/frontend_tutorial.mdx)。
-5. [vllm-tutorial](https://github.com/1998x-stack/vllm-tutorial) —— 参考其课程组织与 QA 工程；[Olah-style-posts](https://github.com/1998x-stack/Olah-style-posts) —— 参考其论文图解工作流。内容、绘图和代码均为独立创作，不复制原始素材。
+2. Kwon et al., [PagedAttention](https://arxiv.org/abs/2309.06180), SOSP 2023.
+3. Ye et al., [FlashInfer](https://arxiv.org/abs/2501.01005), MLSys 2025.
+4. Dao et al., [FlashAttention-2](https://arxiv.org/abs/2307.08691), 2023.
+5. Li et al., [EAGLE-2](https://arxiv.org/abs/2406.16858), EMNLP 2024.
+6. Li et al., [EAGLE-3](https://arxiv.org/abs/2503.01840), 2025.
+7. Leviathan et al., [Fast Inference from Transformers via Speculative Decoding](https://arxiv.org/abs/2211.17192), 2023.
 
-## 编辑与贡献
+## 生产流程
 
-先读 [AGENTS.md](AGENTS.md)，再读本仓库 Skill；新增主题前检查是否与已有章节重复，建立事实清单与 SVG storyboard，并提供证据 JSON。PR 应附静态检查结果、浏览器 QA 结果、修改前后图示与版本说明；未跑的检查明确标记“未验证”。本仓库不默认拥有第三方素材的版权或许可。
+先读 [AGENTS.md](AGENTS.md) 和本地 Skill；新选题先去重，再查原论文、官方文档和固定 commit 源码；先写证据清单和故事板，再做文章、SVG 和 CPU 实验。PR 应附静态检查、浏览器 QA、截图和版本说明；未运行的检查标记为 not verified。Pages 必须独立检查公开资源后才能称为已发布。
