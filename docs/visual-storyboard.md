@@ -41,3 +41,14 @@
 - 每图必须在不开 JS 时可读；交互状态改变解释结论。
 - 不把页号画成 token ID，不把 RadixCache 画成物理 allocator，不把 attention backend 画成 KV pool。
 - Chunked Prefill 不画成固定等长切片；Speculative chain rejection 与 block verification 分开画；当前文档所述 stochastic EAGLE/EAGLE3/NEXTN block 路径要求 topk=1，不能标成 topk>1 tree。
+
+## 第三批（11–15）：分布式与多租户 serving
+| 章 | 学习问题 | Figure A | Figure B | 交互 / CPU 实验 |
+|---|---|---|---|---|
+| 11 | TP/PP/DP/EP/CP 分别切分什么？ | 五种并行轴 | TP=2、PP=4 rank 网格 | 并行轴选择器；parallel_topology.py |
+| 12 | Top-K token 如何跨 rank 到达专家并返回？ | Router / All-to-All | TBO 双 microbatch 时间线 | Token lifecycle；moe_dispatch.py |
+| 13 | 被驱逐的 KV 如何从 Host / Storage 恢复？ | L1/L2/L3 与共享边界 | local match / prefetch / promotion | tier-hit explorer；hicache_tiers.py |
+| 14 | 多 adapter 如何共享 base model？ | 异构 batch 与 LoRA branch | Host/GPU adapter pool | pool lifecycle；lora_pool.py |
+| 15 | 多模态 Encoder、Prefill、Decode 如何解耦？ | Unified / PD / EPD | embeddings 与 KV 两类数据流 | topology selector；epd_pipeline.py |
+
+并行图须区分逻辑 rank group 与物理 GPU 拓扑；HiCache 图须标注 L2 instance-private 与 L3 backend-dependent；EPD 图须分开画 embedding cache 和 language KV cache。

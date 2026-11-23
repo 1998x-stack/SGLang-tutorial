@@ -16,9 +16,15 @@ from page_allocator import ToyPagedAllocator
 from chunk_budget import ChunkBudget, choose_chunk
 from online_softmax import online_weighted_sum, full_weighted_sum
 from speculative_sampling import acceptance_probability, residual_distribution, verify_candidate
+from parallel_topology import model_parallel_groups, attention_tp_width, moe_tp_width
+from moe_dispatch import dispatch_topk, combine_outputs, imbalance_ratio
+from hicache_tiers import HiCacheToy, write_levels
+from lora_pool import AdapterPool, PoolFull
+from epd_pipeline import StageCapacity, end_to_end_latency_ms
 
 REV_FIRST = "0a8693fbe3a2e46ccc06470a461a2b85865672fd"
 REV_ADVANCED = "6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd"
+REV_THIRD = "ac0380c7faf9cece3ca32ffe75815af7c585acea"
 
 
 class Reader(HTMLParser):
@@ -46,11 +52,11 @@ class ArticleTest(unittest.TestCase):
     def test_course_map(self):
         page = read("index.html")
         self.assertEqual(len(page.tags.get("h1", [])), 1)
-        self.assertEqual(sum("data-category" in x for x in page.tags.get("article", [])), 10)
-        self.assertEqual(sum("data-filter" in x for x in page.tags.get("button", [])), 11)
+        self.assertEqual(sum("data-category" in x for x in page.tags.get("article", [])), 15)
+        self.assertEqual(sum("data-filter" in x for x in page.tags.get("button", [])), 16)
 
     def test_depth_and_interaction_contract(self):
-        for i in range(1, 11):
+        for i in range(1, 16):
             name = f"{i:02}.html"
             with self.subTest(article=name):
                 page = read(name)
@@ -88,7 +94,7 @@ class ArticleTest(unittest.TestCase):
 
     def test_svg_manifest(self):
         files = list((ROOT / "assets/diagrams").glob("*.svg"))
-        self.assertEqual(len(files), 20)
+        self.assertEqual(len(files), 30)
         ns = "{http://www.w3.org/2000/svg}"
         for path in files:
             with self.subTest(svg=path.name):
@@ -108,7 +114,7 @@ class ArticleTest(unittest.TestCase):
             n = f"{i:02}"
             evidence = json.loads((ROOT / "evidence" / f"{n}.json").read_text())
             self.assertEqual(evidence["article"], n + ".html")
-            expected = REV_FIRST if i <= 5 else REV_ADVANCED
+            expected = REV_FIRST if i <= 5 else (REV_ADVANCED if i <= 10 else REV_THIRD)
             self.assertEqual(evidence["source_revision"], expected)
             self.assertGreaterEqual(len(evidence["claims"]), 4)
             for claim in evidence["claims"]:
@@ -201,6 +207,50 @@ class SpeculativeSamplingTest(unittest.TestCase):
         self.assertEqual(residual_distribution(p, q), (Fraction(1), Fraction(0)))
         self.assertTrue(verify_candidate(p, q, 0, Fraction(9, 10)))
 
+
+
+class ParallelTopologyTest(unittest.TestCase):
+    def test_documented_groups(self):
+        g=model_parallel_groups(8,2,4)
+        self.assertEqual(g["tp"],((0,1),(2,3),(4,5),(6,7)))
+        self.assertEqual(g["pp"],((0,2,4,6),(1,3,5,7)))
+    def test_nested_widths(self):
+        self.assertEqual(attention_tp_width(8,1,2),4)
+        self.assertEqual(moe_tp_width(8,4,2),1)
+        with self.assertRaises(ValueError): model_parallel_groups(8,3,2)
+class MoEDispatchTest(unittest.TestCase):
+    def test_dispatch_and_combine(self):
+        routes=[[(0,.7),(2,.3)],[(1,.4),(3,.6)]]
+        buckets,loads=dispatch_topk(routes,{0:0,1:0,2:1,3:1})
+        self.assertEqual(len(buckets[0]),2)
+        self.assertEqual(combine_outputs(routes,{(0,0):2,(0,2):4,(1,1):1,(1,3):3}),[2.6,2.2])
+        self.assertEqual(imbalance_ratio(loads),1.0)
+    def test_invalid_weights(self):
+        with self.assertRaises(ValueError): dispatch_topk([[(0,.2)]],{0:0})
+class HiCacheTierTest(unittest.TestCase):
+    def test_l2_private_l3_shared_namespace(self):
+        c=HiCacheToy(); c.put("A","doc","L2"); c.put("A","global","L3","shared")
+        self.assertEqual(c.lookup("B","doc","shared")[0],"MISS")
+        self.assertEqual(c.lookup("B","global","shared")[0],"L3")
+    def test_write_policy(self):
+        self.assertEqual(write_levels("write_through"),("L2","L3"))
+        self.assertEqual(write_levels("write_through_selective",False),())
+        self.assertEqual(write_levels("write_through_selective",True),("L2","L3"))
+class LoRAPoolTest(unittest.TestCase):
+    def test_lru_eviction(self):
+        p=AdapterPool(3); p.acquire("A"); p.acquire("B")
+        self.assertEqual(p.acquire("C"),"A")
+        self.assertEqual(p.active,("<base>","B","C"))
+    def test_pinned_blocks_eviction(self):
+        p=AdapterPool(2); p.acquire("A",pinned=True)
+        with self.assertRaises(PoolFull): p.acquire("B")
+class EPDStageTest(unittest.TestCase):
+    def test_bottleneck_after_scaling(self):
+        self.assertEqual(StageCapacity(8,1,10,2,3,4).bottleneck(),("encoder",8))
+        self.assertEqual(StageCapacity(8,2,10,2,3,4).bottleneck(),("decode",12))
+    def test_latency(self):
+        self.assertEqual(end_to_end_latency_ms(10,2,20,3,30,5),70)
+        with self.assertRaises(ValueError): end_to_end_latency_ms(1,-1,1,1,1)
 
 if __name__ == "__main__":
     unittest.main()
