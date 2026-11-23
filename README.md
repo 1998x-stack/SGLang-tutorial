@@ -87,7 +87,7 @@ python3 scripts/browser_qa.py --out reports/browser-qa
 8. Shoeybi et al., [Megatron-LM](https://arxiv.org/abs/1909.08053), 2019.
 9. Sheng et al., [S-LoRA](https://arxiv.org/abs/2311.03285), 2023.
 10. Chen et al., [Punica](https://proceedings.mlsys.org/paper_files/paper/2024/hash/054de805fcceb78a201f5e9d53c85908-Abstract-Conference.html), MLSys 2024.
-11. [SGLang HiCache engineering blog](https://www.sglang.io/blog/hicache) and [EPD documentation](https://docs.sglang.io/advanced_features/epd_disaggregation.html).
+11. [SGLang HiCache engineering blog](https://lmsys.org/blog/2025-09-10-sglang-hicache/) and [EPD documentation](https://docs.sglang.io/advanced_features/epd_disaggregation.html).
 
 ## 生产流程
 
