@@ -41,7 +41,7 @@ def main():
                         const r = x.getBoundingClientRect(), s = getComputedStyle(x);
                         return {
                             tag: x.tagName.toLowerCase(), cls: String(x.className || ''),
-                            text: (x.textContent || '').trim().replace(/\\s+/g, ' ').slice(0, 90),
+                            text: (x.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 90),
                             left: Math.round(r.left), right: Math.round(r.right),
                             width: Math.round(r.width), scrollWidth: x.scrollWidth,
                             clientWidth: x.clientWidth, overflowX: s.overflowX
@@ -51,7 +51,7 @@ def main():
                 })""")
                 fail = []
                 if shape["overflow"] > 1:
-                    fail.append(f"document overflows horizontally: {shape['overflow']}px")
+                    fail.append(f"document overflows horizontally: {shape['overflow']}px; offenders={shape['overflowNodes']}")
                 for img in shape["images"]:
                     if not img["complete"] or img["width"] < 1:
                         fail.append(f"image not loaded: {img['src']}")
