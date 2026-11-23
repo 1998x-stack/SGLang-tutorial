@@ -1,6 +1,6 @@
 # SGLang Tutorial · 从源码到可视化推理系统
 
-**读懂 SGLang：从请求生命周期、KV 与调度，深入分布式并行、MoE 专家通信、HiCache、多 LoRA、量化、CUDA Graph 与生产观测。**
+**读懂 SGLang：从请求生命周期、KV 与调度，深入分布式并行、MoE 专家通信、HiCache、多 LoRA、量化、CUDA Graph、结构化生成、Tool Parser、确定性推理与分布式 Checkpoint Engine。**
 
 [开始阅读](https://1998x-stack.github.io/SGLang-tutorial/) · [官方 SGLang](https://github.com/sgl-project/sglang) · [官方文档](https://docs.sglang.io/) · [原始论文](https://arxiv.org/abs/2312.07104)
 
@@ -35,6 +35,11 @@
 | [23 · CUDA Graph](23.html) | Capture、Replay、Breakable segments 与 ViT graph cache 如何约束 shape/address？ | 双 SVG + MathML + 交互 / CPU graph-key 实验 | Breakable Graph、ViT graph、Foundry persistence 与 PyTorch CUDA semantics |
 | [24 · Multimodal Processing](24.html) | Raw image/video/audio 如何经过 processor、token expansion 与 feature transport？ | 双 SVG + MathML + 交互 / CPU placeholder expansion | TokenSpaceProcessor、processor executor、expansion 与 feature transport |
 | [25 · Observability & Benchmarking](25.html) | TTFT、TPOT、ITL、Prometheus 与四类 benchmark 应如何解释？ | 双 SVG + MathML + 交互 / CPU metrics 计算 | Production metrics、benchmark guide、metrics reporter 与 observability docs |
+| [26 · XGrammar / Structured Generation](26.html) | JSON Schema / EBNF 如何编译成 grammar state 与 token mask？ | 双 SVG + MathML + 交互 / CPU grammar-mask 实验 | Structured Outputs docs、XGrammar backend、GrammarManager 与 MLSys 2025 |
+| [27 · Function Calling / Tool Parser](27.html) | 模型专属 tool-call protocol 如何增量解析并归一化为 ToolCallItem？ | 双 SVG + MathML + 交互 / CPU streaming parser | Tool Parser docs、FunctionCallParser、BaseFormatDetector、Toolformer 与 Gorilla |
+| [28 · Deterministic Inference](28.html) | Dynamic batch 为什么改变浮点 reduction，如何验证 batch-invariant execution？ | 双 SVG + MathML + 交互 / CPU float32 与 seeded sampler | Deterministic Inference docs、batch_invariant_ops、LLM-42 与 Vosti |
+| [29 · Adaptive Speculative Decoding](29.html) | 接受长度 EMA、batch-size slots 与预构建 graph state 如何共同调整 EAGLE steps？ | 双 SVG + MathML + 交互 / CPU adaptive policy | Adaptive Speculative docs、adaptive_spec_params、AdaptiveController、BanditSpec |
+| [30 · Distributed Checkpoint Engine](30.html) | 多节点 checkpoint 如何经 Parameter Server、Broadcast/P2P 和 IPC 进入 Ready 状态？ | 双 SVG + MathML + 交互 / CPU shard/readiness 实验 | Checkpoint Engine docs、checkpoint worker、weight updater 与 IPC endpoint |
 
 ## 第二批源码基线
 
@@ -140,3 +145,28 @@ python3 scripts/browser_qa.py --out reports/browser-qa
 - [Production metrics](https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/references/production_metrics.mdx) · [benchmark and profiling](https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/developer_guide/benchmark_and_profiling.mdx)
 
 CPU-only teaching labs: `weight_quantization.py`, `kv_cache_quantization.py`, `cuda_graph_capture.py`, `multimodal_pipeline.py`, `serving_metrics.py`. They model invariants and arithmetic only; they do not implement SGLang CUDA kernels, media decoders, CUDA Graphs or a running metrics server.
+
+## 第六批源码基线
+
+第六批（26–30）固定上游实现快照为 `sgl-project/sglang@563813c0d60282fa848382fec600b40d28ddec98`（2026-11-23）。本批先对照 01–25 课程去重：第 26 章从第 04 章的前端 grammar 概念下沉到 XGrammar compiler/matcher 与 scheduler queue；第 29 章从第 10 章的 EAGLE 算法下沉到 runtime adaptive policy；其余主题分别补齐 Tool Parser、Deterministic Inference 与 Checkpoint Engine。
+
+关键入口：
+- [Structured Outputs](https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/structured_outputs.mdx) · [reasoning model constraints](https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/structured_outputs_for_reasoning_models.mdx) · [XGrammar backend](https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/constrained/xgrammar_backend.py) · [GrammarManager](https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/constrained/grammar_manager.py)
+- [Tool Parser docs](https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/tool_parser.mdx) · [FunctionCallParser](https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/function_call/function_call_parser.py) · [BaseFormatDetector](https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/function_call/base_format_detector.py) · [serving_chat](https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/entrypoints/openai/serving_chat.py)
+- [Deterministic Inference](https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/deterministic_inference.mdx) · [batch invariant ops](https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/batch_invariant_ops/batch_invariant_ops.py)
+- [Adaptive Speculative Decoding](https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/adaptive_speculative_decoding.mdx) · [adaptive policy](https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/speculative/adaptive_spec_params.py) · [runtime state](https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/speculative/adaptive_runtime_state.py)
+- [Checkpoint Engine](https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/checkpoint_engine.mdx) · [IPC worker](https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/checkpoint_engine/checkpoint_engine_worker.py) · [server-side weight updater](https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/managers/scheduler_components/weight_updater.py)
+
+CPU-only labs: `grammar_mask.py`, `tool_parser.py`, `deterministic_inference.py`, `adaptive_spec.py`, `checkpoint_engine.py`. They verify finite-state constraints, chunk-boundary parsing, float32 order effects, EMA/hysteresis and rank readiness; they do not implement XGrammar, SGLang CUDA kernels, external tool execution, GPU IPC or a distributed Parameter Server.
+
+## 第六批本地实验
+
+```bash
+python3 examples/grammar_mask.py
+python3 examples/tool_parser.py
+python3 examples/deterministic_inference.py
+python3 examples/adaptive_spec.py
+python3 examples/checkpoint_engine.py
+```
+
+这些实验均为 CPU-only 教学抽象，不依赖 GPU、真实 SGLang server、ZMQ/IPC 或外部工具执行。

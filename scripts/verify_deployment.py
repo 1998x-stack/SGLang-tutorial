@@ -6,11 +6,11 @@ from urllib.request import urlopen
 from urllib.parse import urljoin
 
 ROOT = Path(__file__).resolve().parents[1]
-FILES = ["index.html"] + [f"{i:02}.html" for i in range(1, 26)]
+FILES = ["index.html"] + [f"{i:02}.html" for i in range(1, 31)]
 FILES += ["assets/css/site.css", "assets/js/site.js"]
 FILES += [f"assets/diagrams/{p.name}" for p in sorted((ROOT / "assets/diagrams").glob("*.svg"))]
 FILES += [f"examples/{p.name}" for p in sorted((ROOT / "examples").glob("*.py"))]
-FILES += [f"evidence/{i:02}.json" for i in range(1, 26)]
+FILES += [f"evidence/{i:02}.json" for i in range(1, 31)]
 
 def verify(base_url):
     for path in FILES:

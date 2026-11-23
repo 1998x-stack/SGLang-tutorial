@@ -1,0 +1,55 @@
+{
+  "article": "27.html",
+  "source_revision": "563813c0d60282fa848382fec600b40d28ddec98",
+  "claims": [
+    {
+      "claim": "SGLang documents model-specific tool-call parsers and OpenAI-compatible tool calling, including incremental streaming examples.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/tool_parser.mdx#L1-L45",
+      "locator": "Tool parser overview and supported parser list",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "FunctionCallParser maps parser names to detector classes and selects a detector using tools, tokenizer, tool choice and constrained-mode context.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/function_call/function_call_parser.py#L132-L193",
+      "locator": "FunctionCallParser registry and detector initialization",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "The streaming wrapper forwards chunks to detector.parse_streaming_increment and flushes detector state at stream end.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/function_call/function_call_parser.py#L234-L270",
+      "locator": "parse_stream_chunk and parse_stream_end",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "BaseFormatDetector buffers partial tool markers, incrementally parses JSON and documents formats that require custom streaming detector implementations.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/function_call/base_format_detector.py#L104-L220",
+      "locator": "Partial marker buffering and incremental parse logic",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "Serving Chat processes reasoning deltas before tool-call streaming and flushes remaining tool arguments when generation finishes.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/entrypoints/openai/serving_chat.py#L850-L925",
+      "locator": "Streaming reasoning and tool-call SSE handling",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "Toolformer models tool selection, API argument generation and incorporation of tool results as a learned language-model capability.",
+      "source_url": "https://proceedings.neurips.cc/paper_files/paper/2023/hash/d842425e4bf79ba039352da0f658a906-Abstract-Conference.html",
+      "locator": "Toolformer paper abstract",
+      "kind": "paper",
+      "status": "verified"
+    },
+    {
+      "claim": "Gorilla studies accurate API-call generation and retrieval-aware adaptation to changing API documentation and versions.",
+      "source_url": "https://proceedings.nips.cc/paper_files/paper/2024/hash/e4c61f578ff07830f5c37378dd3ecb0d-Abstract-Conference.html",
+      "locator": "Gorilla paper abstract",
+      "kind": "paper",
+      "status": "verified"
+    }
+  ]
+}

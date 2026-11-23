@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Chromium QA for all twenty-five chapters at desktop, tablet and mobile widths."""
+"""Chromium QA for all thirty chapters at desktop, tablet and mobile widths."""
 import argparse
 import json
 from pathlib import Path
@@ -7,7 +7,7 @@ from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
 WIDTHS = (1440, 768, 390, 360)
-PAGES = ["index.html"] + [f"{i:02}.html" for i in range(1, 26)]
+PAGES = ["index.html"] + [f"{i:02}.html" for i in range(1, 31)]
 
 
 def main():
@@ -36,11 +36,22 @@ def main():
                     math: [...document.querySelectorAll('math')].map(x => ({
                         namespace: x.namespaceURI, width: x.getBoundingClientRect().width,
                         height: x.getBoundingClientRect().height
-                    }))
+                    })),
+                    overflowNodes: [...document.querySelectorAll('body *')].map(x => {
+                        const r = x.getBoundingClientRect(), s = getComputedStyle(x);
+                        return {
+                            tag: x.tagName.toLowerCase(), cls: String(x.className || ''),
+                            text: (x.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 90),
+                            left: Math.round(r.left), right: Math.round(r.right),
+                            width: Math.round(r.width), scrollWidth: x.scrollWidth,
+                            clientWidth: x.clientWidth, overflowX: s.overflowX
+                        };
+                    }).filter(x => x.width > 0 && (x.left < -1 || x.right > innerWidth + 1))
+                      .sort((a, b) => b.right - a.right).slice(0, 12)
                 })""")
                 fail = []
                 if shape["overflow"] > 1:
-                    fail.append(f"document overflows horizontally: {shape['overflow']}px")
+                    fail.append(f"document overflows horizontally: {shape['overflow']}px; offenders={shape['overflowNodes']}")
                 for img in shape["images"]:
                     if not img["complete"] or img["width"] < 1:
                         fail.append(f"image not loaded: {img['src']}")
@@ -76,9 +87,9 @@ def main():
                     if page.locator(".course-card:not([hidden])").count() != 1:
                         fail.append("Mooncake category filter failed")
                     page.locator("[data-filter='all']").click()
-                    if page.locator(".course-grid .course-card").count() != 25:
-                        fail.append("course grid must contain all 25 chapter cards")
-                    for category in ("quantization", "kv-quantization", "cuda-graph", "multimodal-pipeline", "observability"):
+                    if page.locator(".course-grid .course-card").count() != 30:
+                        fail.append("course grid must contain all 30 chapter cards")
+                    for category in ("quantization", "kv-quantization", "cuda-graph", "multimodal-pipeline", "observability", "structured-output", "tool-parser", "deterministic", "adaptive-spec", "checkpoint-engine"):
                         page.locator(f"[data-filter='{category}']").click()
                         if page.locator(".course-card:not([hidden])").count() != 1:
                             fail.append(f"{category} category filter failed")

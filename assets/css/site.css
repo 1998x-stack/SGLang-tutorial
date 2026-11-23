@@ -90,3 +90,32 @@ code{font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospac
 
 /* Preserve diagram label legibility while containing horizontal scroll inside the figure. */
 @media(max-width:650px){figure.diagram{overflow-x:auto;overscroll-behavior-x:contain}figure.diagram img{width:760px;max-width:none}figure.diagram figcaption{max-width:100%;min-width:0}}
+
+/* Keep horizontally scrollable mobile navigation inside the article viewport. */
+@media(max-width:940px){
+  .reading,.reading main,.reading article,.article-head,.toc{min-width:0;max-width:100%;box-sizing:border-box}
+  .toc{width:100%;overflow-x:hidden}
+  .toc ol{display:flex;width:100%;min-width:0;max-width:100%;box-sizing:border-box;overflow-x:auto}
+  .toc li{flex:0 0 auto;min-width:0}
+  figure.diagram{min-width:0;max-width:100%}
+}
+
+/* Wrap the mobile table of contents instead of letting a long flex row widen the document. */
+@media(max-width:940px){
+  .toc ol{display:flex;flex-wrap:wrap;gap:8px 14px;width:100%;min-width:0;max-width:100%;white-space:normal;overflow:visible}
+  .toc li{flex:0 1 auto;min-width:0;max-width:100%;margin:0}
+  .toc a{white-space:normal;overflow-wrap:anywhere}
+}
+
+/* Long implementation identifiers must wrap within the article column on narrow screens. */
+article a{overflow-wrap:anywhere}
+
+/* SVGs retain a readable 760px canvas, while the figure itself is a bounded scroll viewport. */
+@media(max-width:940px){
+  figure.diagram{display:block;width:100%;max-width:100%;min-width:0;box-sizing:border-box;overflow-x:auto;overflow-y:hidden}
+}
+
+/* The article column clips only outer overflow; each diagram keeps its own horizontal scroll viewport. */
+@media(max-width:940px){
+  .reading article{overflow-x:clip}
+}

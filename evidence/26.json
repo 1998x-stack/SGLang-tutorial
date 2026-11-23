@@ -1,0 +1,48 @@
+{
+  "article": "26.html",
+  "source_revision": "563813c0d60282fa848382fec600b40d28ddec98",
+  "claims": [
+    {
+      "claim": "SGLang accepts one request-level constraint among JSON Schema, regex and EBNF, and documents XGrammar, Outlines and Llguidance as grammar backends with different feature support.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/structured_outputs.mdx#L6-L18",
+      "locator": "Constraint parameters and grammar backend support table",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "XGrammar constructs TokenizerInfo and GrammarCompiler, keeps a cache budget, and creates a separate uncached framing compiler for structural tags.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/constrained/xgrammar_backend.py#L205-L293",
+      "locator": "XGrammarGrammarBackend initialization and structural-tag compilation",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "XGrammarGrammar exposes matcher-based next-token bitmask generation, device movement and logits masking; accepted tokens advance matcher state and rollback restores prior matcher state.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/constrained/xgrammar_backend.py#L100-L168",
+      "locator": "XGrammarGrammar accept, rollback, fill_vocab_mask and apply_vocab_mask",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "GrammarManager routes schema/regex/EBNF/structural-tag requests through grammar keys and a grammar queue; ready and failed request decisions are synchronized across DP/TP and PP ranks.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/constrained/grammar_manager.py#L157-L260",
+      "locator": "process_req_with_grammar and get_ready_grammar_requests",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "XGrammar prechecks context-independent vocabulary tokens, uses persistent stack structures for context-dependent checks and overlaps grammar work with GPU execution.",
+      "source_url": "https://proceedings.mlsys.org/paper_files/paper/2025/hash/5c20ca4b0b20b0bd2f1d839dc605e70f-Abstract-Conference.html",
+      "locator": "XGrammar paper abstract and core design",
+      "kind": "paper",
+      "status": "verified"
+    },
+    {
+      "claim": "Structured output constraints guarantee conformance to the selected grammar, not semantic truth or business authorization.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/structured_outputs.mdx#L6-L18",
+      "locator": "Scope of grammar-constrained output formats; semantic/authorization boundary is an engineering interpretation",
+      "kind": "derived",
+      "status": "derived"
+    }
+  ]
+}
