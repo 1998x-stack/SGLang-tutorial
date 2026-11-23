@@ -18,7 +18,7 @@
     },
     {
       "claim": "Multimodal placeholder expansion preserves an already-expanded prefix, replaces placeholders with their corresponding token runs, and does not scan inserted tokens again",
-      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/multimodal/token_space_mm_process/expansion.py#L1-L58",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/multimodal/token_space_mm_process/expansion.py#L1-L55",
       "locator": "expand_token_placeholders contract and ordered splice algorithm",
       "kind": "implementation",
       "status": "verified"
