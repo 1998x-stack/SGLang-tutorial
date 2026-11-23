@@ -24,8 +24,13 @@ jobs:
           python-version: "3.12"
       - name: Offline test suite
         run: python3 -m unittest discover -s tests -v
-      - name: CPU-only reproducible prefix example
-        run: python3 examples/prefix_match.py
+      - name: CPU-only reproducible examples
+        run: |
+          python3 examples/prefix_match.py
+          python3 examples/page_allocator.py
+          python3 examples/chunk_budget.py
+          python3 examples/online_softmax.py
+          python3 examples/speculative_sampling.py
       - name: Install Playwright Chromium
         run: |
           python3 -m pip install playwright
