@@ -116,7 +116,7 @@ class ArticleTest(unittest.TestCase):
                 self.assertFalse(root.findall(".//" + ns + "script"))
 
     def test_evidence_revision_and_claims(self):
-        for i in range(1, 11):
+        for i in range(1, 21):
             n = f"{i:02}"
             evidence = json.loads((ROOT / "evidence" / f"{n}.json").read_text())
             self.assertEqual(evidence["article"], n + ".html")
