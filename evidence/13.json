@@ -1,0 +1,52 @@
+{
+  "article": "13.html",
+  "source_revision": "ac0380c7faf9cece3ca32ffe75815af7c585acea",
+  "retrieved_at": "2026-11-23",
+  "claims": [
+    {
+      "id": "13-01",
+      "claim": "HiCache maps GPU HBM to L1, Host DRAM to L2 and external storage to L3.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0380c7faf9cece3ca32ffe75815af7c585acea/docs/docs/advanced_features/hicache_design.mdx",
+      "locator": "Why and What is HiCache / System Design",
+      "status": "verified",
+      "notes": "Tier names are a conceptual analogy."
+    },
+    {
+      "id": "13-02",
+      "claim": "L1 and L2 are private to an inference instance; L3 may be shared according to backend configuration.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0380c7faf9cece3ca32ffe75815af7c585acea/docs/docs/advanced_features/hicache_design.mdx",
+      "locator": "Tier Sharing Scope",
+      "status": "verified",
+      "notes": "A node-local file backend is not automatically cluster shared."
+    },
+    {
+      "id": "13-03",
+      "claim": "HiRadixTree records local KV tier locations and queries the L3 backend for remote metadata.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0380c7faf9cece3ca32ffe75815af7c585acea/docs/docs/advanced_features/hicache_design.mdx",
+      "locator": "HiRadixTree: Metadata Organization in HiCache",
+      "status": "verified",
+      "notes": "Local and remote metadata paths are distinct."
+    },
+    {
+      "id": "13-04",
+      "claim": "HiCache provides best_effort, wait_complete and timeout prefetch termination strategies.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0380c7faf9cece3ca32ffe75815af7c585acea/docs/docs/advanced_features/hicache_design.mdx",
+      "locator": "Prefetch from L3",
+      "status": "verified",
+      "notes": "Defaults can change; not frozen as universal."
+    },
+    {
+      "id": "13-05",
+      "claim": "HiCache supports multiple write-back policies and host memory layouts.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0380c7faf9cece3ca32ffe75815af7c585acea/docs/docs/advanced_features/hicache_design.mdx",
+      "locator": "Data Write-back / Data Transfer Optimization",
+      "status": "verified",
+      "notes": "Cost formulas are derived teaching models."
+    }
+  ]
+}

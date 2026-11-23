@@ -1,0 +1,43 @@
+{
+  "article": "12.html",
+  "source_revision": "ac0380c7faf9cece3ca32ffe75815af7c585acea",
+  "retrieved_at": "2026-11-23",
+  "claims": [
+    {
+      "id": "12-01",
+      "claim": "SGLang EP separates dispatcher and MoE computation runner responsibilities.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0380c7faf9cece3ca32ffe75815af7c585acea/docs/docs/advanced_features/expert_parallelism.mdx",
+      "locator": "Extensible EP Framework / Framework Overview",
+      "status": "verified",
+      "notes": "Some backend pairs can use fused functions."
+    },
+    {
+      "id": "12-02",
+      "claim": "DeepEP is an expert-parallel token dispatch/combine backend in SGLang.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0380c7faf9cece3ca32ffe75815af7c585acea/python/sglang/srt/layers/moe/token_dispatcher/deepep.py",
+      "locator": "DeepEP dispatcher",
+      "status": "verified",
+      "notes": "Backend support is version and hardware dependent."
+    },
+    {
+      "id": "12-03",
+      "claim": "SGLang documents TBO and SBO as computation/communication overlap strategies.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0380c7faf9cece3ca32ffe75815af7c585acea/docs/docs/advanced_features/expert_parallelism.mdx",
+      "locator": "Computation and Communication Overlap",
+      "status": "verified",
+      "notes": "Article timeline is conceptual."
+    },
+    {
+      "id": "12-04",
+      "claim": "The MoE output can be abstracted as a gate-weighted sum over selected expert functions.",
+      "kind": "derived",
+      "source_url": "https://arxiv.org/abs/2412.19437",
+      "locator": "DeepSeek-V3 report: MoE routing",
+      "status": "derived",
+      "notes": "Generic teaching equation; exact routing variants differ."
+    }
+  ]
+}
