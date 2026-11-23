@@ -30,7 +30,7 @@
 | 09 backend dispatch | 如何选择 Prefill/Decode kernel？ | resolver → hybrid wrapper → backend metadata | same / hybrid |
 | 09 paged attention | Kernel 如何读取分散 KV？ | request row → page indices → K/V tile loop | plan / read / accumulate |
 | 10 EAGLE draft tree | Draft 如何产生候选树？ | parent topology + candidate tokens + tree mask | draft / verify / commit |
-| 10 verification | chain 与 tree verification 有何区别？ | token-wise rejection 与 block/tree correction 不混淆 | accept / reject / residual |
+| 10 verification | chain 与 tree verification 有何区别？ | token-wise rejection 与文档所述 topk=1 block verification 的 prefix check / correction 不混淆 | accept / reject / residual |
 
 ## 设计约束
 
@@ -40,4 +40,4 @@
 - 独立 SVG 必须包含 `xmlns`、`viewBox`、`title`、`desc`，并通过 XML 解析。
 - 每图必须在不开 JS 时可读；交互状态改变解释结论。
 - 不把页号画成 token ID，不把 RadixCache 画成物理 allocator，不把 attention backend 画成 KV pool。
-- Chunked Prefill 不画成固定等长切片；Speculative chain correction 不画成 EAGLE tree 的全部验证语义。
+- Chunked Prefill 不画成固定等长切片；Speculative chain rejection 与 block verification 分开画；当前文档所述 stochastic EAGLE/EAGLE3/NEXTN block 路径要求 topk=1，不能标成 topk>1 tree。
