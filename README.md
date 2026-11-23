@@ -158,3 +158,15 @@ CPU-only teaching labs: `weight_quantization.py`, `kv_cache_quantization.py`, `c
 - [Checkpoint Engine](https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/checkpoint_engine.mdx) · [IPC worker](https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/checkpoint_engine/checkpoint_engine_worker.py) · [server-side weight updater](https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/managers/scheduler_components/weight_updater.py)
 
 CPU-only labs: `grammar_mask.py`, `tool_parser.py`, `deterministic_inference.py`, `adaptive_spec.py`, `checkpoint_engine.py`. They verify finite-state constraints, chunk-boundary parsing, float32 order effects, EMA/hysteresis and rank readiness; they do not implement XGrammar, SGLang CUDA kernels, external tool execution, GPU IPC or a distributed Parameter Server.
+
+## 第六批本地实验
+
+```bash
+python3 examples/grammar_mask.py
+python3 examples/tool_parser.py
+python3 examples/deterministic_inference.py
+python3 examples/adaptive_spec.py
+python3 examples/checkpoint_engine.py
+```
+
+这些实验均为 CPU-only 教学抽象，不依赖 GPU、真实 SGLang server、ZMQ/IPC 或外部工具执行。
