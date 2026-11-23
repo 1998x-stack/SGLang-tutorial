@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Chromium QA for all ten chapters at desktop, tablet and mobile widths."""
+"""Chromium QA for all fifteen chapters at desktop, tablet and mobile widths."""
 import argparse
 import json
 from pathlib import Path
@@ -7,7 +7,7 @@ from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
 WIDTHS = (1440, 768, 390, 360)
-PAGES = ["index.html"] + [f"{i:02}.html" for i in range(1, 11)]
+PAGES = ["index.html"] + [f"{i:02}.html" for i in range(1, 16)]
 
 
 def main():

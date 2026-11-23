@@ -31,6 +31,11 @@ jobs:
           python3 examples/chunk_budget.py
           python3 examples/online_softmax.py
           python3 examples/speculative_sampling.py
+          python3 examples/parallel_topology.py
+          python3 examples/moe_dispatch.py
+          python3 examples/hicache_tiers.py
+          python3 examples/lora_pool.py
+          python3 examples/epd_pipeline.py
       - name: Install Playwright Chromium
         run: |
           python3 -m pip install playwright
@@ -56,9 +61,19 @@ jobs:
           test -f _site/examples/chunk_budget.py
           test -f _site/examples/online_softmax.py
           test -f _site/examples/speculative_sampling.py
+          test -f _site/examples/parallel_topology.py
+          test -f _site/examples/moe_dispatch.py
+          test -f _site/examples/hicache_tiers.py
+          test -f _site/examples/lora_pool.py
+          test -f _site/examples/epd_pipeline.py
           test -f _site/evidence/01.json
           test -f _site/evidence/06.json
           test -f _site/evidence/10.json
+          test -f _site/evidence/11.json
+          test -f _site/evidence/12.json
+          test -f _site/evidence/13.json
+          test -f _site/evidence/14.json
+          test -f _site/evidence/15.json
       - uses: actions/upload-pages-artifact@v4
         with:
           path: _site

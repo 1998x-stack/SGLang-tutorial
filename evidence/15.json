@@ -1,0 +1,52 @@
+{
+  "article": "15.html",
+  "source_revision": "ac0380c7faf9cece3ca32ffe75815af7c585acea",
+  "retrieved_at": "2026-11-23",
+  "claims": [
+    {
+      "id": "15-01",
+      "claim": "EPD separates Encoder, Prefill and Decode stages for VLM inference.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0380c7faf9cece3ca32ffe75815af7c585acea/docs/docs/advanced_features/epd_disaggregation.mdx",
+      "locator": "Why and What is EPD Disaggregation?",
+      "status": "verified",
+      "notes": "Optional deployment topology."
+    },
+    {
+      "id": "15-02",
+      "claim": "Encoder-only and language-only services can be configured with encoder endpoints and transfer backend.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0380c7faf9cece3ca32ffe75815af7c585acea/docs/docs/advanced_features/epd_disaggregation.mdx",
+      "locator": "Usage / Encoder transfer with Mooncake",
+      "status": "verified",
+      "notes": "Exact launch args depend on model/backend."
+    },
+    {
+      "id": "15-03",
+      "claim": "Global multimodal embedding cache stores encoder embeddings, not language-model KV Cache.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0380c7faf9cece3ca32ffe75815af7c585acea/docs/docs/advanced_features/epd_disaggregation.mdx",
+      "locator": "Global multimodal embedding cache notes",
+      "status": "verified",
+      "notes": "Distinct from HiCache KV storage tiers."
+    },
+    {
+      "id": "15-04",
+      "claim": "Encoder server code owns multimodal preprocessing and embedding production.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0380c7faf9cece3ca32ffe75815af7c585acea/python/sglang/srt/disaggregation/encoder/server.py",
+      "locator": "Encoder server request path",
+      "status": "verified",
+      "notes": "Not a complete pipeline trace."
+    },
+    {
+      "id": "15-05",
+      "claim": "In a simplified steady-state pipeline, throughput is bounded by the slowest stage capacity.",
+      "kind": "derived",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0380c7faf9cece3ca32ffe75815af7c585acea/docs/docs/advanced_features/epd_disaggregation.mdx",
+      "locator": "Independent horizontal scaling rationale",
+      "status": "derived",
+      "notes": "Teaching bottleneck model; queueing/transfer not modeled."
+    }
+  ]
+}

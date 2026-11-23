@@ -67,3 +67,10 @@ python3 examples/speculative_sampling.py
 - 10 篇章节、20 个 SVG、10 个 evidence JSON、首页 10 张卡片与 11 个分类筛选项。
 - Chromium 1440/768/390/360 × 11 pages = 44 个 viewport；验证 lazy SVG 实际加载、MathML namespace/geometry、stepper 状态、搜索/筛选、JS error、请求失败与页面横向溢出。
 - 所有内部章节链接、examples 链接和图资源均应解析；独立 SVG 通过 XML 解析，标题/描述非空。
+
+## 第三批（11–15）源码与正确性约束
+- 固定源码快照 `sgl-project/sglang@ac0380c7faf9cece3ca32ffe75815af7c585acea`；入口为 `parallel_state.py`、`dp_attention.py`、`expert_parallelism.mdx`、`deepep.py`、`moe_runner/runner.py`、`hicache_design.mdx`、`lora_manager.py`、`lora/mem_pool.py`、`epd_disaggregation.mdx` 与 `encoder/server.py`。
+- TP×PP 描述主 model-parallel world；Attention-DP/CP 与 MoE-EP/DP 是子组。MoE dispatch / combine 与 compute runner 分层；TBO/SBO 不消除依赖。
+- HiCache 的 L2 是 instance-private，L3 backend-dependent；LoRA `max_loras_per_batch` 计入 `None` base ID；EPD embedding cache 与 KV cache 必须分开画。
+- CPU labs：`parallel_topology.py`、`moe_dispatch.py`、`hicache_tiers.py`、`lora_pool.py`、`epd_pipeline.py`。覆盖非法拓扑、路由权重、L2/L3 共享边界、pinned slot 与 pipeline bottleneck。
+- 回归基线：15 篇、30 SVG、15 evidence、16 个筛选按钮；Chromium 1440/768/390/360 × 16 pages；Pages 必须发布 examples 与 evidence。

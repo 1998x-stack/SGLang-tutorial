@@ -5,14 +5,21 @@ from urllib.request import urlopen
 from urllib.parse import urljoin
 
 FILES = [
-    "index.html", "01.html", "05.html", "06.html", "10.html",
+    "index.html", "01.html", "05.html", "06.html", "10.html", "11.html", "12.html", "13.html", "14.html", "15.html",
     "assets/css/site.css", "assets/js/site.js",
     "assets/diagrams/06-memory-mapping.svg",
     "assets/diagrams/10-eagle-draft-tree.svg",
+    "assets/diagrams/11-parallelism-axes.svg", "assets/diagrams/11-rank-grid.svg",
+    "assets/diagrams/12-moe-routing.svg", "assets/diagrams/12-moe-overlap.svg",
+    "assets/diagrams/13-hicache-tiers.svg", "assets/diagrams/13-hicache-flow.svg",
+    "assets/diagrams/14-lora-batch.svg", "assets/diagrams/14-lora-pool.svg",
+    "assets/diagrams/15-epd-topology.svg", "assets/diagrams/15-epd-dataflow.svg",
     "examples/prefix_match.py", "examples/page_allocator.py",
     "examples/chunk_budget.py", "examples/online_softmax.py",
-    "examples/speculative_sampling.py",
-    "evidence/01.json", "evidence/06.json", "evidence/10.json",
+    "examples/speculative_sampling.py", "examples/parallel_topology.py",
+    "examples/moe_dispatch.py", "examples/hicache_tiers.py", "examples/lora_pool.py", "examples/epd_pipeline.py",
+    "evidence/01.json", "evidence/06.json", "evidence/10.json", "evidence/11.json",
+    "evidence/12.json", "evidence/13.json", "evidence/14.json", "evidence/15.json",
 ]
 
 

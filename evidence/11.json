@@ -1,0 +1,43 @@
+{
+  "article": "11.html",
+  "source_revision": "ac0380c7faf9cece3ca32ffe75815af7c585acea",
+  "retrieved_at": "2026-11-23",
+  "claims": [
+    {
+      "id": "11-01",
+      "claim": "The principal model-parallel world size equals TP width multiplied by PP width.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0380c7faf9cece3ca32ffe75815af7c585acea/python/sglang/srt/distributed/parallel_state.py",
+      "locator": "initialize_model_parallel() docstring and world-size consistency check",
+      "status": "verified",
+      "notes": "Does not multiply every nested attention/MoE subgroup."
+    },
+    {
+      "id": "11-02",
+      "claim": "The documented 8-rank TP=2 PP=4 example forms four TP groups and two PP groups.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0380c7faf9cece3ca32ffe75815af7c585acea/python/sglang/srt/distributed/parallel_state.py",
+      "locator": "initialize_model_parallel() rank-group example",
+      "status": "verified",
+      "notes": "Redrawn as a 4-by-2 grid."
+    },
+    {
+      "id": "11-03",
+      "claim": "With Attention-DP enabled, get_dp_tp_group returns the attention-TP group for one DP rank's batch.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0380c7faf9cece3ca32ffe75815af7c585acea/python/sglang/srt/layers/dp_attention.py",
+      "locator": "get_dp_tp_group()",
+      "status": "verified",
+      "notes": "Other model/backend constraints still apply."
+    },
+    {
+      "id": "11-04",
+      "claim": "Tensor parallelism is an intra-layer model-parallel approach complementary to pipeline parallelism.",
+      "kind": "paper",
+      "source_url": "https://arxiv.org/abs/1909.08053",
+      "locator": "Megatron-LM abstract and method",
+      "status": "verified",
+      "notes": "Historical research context."
+    }
+  ]
+}

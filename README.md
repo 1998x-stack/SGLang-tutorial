@@ -1,6 +1,6 @@
 # SGLang Tutorial · 从源码到可视化推理系统
 
-**读懂 SGLang：请求如何执行、KV 如何分配与复用、调度如何组织 Prefill/Decode，以及 GPU attention 和推测解码如何工作。**
+**读懂 SGLang：从请求生命周期、KV 与调度，深入分布式并行、MoE 专家通信、HiCache、多 LoRA 与多模态 EPD。**
 
 [开始阅读](https://1998x-stack.github.io/SGLang-tutorial/) · [官方 SGLang](https://github.com/sgl-project/sglang) · [官方文档](https://docs.sglang.io/) · [原始论文](https://arxiv.org/abs/2312.07104)
 
@@ -20,6 +20,11 @@
 | [08 · Chunked Prefill](08.html) | 长 Prompt 如何根据预算切成 chunk？ | 两幅独立 SVG + MathML + 交互 / CPU 实验 | 论文、官方文档、固定 commit 源码 |
 | [09 · Attention Backend](09.html) | 后端如何把页索引送进 attention kernel？ | 两幅独立 SVG + MathML + 交互 / CPU 实验 | 论文、官方文档、固定 commit 源码 |
 | [10 · EAGLE 推测解码](10.html) | Draft Tree 如何被 Target 验证？ | 两幅独立 SVG + MathML + 交互 / CPU 实验 | 论文、官方文档、固定 commit 源码 |
+| [11 · 分布式并行](11.html) | TP/PP/DP/EP 与 Attention-DP 如何切分 rank？ | 双 SVG + MathML + 交互 / CPU rank-group 实验 | 固定 commit 源码与 Megatron-LM |
+| [12 · MoE Expert Parallelism](12.html) | Top-K token 如何跨 GPU dispatch、计算与 combine？ | 双 SVG + MathML + 交互 / CPU 路由实验 | 官方 EP 文档、DeepEP 与源码 |
+| [13 · HiCache](13.html) | KV 如何在 GPU、Host 与 Storage 间保留和回迁？ | 双 SVG + MathML + 交互 / CPU tier 实验 | 官方设计文档、工程博客与源码 |
+| [14 · Multi-LoRA](14.html) | 多 adapter 如何共享 base model 并管理 GPU slots？ | 双 SVG + MathML + 交互 / CPU pool 实验 | S-LoRA、Punica、官方文档与源码 |
+| [15 · EPD](15.html) | Encoder、Prefill、Decode 如何独立部署？ | 双 SVG + MathML + 交互 / CPU capacity 实验 | 官方 EPD 文档与源码 |
 
 ## 第二批源码基线
 
@@ -33,6 +38,17 @@
 - [Scheduler](https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/managers/scheduler.py)
 - [Attention backend resolver](https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/model_executor/model_runner_components/attention_backend_setup.py)
 - [EAGLE worker](https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/speculative/eagle_worker_v2.py)
+
+## 第三批源码基线
+
+第三批（11–15）以 SGLang 上游 `sgl-project/sglang@ac0380c7faf9cece3ca32ffe75815af7c585acea` 为实现快照（2026-11-23）。本批覆盖并行 group、MoE EP、HiCache、LoRA 与 EPD；官方文档、运行时源码和论文历史贡献分开记录在 `evidence/11.json`–`evidence/15.json`。
+
+关键入口：
+- [Parallel groups](https://github.com/sgl-project/sglang/blob/ac0380c7faf9cece3ca32ffe75815af7c585acea/python/sglang/srt/distributed/parallel_state.py)
+- [Expert Parallelism](https://github.com/sgl-project/sglang/blob/ac0380c7faf9cece3ca32ffe75815af7c585acea/docs/docs/advanced_features/expert_parallelism.mdx)
+- [HiCache design](https://github.com/sgl-project/sglang/blob/ac0380c7faf9cece3ca32ffe75815af7c585acea/docs/docs/advanced_features/hicache_design.mdx)
+- [LoRA manager](https://github.com/sgl-project/sglang/blob/ac0380c7faf9cece3ca32ffe75815af7c585acea/python/sglang/srt/lora/lora_manager.py)
+- [EPD docs](https://github.com/sgl-project/sglang/blob/ac0380c7faf9cece3ca32ffe75815af7c585acea/docs/docs/advanced_features/epd_disaggregation.mdx)
 
 ## 可视化规范
 
@@ -51,6 +67,11 @@ python3 examples/page_allocator.py
 python3 examples/chunk_budget.py
 python3 examples/online_softmax.py
 python3 examples/speculative_sampling.py
+python3 examples/parallel_topology.py
+python3 examples/moe_dispatch.py
+python3 examples/hicache_tiers.py
+python3 examples/lora_pool.py
+python3 examples/epd_pipeline.py
 python3 scripts/browser_qa.py --out reports/browser-qa
 ```
 
@@ -63,6 +84,10 @@ python3 scripts/browser_qa.py --out reports/browser-qa
 5. Li et al., [EAGLE-2](https://arxiv.org/abs/2406.16858), EMNLP 2024.
 6. Li et al., [EAGLE-3](https://arxiv.org/abs/2503.01840), 2025.
 7. Leviathan et al., [Fast Inference from Transformers via Speculative Decoding](https://arxiv.org/abs/2211.17192), 2023.
+8. Shoeybi et al., [Megatron-LM](https://arxiv.org/abs/1909.08053), 2019.
+9. Sheng et al., [S-LoRA](https://arxiv.org/abs/2311.03285), 2023.
+10. Chen et al., [Punica](https://proceedings.mlsys.org/paper_files/paper/2024/hash/054de805fcceb78a201f5e9d53c85908-Abstract-Conference.html), MLSys 2024.
+11. [SGLang HiCache engineering blog](https://lmsys.org/blog/2025-09-10-sglang-hicache/) and [EPD documentation](https://docs.sglang.io/advanced_features/epd_disaggregation.html).
 
 ## 生产流程
 
