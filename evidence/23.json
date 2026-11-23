@@ -11,7 +11,7 @@
     },
     {
       "claim": "Breakable graph replay launches each captured segment and invokes recorded non-graph functions with stable tensor references between segments",
-      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/breakable_cuda_graph.mdx#L135-L175",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/breakable_cuda_graph.mdx#L130-L164",
       "locator": "Capture and replay sequence",
       "kind": "implementation",
       "status": "verified"
@@ -39,7 +39,7 @@
     },
     {
       "claim": "A graph break adds graph launch, eager Python invocation and capture boundary work; graph replay benefit only applies to captured segments",
-      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/breakable_cuda_graph.mdx#L190-L220",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/breakable_cuda_graph.mdx#L179-L190",
       "locator": "Breakable graph performance overhead",
       "kind": "implementation",
       "status": "verified"
