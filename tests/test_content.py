@@ -31,12 +31,18 @@ from kv_cache_quantization import bf16_bytes, fp8_bytes, nvfp4_bytes, block_quan
 from cuda_graph_capture import GraphKey, GraphCache, replay_segments
 from multimodal_pipeline import MediaItem, expand_placeholders, transport_target, token_count
 from serving_metrics import request_metrics, percentile, throughput, benchmark_layer
+from grammar_mask import ToyGrammar, GrammarCache
+from tool_parser import ToyToolStreamParser
+from deterministic_inference import reduce_float32, batch_invariant_sum, seeded_choice
+from adaptive_spec import AdaptiveSlot, AdaptivePolicy, RuntimeStatePool
+from checkpoint_engine import split_shards, transfer_plan, WeightReadiness
 
 REV_FIRST = "0a8693fbe3a2e46ccc06470a461a2b85865672fd"
 REV_ADVANCED = "6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd"
 REV_THIRD = "ac0380c7faf9cece3ca32ffe75815af7c585acea"
 REV_FOURTH = "ac0243723b0dcba177f8792979daaa2f8d6ee6ea"
 REV_FIFTH = "563813c0d60282fa848382fec600b40d28ddec98"
+REV_SIXTH = "563813c0d60282fa848382fec600b40d28ddec98"
 
 
 class Reader(HTMLParser):
@@ -64,11 +70,11 @@ class ArticleTest(unittest.TestCase):
     def test_course_map(self):
         page = read("index.html")
         self.assertEqual(len(page.tags.get("h1", [])), 1)
-        self.assertEqual(sum("data-category" in x for x in page.tags.get("article", [])), 25)
-        self.assertEqual(sum("data-filter" in x for x in page.tags.get("button", [])), 26)
+        self.assertEqual(sum("data-category" in x for x in page.tags.get("article", [])), 30)
+        self.assertEqual(sum("data-filter" in x for x in page.tags.get("button", [])), 31)
 
     def test_depth_and_interaction_contract(self):
-        for i in range(1, 26):
+        for i in range(1, 31):
             name = f"{i:02}.html"
             with self.subTest(article=name):
                 page = read(name)
@@ -106,7 +112,7 @@ class ArticleTest(unittest.TestCase):
 
     def test_svg_manifest(self):
         files = list((ROOT / "assets/diagrams").glob("*.svg"))
-        self.assertEqual(len(files), 50)
+        self.assertEqual(len(files), 60)
         ns = "{http://www.w3.org/2000/svg}"
         for path in files:
             with self.subTest(svg=path.name):
@@ -126,7 +132,7 @@ class ArticleTest(unittest.TestCase):
             n = f"{i:02}"
             evidence = json.loads((ROOT / "evidence" / f"{n}.json").read_text())
             self.assertEqual(evidence["article"], n + ".html")
-            expected = REV_FIRST if i <= 5 else (REV_ADVANCED if i <= 10 else (REV_THIRD if i <= 15 else (REV_FOURTH if i <= 20 else REV_FIFTH)))
+            expected = REV_FIRST if i <= 5 else (REV_ADVANCED if i <= 10 else (REV_THIRD if i <= 15 else (REV_FOURTH if i <= 20 else (REV_FIFTH if i <= 25 else REV_SIXTH))))
             self.assertEqual(evidence["source_revision"], expected)
             self.assertGreaterEqual(len(evidence["claims"]), 4)
             for claim in evidence["claims"]:
@@ -424,6 +430,114 @@ class ServingMetricsTest(unittest.TestCase):
         self.assertEqual(benchmark_layer("bench_one_batch")[1], "ModelRunner")
         with self.assertRaises(ValueError):
             benchmark_layer("unknown")
+
+
+
+class GrammarMaskTest(unittest.TestCase):
+    def test_allowed_tokens_rejection_and_rollback(self):
+        grammar = ToyGrammar()
+        self.assertEqual(grammar.allowed_tokens(), frozenset({"{"}))
+        self.assertFalse(grammar.accept("true"))
+        self.assertTrue(grammar.accept("{"))
+        self.assertEqual(grammar.allowed_tokens(), frozenset({'"ok"'}))
+        self.assertTrue(grammar.accept('"ok"'))
+        grammar.rollback()
+        self.assertEqual(grammar.allowed_tokens(), frozenset({'"ok"'}))
+
+    def test_complete_sequence_and_cache(self):
+        grammar = ToyGrammar()
+        for token in ['{', '"ok"', ':', 'true', ',', '"count"', ':', '2', '}']:
+            self.assertIn(token, grammar.allowed_tokens())
+            self.assertTrue(grammar.accept(token))
+        self.assertTrue(grammar.terminated)
+        cache = GrammarCache()
+        self.assertEqual(cache.get("schema-A"), cache.get("schema-A"))
+        self.assertEqual(cache.compiles, 1)
+
+
+class ToolParserTest(unittest.TestCase):
+    def test_partial_marker_json_and_final_flush(self):
+        parser = ToyToolStreamParser()
+        normal, calls = parser.feed("Searching <tool_")
+        self.assertEqual(normal, "Searching ")
+        self.assertEqual(calls, [])
+        normal, calls = parser.feed('call>{"name":"search",')
+        self.assertEqual(normal, "")
+        self.assertEqual(calls, [])
+        normal, calls = parser.feed('"arguments":{"q":"SGLang"}}</tool_call> done.')
+        self.assertEqual(normal, " done.")
+        self.assertEqual(calls, [{"name": "search", "arguments": {"q": "SGLang"}}])
+        self.assertEqual(parser.finish(), "")
+
+    def test_multiple_calls_and_malformed_fallback(self):
+        parser = ToyToolStreamParser()
+        normal, calls = parser.feed(
+            '<tool_call>{"name":"a","arguments":{}}</tool_call>'
+            '<tool_call>{"name":"b","arguments":{"x":1}}</tool_call>'
+        )
+        self.assertEqual(normal, "")
+        self.assertEqual([x["name"] for x in calls], ["a", "b"])
+        parser = ToyToolStreamParser()
+        normal, calls = parser.feed("<tool_call>{bad}</tool_call>")
+        self.assertEqual(calls, [])
+        self.assertIn("{bad}", normal)
+
+
+class DeterministicInferenceTest(unittest.TestCase):
+    def test_float32_reduction_order_changes_result(self):
+        values = [1e20, -1e20, 3.14]
+        left = reduce_float32(values, [0, 1, 2])
+        right = reduce_float32(values, [1, 2, 0])
+        self.assertNotEqual(left, right)
+        self.assertEqual(batch_invariant_sum(values), left)
+
+    def test_per_request_seed_is_reproducible(self):
+        self.assertEqual(seeded_choice("ABC", 42), seeded_choice("ABC", 42))
+        self.assertNotEqual(seeded_choice("ABC", 42), seeded_choice("ABC", 43))
+
+
+class AdaptiveSpecTest(unittest.TestCase):
+    def test_ema_moves_up_and_down_with_hysteresis(self):
+        slot = AdaptiveSlot(candidate_steps=(1, 3, 5, 7), current_steps=3, alpha=1)
+        self.assertTrue(slot.update([4, 4, 4]))
+        self.assertEqual(slot.current_steps, 5)
+        self.assertTrue(slot.update([0, 0, 0]))
+        self.assertEqual(slot.current_steps, 1)
+
+    def test_batch_slots_and_prebuilt_state_pool(self):
+        small = AdaptiveSlot(candidate_steps=(1, 3, 5), current_steps=1, alpha=1)
+        large = AdaptiveSlot(candidate_steps=(1, 3), current_steps=1, alpha=1)
+        policy = AdaptivePolicy({1: small, 8: large})
+        self.assertIs(policy.slot_for(2), small)
+        self.assertIs(policy.slot_for(16), large)
+        pool = RuntimeStatePool([1, 3, 5])
+        pool.activate(3)
+        pool.activate(3)
+        self.assertEqual(pool.swaps, 1)
+        with self.assertRaises(KeyError):
+            pool.activate(7)
+
+
+class CheckpointEngineTest(unittest.TestCase):
+    def test_shard_split_and_transfer_modes(self):
+        assignments = split_shards(["c", "a", "b", "d"], 2)
+        self.assertEqual(assignments, [["a", "c"], ["b", "d"]])
+        self.assertEqual(transfer_plan("broadcast", 2, 4), [("broadcast", 2, 4)])
+        self.assertEqual(len(transfer_plan("all", 2, 4)), 2)
+        with self.assertRaises(ValueError):
+            transfer_plan("unknown", 2, 4)
+
+    def test_admin_auth_and_rank_readiness_barrier(self):
+        readiness = WeightReadiness(expected_ranks=2, admin_key="secret")
+        with self.assertRaises(PermissionError):
+            readiness.accept_rank(0, "weights", "wrong")
+        readiness.accept_rank(0, "weights-0", "secret")
+        self.assertFalse(readiness.ready)
+        readiness.accept_rank(1, "weights-1", "secret")
+        self.assertTrue(readiness.ready)
+        with self.assertRaises(ValueError):
+            readiness.accept_rank(2, "weights-2", "secret")
+
 
 
 if __name__ == "__main__":

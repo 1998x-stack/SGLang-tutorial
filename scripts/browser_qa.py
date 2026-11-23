@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Chromium QA for all twenty-five chapters at desktop, tablet and mobile widths."""
+"""Chromium QA for all thirty chapters at desktop, tablet and mobile widths."""
 import argparse
 import json
 from pathlib import Path
@@ -7,7 +7,7 @@ from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
 WIDTHS = (1440, 768, 390, 360)
-PAGES = ["index.html"] + [f"{i:02}.html" for i in range(1, 26)]
+PAGES = ["index.html"] + [f"{i:02}.html" for i in range(1, 31)]
 
 
 def main():
@@ -76,9 +76,9 @@ def main():
                     if page.locator(".course-card:not([hidden])").count() != 1:
                         fail.append("Mooncake category filter failed")
                     page.locator("[data-filter='all']").click()
-                    if page.locator(".course-grid .course-card").count() != 25:
-                        fail.append("course grid must contain all 25 chapter cards")
-                    for category in ("quantization", "kv-quantization", "cuda-graph", "multimodal-pipeline", "observability"):
+                    if page.locator(".course-grid .course-card").count() != 30:
+                        fail.append("course grid must contain all 30 chapter cards")
+                    for category in ("quantization", "kv-quantization", "cuda-graph", "multimodal-pipeline", "observability", "structured-output", "tool-parser", "deterministic", "adaptive-spec", "checkpoint-engine"):
                         page.locator(f"[data-filter='{category}']").click()
                         if page.locator(".course-card:not([hidden])").count() != 1:
                             fail.append(f"{category} category filter failed")
