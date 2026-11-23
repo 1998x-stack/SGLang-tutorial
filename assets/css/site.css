@@ -109,3 +109,8 @@ code{font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospac
 
 /* Long implementation identifiers must wrap within the article column on narrow screens. */
 article a{overflow-wrap:anywhere}
+
+/* SVGs retain a readable 760px canvas, while the figure itself is a bounded scroll viewport. */
+@media(max-width:940px){
+  figure.diagram{display:block;width:100%;max-width:100%;min-width:0;box-sizing:border-box;overflow-x:auto;overflow-y:hidden}
+}
