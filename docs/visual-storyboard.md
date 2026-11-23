@@ -1,4 +1,4 @@
-# SVG 视觉故事板 · Chapters 01–20
+# SVG 视觉故事板 · Chapters 01–25
 
 图不是装饰，而是具有输入、输出、状态和因果方向的微型技术解释。
 
@@ -63,3 +63,15 @@
 | 20 | Multi-LoRA 的 adapter IDs、CPU/GPU residency 与 pinning 如何调度？ | heterogeneous batch rows | GPU slot pool / LRU / pinned | pool selector；lora_scheduler.py |
 
 关键不变量：Router admission 不是 reservation；PD bootstrap 控制消息不等于 KV payload；Mooncake 三类 payload 不共享 key；DeepEP A2A backend 与 MoE runner 分离；SGLang ElasticBuffer wheel 与独立 V2.5 EPBuffer wheel 不能混用；LoRA None 是一个 distinct ID，pinned adapters 不能占满 GPU slots。
+
+
+## 第五批（21–25）：数值表示、执行图、多模态输入与可观测性
+| 章 | 学习问题 | Figure A | Figure B | 交互 / CPU 实验 |
+|---|---|---|---|---|
+| 21 | checkpoint quant metadata 如何落到 per-layer quant method 与 GEMM backend？ | metadata → registry → layer method → kernel | W/A precision matrix | offline / online / backend selector；weight_quantization.py |
+| 22 | 量化 KV 如何写入 pool 并被不同 attention backend 读取？ | quantize → paged pool → native/workspace read | BF16/FP8/NVFP4 scale-aware capacity | native / workspace / unsupported selector；kv_cache_quantization.py |
+| 23 | Graph capture/replay 为什么依赖静态 shape 与地址？ | warmup/capture/static buffer/replay | breakable graph/eager segments | full / breakable / eager selector；cuda_graph_capture.py |
+| 24 | raw image/video/audio 如何变成 token spans 与 scheduler features？ | media I/O → processor → expansion → transport | placeholder → variable token runs | modality selector；multimodal_pipeline.py |
+| 25 | 生产指标与 benchmark 分别观察哪一层？ | TTFT/TPOT/ITL/E2E timeline | four benchmark tools and stack boundaries | serving/engine/kernel selector；serving_metrics.py |
+
+关键不变量：W/A quantization 与 KV quantization 是不同对象；NVFP4 ratio 计入 scale overhead 但不代表吞吐；graph replay 更新 buffer 内容而非替换地址；multimodal placeholder expansion 不重复扫描插入 token；request-level TPOT 与 token-weighted ITL 统计口径不同；single-batch kernel benchmark 不能冒充 steady-state serving。

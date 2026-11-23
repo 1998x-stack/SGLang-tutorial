@@ -1,6 +1,6 @@
 # SGLang Tutorial · 从源码到可视化推理系统
 
-**读懂 SGLang：从请求生命周期、KV 与调度，深入分布式并行、MoE 专家通信、HiCache、多 LoRA 与多模态 EPD。**
+**读懂 SGLang：从请求生命周期、KV 与调度，深入分布式并行、MoE 专家通信、HiCache、多 LoRA、量化、CUDA Graph 与生产观测。**
 
 [开始阅读](https://1998x-stack.github.io/SGLang-tutorial/) · [官方 SGLang](https://github.com/sgl-project/sglang) · [官方文档](https://docs.sglang.io/) · [原始论文](https://arxiv.org/abs/2312.07104)
 
@@ -30,6 +30,11 @@
 | [18 · Mooncake data planes](18.html) | PD KV transfer、HiCache L3 与 EPD embeddings 有何区别？ | 双 SVG + MathML + 交互 / CPU object-plane 实验 | Mooncake Store、HiCache 与 EPD 源码 |
 | [19 · DeepEP V2](19.html) | Normal/Low-Latency、ElasticBuffer、TBO/SBO 与 EPLB 如何协作？ | 双 SVG + MathML + 交互 / CPU overlap 实验 | SGLang EP docs、DeepEP 与固定 adapter |
 | [20 · Multi-LoRA scheduler](20.html) | GPU slots、None base ID、pinning、drain 与 dynamic load 如何调度？ | 双 SVG + MathML + 交互 / CPU pool 实验 | LoRA docs、manager、memory pool 与 S-LoRA/Punica |
+| [21 · Weight Quantization](21.html) | AWQ/GPTQ/FP8/FP4 如何从 checkpoint metadata 进入 layer method 与 GEMM backend？ | 双 SVG + MathML + 交互 / CPU per-row quant 实验 | Quantization docs、checkpoint resolver、method registry 与 AWQ/GPTQ |
+| [22 · Quantized KV Cache](22.html) | FP8/FP4 KV 如何处理 scale、page layout 与 attention backend 读取？ | 双 SVG + MathML + 交互 / CPU block quant 与容量估算 | Quantized KV docs、KV cache method、FP4 access registry 与 KIVI |
+| [23 · CUDA Graph](23.html) | Capture、Replay、Breakable segments 与 ViT graph cache 如何约束 shape/address？ | 双 SVG + MathML + 交互 / CPU graph-key 实验 | Breakable Graph、ViT graph、Foundry persistence 与 PyTorch CUDA semantics |
+| [24 · Multimodal Processing](24.html) | Raw image/video/audio 如何经过 processor、token expansion 与 feature transport？ | 双 SVG + MathML + 交互 / CPU placeholder expansion | TokenSpaceProcessor、processor executor、expansion 与 feature transport |
+| [25 · Observability & Benchmarking](25.html) | TTFT、TPOT、ITL、Prometheus 与四类 benchmark 应如何解释？ | 双 SVG + MathML + 交互 / CPU metrics 计算 | Production metrics、benchmark guide、metrics reporter 与 observability docs |
 
 ## 第二批源码基线
 
@@ -116,3 +121,17 @@ python3 scripts/browser_qa.py --out reports/browser-qa
 ## 生产流程
 
 先读 [AGENTS.md](AGENTS.md) 和本地 Skill；新选题先去重，再查原论文、官方文档和固定 commit 源码；先写证据清单和故事板，再做文章、SVG 和 CPU 实验。PR 应附静态检查、浏览器 QA、截图和版本说明；未运行的检查标记为 not verified。Pages 必须独立检查公开资源后才能称为已发布。
+
+
+## 第五批源码基线
+
+第五批（21–25）固定上游实现快照为 `sgl-project/sglang@563813c0d60282fa848382fec600b40d28ddec98`（2026-11-23）。本批以 quantization / quantized KV、CUDA Graph、multimodal token-space processing、observability / benchmark 为主线；历史论文与当前实现分别记录在 `evidence/21.json`–`evidence/25.json`。
+
+关键入口：
+- [Quantization docs](https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/quantization.mdx) · [checkpoint metadata resolver](https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/model_loader/checkpoint_quantization.py) · [quantization registry](https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/layers/quantization/__init__.py)
+- [Quantized KV Cache docs](https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/quantized_kv_cache.mdx) · [FP4 KV access registry](https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/layers/quantization/fp4_kv_cache_quant_method.py)
+- [Breakable CUDA Graph](https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/breakable_cuda_graph.mdx) · [ViT CUDA Graph](https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/cuda_graph_for_multi_modal_encoder.mdx) · [Graph persistence](https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/cuda_graph_persistence.mdx)
+- [TokenSpaceProcessor](https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/multimodal/token_space_mm_process/processor.py) · [placeholder expansion](https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/multimodal/token_space_mm_process/expansion.py) · [feature transport](https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/multimodal/transport/feature_transport.py)
+- [Production metrics](https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/references/production_metrics.mdx) · [benchmark and profiling](https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/developer_guide/benchmark_and_profiling.mdx)
+
+CPU-only teaching labs: `weight_quantization.py`, `kv_cache_quantization.py`, `cuda_graph_capture.py`, `multimodal_pipeline.py`, `serving_metrics.py`. They model invariants and arithmetic only; they do not implement SGLang CUDA kernels, media decoders, CUDA Graphs or a running metrics server.
