@@ -50,7 +50,7 @@ PR 比较文件并检查 CI；仅在检查通过后合并。用实际 GitHub Pag
 - **Radix internals:** `match_prefix` 可能触发 edge split；split 的 key/value index slices 不等于复制底层 KV tensor。lock_ref 从 0→1 将路径长度从 evictable 移入 protected；eviction 由策略选择可回收 leaf，并通过 allocator 释放。
 - **Chunked prefill:** 仅用 `min(remaining, token budget, memory budget, policy cap)` 作为教学上界，不宣称是实现的完整单公式。解释 `available_chunk_tokens`、`fit_chunk`、alignment、continuation/stash 和 mixed forward。注意模型/后端可能禁用 chunking。
 - **Attention:** 画出 resolver → prefill/decode backend (or hybrid) → metadata → kernel。把 paged KV index traversal 与 attention math 分开。Online softmax 只作为算法教学，必须注明 backend-specific implementation differences。
-- **Speculative:** 标准 chain sampling 的 `alpha=min(1,p/q)` 与 residual distribution 只适用于对应 token-wise chain；EAGLE top-k tree / block verification 需要 tree mask 和算法特定 correction。SGLang 参数约束以固定版本官方文档为准。
+- **Speculative:** 标准 chain sampling 的 `alpha=min(1,p/q)` 与 residual distribution 只适用于对应 token-wise chain；EAGLE draft topology、token-wise rejection 与 block verification 是不同维度。当前官方文档所述 stochastic EAGLE/EAGLE3/NEXTN block-verification 路径要求 `--speculative-eagle-topk 1`，不得写成 `topk>1` 的树验证。支持设备、DFlash/DSpark proposal 条件和 correction 规则以固定版本官方文档为准。
 - 数值例子全部标为 toy/derived；不把论文 speedup 或某个 GPU 的结果移植为仓库自己的 benchmark。
 
 ## Gate 5.5 · 第二批 CPU 实验
