@@ -1,0 +1,64 @@
+{
+  "article": "20.html",
+  "source_revision": "ac0243723b0dcba177f8792979daaa2f8d6ee6ea",
+  "retrieved_at": "2026-11-23",
+  "external_revisions": {
+    "sglang": "ac0243723b0dcba177f8792979daaa2f8d6ee6ea"
+  },
+  "claims": [
+    {
+      "id": "20-01",
+      "claim": "max_loras_per_batch counts distinct adapter IDs including None for base-model requests.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/docs/docs/advanced_features/lora.mdx",
+      "locator": "Arguments for LoRA Serving",
+      "status": "verified",
+      "notes": "GPU pool capacity, not number of rows."
+    },
+    {
+      "id": "20-02",
+      "claim": "max_loaded_loras limits CPU-resident adapters and is separate from GPU batch slot capacity.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/docs/docs/advanced_features/lora.mdx",
+      "locator": "Arguments for LoRA Serving",
+      "status": "verified",
+      "notes": "When set, max_loaded_loras must be at least max_loras_per_batch."
+    },
+    {
+      "id": "20-03",
+      "claim": "Pinned adapters remain in GPU slots and the maximum pinned count is max_loras_per_batch minus one.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/docs/docs/advanced_features/lora.mdx",
+      "locator": "LoRA GPU Pinning",
+      "status": "verified",
+      "notes": "The cap prevents pinned adapters from occupying every slot."
+    },
+    {
+      "id": "20-04",
+      "claim": "Dynamic load/unload endpoints are admin APIs requiring an admin API key and explicit shape compatibility planning.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/docs/docs/advanced_features/lora.mdx",
+      "locator": "Dynamic LoRA loading",
+      "status": "verified",
+      "notes": "Rank and target module shapes should be configured at startup."
+    },
+    {
+      "id": "20-05",
+      "claim": "The LoRA manager checks overlap-loading compatibility with the configured memory pool and parallel topology.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/python/sglang/srt/lora/lora_manager.py",
+      "locator": "LoRAManager initialization and overlap loading checks",
+      "status": "verified",
+      "notes": "Not every pool supports DP-attention overlap loading."
+    },
+    {
+      "id": "20-06",
+      "claim": "KV prefixes computed under different adapter identities must not be reused as if they were equivalent.",
+      "kind": "derived",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/python/sglang/srt/lora/mem_pool.py",
+      "locator": "LoRA adapter identity and memory pool integration",
+      "status": "derived",
+      "notes": "Adapter-dependent hidden states require cache namespace compatibility."
+    }
+  ]
+}

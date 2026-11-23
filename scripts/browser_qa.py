@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Chromium QA for all fifteen chapters at desktop, tablet and mobile widths."""
+"""Chromium QA for all twenty chapters at desktop, tablet and mobile widths."""
 import argparse
 import json
 from pathlib import Path
@@ -7,7 +7,7 @@ from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
 WIDTHS = (1440, 768, 390, 360)
-PAGES = ["index.html"] + [f"{i:02}.html" for i in range(1, 16)]
+PAGES = ["index.html"] + [f"{i:02}.html" for i in range(1, 21)]
 
 
 def main():
@@ -72,6 +72,12 @@ def main():
                     page.locator('[data-filter="kernel"]').click()
                     if page.locator(".course-card:not([hidden])").count() != 1:
                         fail.append("category filter failed")
+                    page.locator("[data-filter='mooncake']").click()
+                    if page.locator(".course-card:not([hidden])").count() != 1:
+                        fail.append("Mooncake category filter failed")
+                    page.locator("[data-filter='all']").click()
+                    if page.locator(".course-grid .course-card").count() != 20:
+                        fail.append("course grid must contain all 20 chapter cards")
                 fail.extend(page_errors)
                 fail.extend(f"request failed: {url}" for url in request_errors)
                 page.screenshot(path=str(out / f"{name[:-5] or 'index'}-{width}.png"), full_page=True)

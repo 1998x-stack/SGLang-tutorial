@@ -1,0 +1,64 @@
+{
+  "article": "16.html",
+  "source_revision": "ac0243723b0dcba177f8792979daaa2f8d6ee6ea",
+  "retrieved_at": "2026-11-23",
+  "external_revisions": {
+    "sglang": "ac0243723b0dcba177f8792979daaa2f8d6ee6ea"
+  },
+  "claims": [
+    {
+      "id": "16-01",
+      "claim": "Router organizes deployments into buckets containing unified or separate prefill/decode engine groups.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/sgl-router/README.md",
+      "locator": "Architecture",
+      "status": "verified",
+      "notes": "Bucket order uses SLO preference, capacity and rank."
+    },
+    {
+      "id": "16-02",
+      "claim": "The reorg request path performs preprocessing, bucket selection, admission, policy selection, dispatch and retry.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/sgl-router/ARCHITECTURE.md",
+      "locator": "1.2 Request routing lifecycle; 1.3 load-aware routing",
+      "status": "verified",
+      "notes": "Retry is bounded and applies to dispatch failures before response."
+    },
+    {
+      "id": "16-03",
+      "claim": "Cache-aware routing prefers the longest cached prefix owner that satisfies the minimum match threshold and admission.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/sgl-router/README.md",
+      "locator": "Routing policies / cache_aware",
+      "status": "verified",
+      "notes": "Only plain and prefill groups; decode behavior differs."
+    },
+    {
+      "id": "16-04",
+      "claim": "Session bindings live in each router replica and require sticky routing when multiple replicas are used.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/sgl-router/README.md",
+      "locator": "Scalability / session_aware",
+      "status": "verified",
+      "notes": "Router replicas rebuild routing state from worker reports and KV events."
+    },
+    {
+      "id": "16-05",
+      "claim": "Router metrics expose TTFT, active load, worker health, KV event batches and cache prefix signals.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/sgl-router/monitoring/README.md",
+      "locator": "Metrics covered",
+      "status": "verified",
+      "notes": "Metric names and labels are version-specific."
+    },
+    {
+      "id": "16-06",
+      "claim": "Balanced routing switches from prefix owner A to alternative B only when both factor and absolute-gap conditions hold.",
+      "kind": "derived",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/sgl-router/ARCHITECTURE.md",
+      "locator": "1.4 Example: cache-aware and session-aware",
+      "status": "derived",
+      "notes": "Restatement of documented policy, not a measured score."
+    }
+  ]
+}

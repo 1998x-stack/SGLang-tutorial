@@ -74,3 +74,31 @@ python3 examples/speculative_sampling.py
 - HiCache 的 L2 是 instance-private，L3 backend-dependent；LoRA `max_loras_per_batch` 计入 `None` base ID；EPD embedding cache 与 KV cache 必须分开画。
 - CPU labs：`parallel_topology.py`、`moe_dispatch.py`、`hicache_tiers.py`、`lora_pool.py`、`epd_pipeline.py`。覆盖非法拓扑、路由权重、L2/L3 共享边界、pinned slot 与 pipeline bottleneck。
 - 回归基线：15 篇、30 SVG、15 evidence、16 个筛选按钮；Chromium 1440/768/390/360 × 16 pages；Pages 必须发布 examples 与 evidence。
+
+## Gate 0.75 · 第四批源码与外部依赖锚点（16–20）
+- SGLang ac0243723b0dcba177f8792979daaa2f8d6ee6ea；sgl-project/DeepEP sgl-deepep branch ece7e40b2f4e53a2910a442d2bbc33fe4130c3e0；sgl-deepep-v25 branch d30642958b04c4b1bd7b607ba7c551ea39e9140a；Mooncake 8cd2bd5b45c36dc7520cc28267018aa8ae0645c1。各 claim 必须指向该 snapshot 的真实文件与 locator。
+- Router docs / Rust reorg policy、PD sender/receiver state machine、Mooncake Store + HiCache + EPD embedding cache、DeepEP V1/V2 adapter、LoRA manager / memory pool 分别核验。
+- 区分控制面与数据面，区分不同 Mooncake payload，区分 DeepEP dispatcher 与 runner，区分 LoRA CPU residency / GPU slot / adapter ID。
+- SGLang 该 snapshot 的 deepep_v2.py 从 deep_ep 导入 ElasticBuffer；pyproject 与 release workflow 使用 sgl-deep-ep package line。sgl-deep-ep-v25 是独立 wheel / import namespace，V2.5 API 拆分为 EPBuffer family。不得把两条 wheel line 写成同一兼容矩阵。
+- prefill_complete 的适用限制与 worker version consistency 必须按官方 docs 原文检查，不得写成通用开关。
+
+## Gate 2.75 · Router / PD / Mooncake / EP / LoRA 机制边界
+- Router：bucket fit → admission → policy → dispatch/retry。Power-of-Two 用阶段性 lexicographic load；cache-aware 的 prefix owner 需通过 admission；session affinity 是 router-local state。
+- PD：bootstrap metadata 不等于 KV payload transfer。early 与 prefill_complete 改变每请求目的 slot reservation 时机；必须描述 sender/receiver abort、timeouts、retraction 和 unsupported configurations。
+- Mooncake：PD request KV handoff、HiCache L3 KV objects、EPD multimodal embeddings 的 key/type/lifecycle 分开。
+- DeepEP：normal / low_latency、SGLang ElasticBuffer wheel / separate EPBuffer V2.5 wheel、FP8 scales / capacity checks、TBO/SBO、EPLB 的统计窗口和负载目标分开。
+- Multi-LoRA：distinct IDs includes None；CPU loaded count 与 GPU slot count 不同；pinned <= max_loras_per_batch - 1；dynamic load shape contract 与 admin authentication。
+
+## Gate 5.75 · 第四批 CPU 实验
+- router_policy.py：cache owner、admission、balanced factor+gap、Power-of-Two fallback。
+- pd_lifecycle.py：early / prefill_complete、非法状态转移、abort。
+- mooncake_planes.py：PD KV / HiCache pages / EPD embeddings 类型隔离。
+- deepep_overlap.py：phase mode、overlap bounds、expert skew。
+- lora_scheduler.py：base None slot、LRU、pinned limit、slot exhaustion。
+- 全部只验证教学抽象，不模拟 Rust router、GPU collectives、RDMA 或真实吞吐。
+
+## Gate 6.75 · 第四批回归
+- 20 篇文章、40 张 SVG、20 份 evidence、21 个首页 filter buttons。
+- Chromium 1440/768/390/360 × 21 pages（首页 + 20 章）。
+- 首页 20 张课程卡片必须全部在 .course-grid 内；搜索、原有类别与新增 Mooncake / Router 等分类均要交互验证。
+- Pages staging 和 public smoke check 覆盖全部 20 HTML、全部 SVG、examples 与 evidence。

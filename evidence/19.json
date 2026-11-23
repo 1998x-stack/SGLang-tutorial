@@ -1,0 +1,75 @@
+{
+  "article": "19.html",
+  "source_revision": "ac0243723b0dcba177f8792979daaa2f8d6ee6ea",
+  "retrieved_at": "2026-11-23",
+  "external_revisions": {
+    "sglang": "ac0243723b0dcba177f8792979daaa2f8d6ee6ea",
+    "sgl_deep_ep_v2": "ece7e40b2f4e53a2910a442d2bbc33fe4130c3e0",
+    "sgl_deep_ep_v25": "d30642958b04c4b1bd7b607ba7c551ea39e9140a"
+  },
+  "claims": [
+    {
+      "id": "19-01",
+      "claim": "SGLang documents DeepEP normal mode for high-throughput Prefill and low_latency mode for low-latency Decode/CUDA Graph workloads.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/docs/docs/advanced_features/expert_parallelism.mdx",
+      "locator": "Backends for MoE Dispatching",
+      "status": "verified",
+      "notes": "Mode selection remains workload and backend dependent."
+    },
+    {
+      "id": "19-02",
+      "claim": "SGLang separates dispatcher dispatch/combine from MoE runner computation and permutation stages.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/docs/docs/advanced_features/expert_parallelism.mdx",
+      "locator": "Extensible EP Framework",
+      "status": "verified",
+      "notes": "Fused functions can replace middle stages for registered backend pairs."
+    },
+    {
+      "id": "19-03",
+      "claim": "The SGLang DeepEP V2 adapter constructs and caches an ElasticBuffer using process group, hidden size, Top-K and per-rank capacity in its cache key.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/python/sglang/srt/layers/moe/token_dispatcher/deepep_v2.py",
+      "locator": "DeepEPv2Buffer.get_buffer",
+      "status": "verified",
+      "notes": "Pinned SGLang adapter imports ElasticBuffer from deep_ep."
+    },
+    {
+      "id": "19-04",
+      "claim": "DeepEP V2 dispatch validates token capacity, hidden size, scale-block alignment and Top-K width before communication.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/python/sglang/srt/layers/moe/token_dispatcher/deepep_v2.py",
+      "locator": "_validate_common and dispatch",
+      "status": "verified",
+      "notes": "Correctness constraints, not merely performance hints."
+    },
+    {
+      "id": "19-05",
+      "claim": "SGLang packages its ElasticBuffer integration as sgl-deep-ep and builds it from the sgl-project/DeepEP sgl-deepep branch.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/python/pyproject.toml",
+      "locator": "dependencies: sgl-deep-ep==0.1.3; release-whl-deepep.yml checks out sgl-deepep",
+      "status": "verified",
+      "notes": "Package/release branch must be matched to the SGLang revision."
+    },
+    {
+      "id": "19-06",
+      "claim": "The separate sgl-deep-ep-v25 wheel follows the sgl-deepep-v25 branch; DeepEP V2.5 splits ElasticBuffer into EPBuffer, EngramBuffer, PPBuffer and BucketBuffer.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/DeepEP/tree/d30642958b04c4b1bd7b607ba7c551ea39e9140a",
+      "locator": "README / V2.5 release notes; SGLang release-whl-deepep-v25.yml",
+      "status": "verified",
+      "notes": "Do not assume the V2.5 package is a drop-in replacement for the ElasticBuffer package imported by this SGLang snapshot."
+    },
+    {
+      "id": "19-07",
+      "claim": "SGLang provides TBO, SBO and EPLB mechanisms to overlap work and address expert load imbalance.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/docs/docs/advanced_features/expert_parallelism.mdx",
+      "locator": "Computation and Communication Overlap / Workload Balancer",
+      "status": "verified",
+      "notes": "Overlap requires preserving collective ordering and buffer lifetime."
+    }
+  ]
+}

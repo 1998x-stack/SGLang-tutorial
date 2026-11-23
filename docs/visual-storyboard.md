@@ -1,4 +1,4 @@
-# SVG 视觉故事板 · Chapters 01–10
+# SVG 视觉故事板 · Chapters 01–20
 
 图不是装饰，而是具有输入、输出、状态和因果方向的微型技术解释。
 
@@ -52,3 +52,14 @@
 | 15 | 多模态 Encoder、Prefill、Decode 如何解耦？ | Unified / PD / EPD | embeddings 与 KV 两类数据流 | topology selector；epd_pipeline.py |
 
 并行图须区分逻辑 rank group 与物理 GPU 拓扑；HiCache 图须标注 L2 instance-private 与 L3 backend-dependent；EPD 图须分开画 embedding cache 和 language KV cache。
+
+## 第四批（16–20）：路由、PD 状态机、数据平面与多租户调度
+| 章 | 学习问题 | Figure A | Figure B | 交互 / CPU 实验 |
+|---|---|---|---|---|
+| 16 | Bucket、Admission、Policy 与 Retry 如何串联？ | Router request lifecycle | cache-aware owner vs load fallback | policy selector；router_policy.py |
+| 17 | Bootstrap、KV reservation、transfer 与 abort 如何协作？ | Prefill/Decode 双侧状态机 | early vs prefill_complete 时间线 | allocation policy；pd_lifecycle.py |
+| 18 | Mooncake 的 PD、HiCache、EPD 三种角色如何区分？ | 三种 payload / consumer 平面 | Master/Metadata/Store 控制与数据面 | role selector；mooncake_planes.py |
+| 19 | DeepEP normal/low-latency、V2 buffer、overlap、EPLB 如何配合？ | dispatch mode comparison | TBO microbatch overlap | mode selector；deepep_overlap.py |
+| 20 | Multi-LoRA 的 adapter IDs、CPU/GPU residency 与 pinning 如何调度？ | heterogeneous batch rows | GPU slot pool / LRU / pinned | pool selector；lora_scheduler.py |
+
+关键不变量：Router admission 不是 reservation；PD bootstrap 控制消息不等于 KV payload；Mooncake 三类 payload 不共享 key；DeepEP A2A backend 与 MoE runner 分离；SGLang ElasticBuffer wheel 与独立 V2.5 EPBuffer wheel 不能混用；LoRA None 是一个 distinct ID，pinned adapters 不能占满 GPU slots。

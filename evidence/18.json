@@ -1,0 +1,65 @@
+{
+  "article": "18.html",
+  "source_revision": "ac0243723b0dcba177f8792979daaa2f8d6ee6ea",
+  "retrieved_at": "2026-11-23",
+  "external_revisions": {
+    "sglang": "ac0243723b0dcba177f8792979daaa2f8d6ee6ea",
+    "mooncake": "8cd2bd5b45c36dc7520cc28267018aa8ae0645c1"
+  },
+  "claims": [
+    {
+      "id": "18-01",
+      "claim": "Mooncake can be used as the PD KV transfer backend between Prefill and Decode workers.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/python/sglang/srt/disaggregation/mooncake/conn.py",
+      "locator": "MooncakeKVSender and MooncakeKVReceiver",
+      "status": "verified",
+      "notes": "Request-scoped peer transfer, not persistent HiCache storage."
+    },
+    {
+      "id": "18-02",
+      "claim": "Mooncake Store can provide HiCache L3 storage for reusable KV pages.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/python/sglang/srt/mem_cache/storage/mooncake_store/README.md",
+      "locator": "Mooncake & SGLang HiCache",
+      "status": "verified",
+      "notes": "L3 backend role is distinct from PD transfer."
+    },
+    {
+      "id": "18-03",
+      "claim": "Mooncake Master manages logical space allocation and eviction, while Store and SGLang exchange payloads directly.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/python/sglang/srt/mem_cache/storage/mooncake_store/README.md",
+      "locator": "Deployment / About Mooncake",
+      "status": "verified",
+      "notes": "Metadata service may be optional or embedded/P2P."
+    },
+    {
+      "id": "18-04",
+      "claim": "The global multimodal embedding cache stores encoder embeddings and is independently enabled from encoder transfer backend selection.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/docs/docs/advanced_features/epd_disaggregation.mdx",
+      "locator": "Global multimodal embedding cache with Mooncake",
+      "status": "verified",
+      "notes": "This is not language-model KV cache."
+    },
+    {
+      "id": "18-05",
+      "claim": "HiCache direct-linker prefetch commits a page only after all attention TP ranks confirm complete KV; failed reads can fall back to recomputation.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/python/sglang/srt/mem_cache/storage/mooncake_store/README.md",
+      "locator": "Direct linker prefetch",
+      "status": "verified",
+      "notes": "Per-rank private GPU slots and completion policy matter."
+    },
+    {
+      "id": "18-06",
+      "claim": "The hit path latency includes lookup, fetch and promotion costs.",
+      "kind": "derived",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/python/sglang/srt/mem_cache/storage/mooncake_store/README.md",
+      "locator": "Direct linker prefetch",
+      "status": "derived",
+      "notes": "A hit helps only when fetch/promotion is cheaper than recomputation."
+    }
+  ]
+}
