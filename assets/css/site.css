@@ -90,3 +90,12 @@ code{font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospac
 
 /* Preserve diagram label legibility while containing horizontal scroll inside the figure. */
 @media(max-width:650px){figure.diagram{overflow-x:auto;overscroll-behavior-x:contain}figure.diagram img{width:760px;max-width:none}figure.diagram figcaption{max-width:100%;min-width:0}}
+
+/* Keep horizontally scrollable mobile navigation inside the article viewport. */
+@media(max-width:940px){
+  .reading,.reading main,.reading article,.article-head,.toc{min-width:0;max-width:100%;box-sizing:border-box}
+  .toc{width:100%;overflow-x:hidden}
+  .toc ol{display:flex;width:100%;min-width:0;max-width:100%;box-sizing:border-box;overflow-x:auto}
+  .toc li{flex:0 0 auto;min-width:0}
+  figure.diagram{min-width:0;max-width:100%}
+}
