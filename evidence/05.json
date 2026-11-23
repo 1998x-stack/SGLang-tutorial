@@ -1,0 +1,43 @@
+{
+  "article": "05.html",
+  "source_revision": "0a8693fbe3a2e46ccc06470a461a2b85865672fd",
+  "review_date": "2026-11-23",
+  "claims": [
+    {
+      "id": "pd",
+      "claim": "Official docs describe separate prefill and decode stages and KV transfer",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/0a8693fbe3a2e46ccc06470a461a2b85865672fd/docs/docs/advanced_features/pd_disaggregation.mdx",
+      "locator": "PD Disaggregation overview",
+      "status": "verified",
+      "notes": "Recheck when upstream revision changes"
+    },
+    {
+      "id": "latency",
+      "claim": "Additive timing equation is a simplified no-overlap model, not a benchmark",
+      "kind": "derived",
+      "source_url": "https://github.com/sgl-project/sglang/blob/0a8693fbe3a2e46ccc06470a461a2b85865672fd/docs/docs/advanced_features/pd_disaggregation.mdx",
+      "locator": "diagram-derived accounting model",
+      "status": "derived",
+      "notes": "Recheck when upstream revision changes"
+    },
+    {
+      "id": "transfer",
+      "claim": "KV transfer is an additional path when workers are separate",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/0a8693fbe3a2e46ccc06470a461a2b85865672fd/docs/docs/advanced_features/pd_disaggregation.mdx",
+      "locator": "transfer architecture",
+      "status": "verified",
+      "notes": "Recheck when upstream revision changes"
+    },
+    {
+      "id": "benefits",
+      "claim": "Resource isolation can be beneficial but is workload-dependent",
+      "kind": "inference",
+      "source_url": "https://github.com/sgl-project/sglang/blob/0a8693fbe3a2e46ccc06470a461a2b85865672fd/docs/docs/advanced_features/pd_disaggregation.mdx",
+      "locator": "design motivation; no universal speedup claim",
+      "status": "derived",
+      "notes": "Recheck when upstream revision changes"
+    }
+  ]
+}
