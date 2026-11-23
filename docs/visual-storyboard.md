@@ -62,4 +62,4 @@
 | 19 | DeepEP normal/low-latency、V2 buffer、overlap、EPLB 如何配合？ | dispatch mode comparison | TBO microbatch overlap | mode selector；deepep_overlap.py |
 | 20 | Multi-LoRA 的 adapter IDs、CPU/GPU residency 与 pinning 如何调度？ | heterogeneous batch rows | GPU slot pool / LRU / pinned | pool selector；lora_scheduler.py |
 
-关键不变量：Router admission 不是 reservation；PD bootstrap 控制消息不等于 KV payload；Mooncake 三类 payload 不共享 key；DeepEP A2A backend 与 MoE runner 分离；LoRA None 是一个 distinct ID，pinned adapters 不能占满 GPU slots。
+关键不变量：Router admission 不是 reservation；PD bootstrap 控制消息不等于 KV payload；Mooncake 三类 payload 不共享 key；DeepEP A2A backend 与 MoE runner 分离；SGLang ElasticBuffer wheel 与独立 V2.5 EPBuffer wheel 不能混用；LoRA None 是一个 distinct ID，pinned adapters 不能占满 GPU slots。

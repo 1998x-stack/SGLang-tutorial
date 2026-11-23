@@ -57,7 +57,7 @@
 
 ## 第四批源码基线
 
-第四批（16–20）以 SGLang 上游 sgl-project/sglang@ac0243723b0dcba177f8792979daaa2f8d6ee6ea 为实现快照（2026-11-23）。外部依赖分别固定为 DeepEP f6aa38fe06cd4a0489e7730365d4e0114970a2f3 与 Mooncake 8cd2bd5b45c36dc7520cc28267018aa8ae0645c1。Router、PD transfer、Mooncake L3、EPD embedding cache、DeepEP V1/V2 与 Multi-LoRA 的数据对象和运行路径分开记录在 evidence/16.json–evidence/20.json。
+第四批（16–20）以 SGLang 上游 sgl-project/sglang@ac0243723b0dcba177f8792979daaa2f8d6ee6ea 为实现快照（2026-11-23）。外部依赖分别固定为 SGLang DeepEP V2 / ElasticBuffer 分支 ece7e40b2f4e53a2910a442d2bbc33fe4130c3e0、独立的 DeepEP V2.5 / EPBuffer 分支 d30642958b04c4b1bd7b607ba7c551ea39e9140a，以及 Mooncake 8cd2bd5b45c36dc7520cc28267018aa8ae0645c1。Router、PD transfer、Mooncake L3、EPD embedding cache、DeepEP V1/V2 与 Multi-LoRA 的数据对象和运行路径分开记录在 evidence/16.json–evidence/20.json。
 
 关键入口：
 - [sgl-router README](https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/sgl-router/README.md) · [architecture](https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/sgl-router/ARCHITECTURE.md) · [metrics](https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/sgl-router/monitoring/README.md)
