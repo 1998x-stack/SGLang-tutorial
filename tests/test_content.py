@@ -223,7 +223,9 @@ class MoEDispatchTest(unittest.TestCase):
         routes=[[(0,.7),(2,.3)],[(1,.4),(3,.6)]]
         buckets,loads=dispatch_topk(routes,{0:0,1:0,2:1,3:1})
         self.assertEqual(len(buckets[0]),2)
-        self.assertEqual(combine_outputs(routes,{(0,0):2,(0,2):4,(1,1):1,(1,3):3}),[2.6,2.2])
+        combined=combine_outputs(routes,{(0,0):2,(0,2):4,(1,1):1,(1,3):3})
+        self.assertAlmostEqual(combined[0],2.6)
+        self.assertAlmostEqual(combined[1],2.2)
         self.assertEqual(imbalance_ratio(loads),1.0)
     def test_invalid_weights(self):
         with self.assertRaises(ValueError): dispatch_topk([[(0,.2)]],{0:0})
