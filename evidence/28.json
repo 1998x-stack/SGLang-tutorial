@@ -1,0 +1,55 @@
+{
+  "article": "28.html",
+  "source_revision": "563813c0d60282fa848382fec600b40d28ddec98",
+  "claims": [
+    {
+      "claim": "SGLang documents dynamic batch size as a source of nondeterministic GPU reduction order because floating-point addition is non-associative.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/deterministic_inference.mdx#L15-L22",
+      "locator": "Root cause of non-determinism",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "The documented deterministic inference attention backends are FlashInfer, FlashAttention 3 and Triton, with different feature compatibility for CUDA Graph, chunked prefill, Radix Cache and non-greedy sampling.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/deterministic_inference.mdx#L24-L70",
+      "locator": "Deterministic backend compatibility matrix",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "SGLang enables deterministic inference through batch-invariant operations and provides tests for varying batch sizes, prefix lengths and Radix Cache consistency.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/deterministic_inference.mdx#L72-L216",
+      "locator": "Usage and verification sections",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "Batch-invariant operators are implemented in a dedicated SGLang module adapted from Thinking Machines Lab batch_invariant_ops.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/batch_invariant_ops/batch_invariant_ops.py#L1-L45",
+      "locator": "Batch invariant operations module and kernel implementation",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "LLM-42 proposes a decode–verify–rollback mechanism to enforce deterministic inference while retaining fast kernels for non-deterministic decode.",
+      "source_url": "https://www.microsoft.com/en-us/research/publication/llm-42-enabling-determinism-in-llm-inference-with-verified-speculation/",
+      "locator": "LLM-42 SOSP 2026 paper abstract",
+      "kind": "paper",
+      "status": "verified"
+    },
+    {
+      "claim": "Vosti formalizes system-level deterministic inference across batching, prompt chunking and KV cache reuse/eviction, and reports counterexamples in production modes.",
+      "source_url": "https://arxiv.org/abs/2609.38981",
+      "locator": "Vosti paper abstract",
+      "kind": "paper",
+      "status": "verified"
+    },
+    {
+      "claim": "Deterministic inference can reduce rollout variation but does not alone prove training and inference use identical kernels, weights or sampler state.",
+      "source_url": "https://github.com/microsoft/llm-42",
+      "locator": "LLM-42 project motivation and SGLang integration notes; training parity is a separate system contract",
+      "kind": "derived",
+      "status": "derived"
+    }
+  ]
+}

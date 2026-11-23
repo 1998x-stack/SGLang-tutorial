@@ -1,0 +1,62 @@
+{
+  "article": "30.html",
+  "source_revision": "563813c0d60282fa848382fec600b40d28ddec98",
+  "claims": [
+    {
+      "claim": "SGLang Checkpoint Engine distributes model weight loading across multiple processes and nodes and can overlap loading with initialization tasks such as CUDA Graph capture.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/checkpoint_engine.mdx#L6-L34",
+      "locator": "Checkpoint Engine overview and architecture",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "Checkpoint Engine supports Broadcast, P2P and combined All update methods.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/checkpoint_engine.mdx#L24-L34",
+      "locator": "Parameter Server transport modes",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "The documented startup path uses dummy model loading and checkpoint-engine-wait-weights-before-ready, then sends weights to /update_weights_from_ipc.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/checkpoint_engine.mdx#L36-L70",
+      "locator": "Single-node startup and update commands",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "The update endpoint requires the server admin API key and the checkpoint update script uses admin_auth_headers.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/checkpoint_engine.mdx#L36-L38",
+      "locator": "Checkpoint Engine admin key requirement",
+      "kind": "security",
+      "status": "verified"
+    },
+    {
+      "claim": "SGLang checkpoint worker extension maps device UUIDs to IPC handles and exposes model loader and post-load hook callbacks.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/checkpoint_engine/checkpoint_engine_worker.py#L39-L154",
+      "locator": "SGLangCheckpointEngineWorkerExtension and concrete implementation",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "Server-side IPC weight updates flow through SchedulerWeightUpdaterManager and use a control-request barrier after runner updates.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/managers/scheduler_components/weight_updater.py#L329-L352",
+      "locator": "update_weights_from_ipc and rank synchronization",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "The runner's IPC updater rejects unsafe active weight-cache states and delegates tensor receipt to the checkpoint-engine worker extension.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/model_executor/model_runner_components/weight_updater.py#L456-L480",
+      "locator": "WeightUpdater.update_weights_from_ipc",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "Checkpoint engine loading should be evaluated as a full startup critical path, including storage, transfer and post-load processing rather than assuming parallel loading always improves readiness time.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/checkpoint_engine.mdx#L6-L34",
+      "locator": "Documented parallel load and initialization overlap; performance boundary is derived engineering guidance",
+      "kind": "derived",
+      "status": "derived"
+    }
+  ]
+}

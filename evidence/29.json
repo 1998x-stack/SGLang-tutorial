@@ -1,0 +1,55 @@
+{
+  "article": "29.html",
+  "source_revision": "563813c0d60282fa848382fec600b40d28ddec98",
+  "claims": [
+    {
+      "claim": "SGLang adaptive speculative decoding currently supports EAGLE/EAGLE3 with speculative_eagle_topk=1 and otherwise falls back to static settings.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/adaptive_speculative_decoding.mdx#L10-L24",
+      "locator": "Current support and motivation",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "Adaptive speculative policy tracks acceptance length with independent EMA slots for different batch-size ranges and uses candidate steps, warmup, update interval and hysteresis.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/adaptive_speculative_decoding.mdx#L26-L104",
+      "locator": "Per-batch tracking, runtime flow and policy decision",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "AdaptiveStepSlot computes an EMA from per-request accepted draft counts and updates candidate steps after warmup and configured intervals.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/speculative/adaptive_spec_params.py#L145-L255",
+      "locator": "AdaptiveStepSlot update and recompute policy",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "AdaptiveController prebuilds candidate SpecRuntimeState objects and switches the active state after batch routing or verification feedback.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/speculative/adaptive_runtime_state.py#L9-L143",
+      "locator": "SpecRuntimeState, init_states, activate_step_by_batch and on_verify_complete",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "BanditSpec formulates speculative decoding hyperparameter selection as online multi-armed bandit optimization.",
+      "source_url": "https://proceedings.mlr.press/v267/hou25h.html",
+      "locator": "BanditSpec ICML 2025 abstract",
+      "kind": "paper",
+      "status": "verified"
+    },
+    {
+      "claim": "Learning to Draft trains co-adaptive draft and verification policies to maximize draft-and-verify cycle throughput.",
+      "source_url": "https://arxiv.org/abs/2603.01639",
+      "locator": "Learning to Draft paper abstract",
+      "kind": "paper",
+      "status": "verified"
+    },
+    {
+      "claim": "A larger candidate-step ladder can increase prebuilt runtime state and graph memory, so adaptive mode may not help stable workloads.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/adaptive_speculative_decoding.mdx#L228-L269",
+      "locator": "Tuning tips and recommended configurations",
+      "kind": "engineering-guidance",
+      "status": "verified"
+    }
+  ]
+}
