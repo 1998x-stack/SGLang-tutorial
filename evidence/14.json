@@ -1,0 +1,52 @@
+{
+  "article": "14.html",
+  "source_revision": "ac0380c7faf9cece3ca32ffe75815af7c585acea",
+  "retrieved_at": "2026-11-23",
+  "claims": [
+    {
+      "id": "14-01",
+      "claim": "SGLang supports LoRA through OpenAI-compatible model:adapter syntax and native request adapter selection.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0380c7faf9cece3ca32ffe75815af7c585acea/docs/docs/advanced_features/lora.mdx",
+      "locator": "Usage / OpenAI-compatible API usage",
+      "status": "verified",
+      "notes": "Exact request API is versioned."
+    },
+    {
+      "id": "14-02",
+      "claim": "max_loras_per_batch counts distinct adapter IDs including None for base-model requests.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0380c7faf9cece3ca32ffe75815af7c585acea/docs/docs/advanced_features/lora.mdx",
+      "locator": "Arguments for LoRA Serving",
+      "status": "verified",
+      "notes": "Toy pool reserves base slot conservatively."
+    },
+    {
+      "id": "14-03",
+      "claim": "SGLang documents LRU/FIFO eviction, GPU pinning and optional overlap loading.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0380c7faf9cece3ca32ffe75815af7c585acea/docs/docs/advanced_features/lora.mdx",
+      "locator": "Arguments / LoRA GPU Pinning / LoRA Overlap Loading",
+      "status": "verified",
+      "notes": "Pinning and overlap constraints depend on configuration."
+    },
+    {
+      "id": "14-04",
+      "claim": "LoRAManager and LoRAMemoryPool implement adapter lifecycle and pool management.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0380c7faf9cece3ca32ffe75815af7c585acea/python/sglang/srt/lora/lora_manager.py",
+      "locator": "LoRAManager.load_lora_adapter() and LoRAMemoryPool",
+      "status": "verified",
+      "notes": "Pool has DP/EP-aware implementation details."
+    },
+    {
+      "id": "14-05",
+      "claim": "S-LoRA and Punica are foundational systems for multi-tenant LoRA serving.",
+      "kind": "paper",
+      "source_url": "https://arxiv.org/abs/2311.03285",
+      "locator": "S-LoRA abstract; see also MLSys Punica paper",
+      "status": "verified",
+      "notes": "Historical papers, not a claim SGLang uses identical implementation."
+    }
+  ]
+}
