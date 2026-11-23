@@ -41,6 +41,11 @@ jobs:
           python3 examples/mooncake_planes.py
           python3 examples/deepep_overlap.py
           python3 examples/lora_scheduler.py
+          python3 examples/weight_quantization.py
+          python3 examples/kv_cache_quantization.py
+          python3 examples/cuda_graph_capture.py
+          python3 examples/multimodal_pipeline.py
+          python3 examples/serving_metrics.py
       - name: Install Playwright Chromium
         run: |
           python3 -m pip install playwright
@@ -84,7 +89,17 @@ jobs:
           test -f _site/examples/mooncake_planes.py
           test -f _site/examples/deepep_overlap.py
           test -f _site/examples/lora_scheduler.py
-          for i in $(seq -w 1 20); do test -f _site/$i.html; test -f _site/evidence/$i.json; done
+          test -f _site/examples/weight_quantization.py
+          test -f _site/examples/kv_cache_quantization.py
+          test -f _site/examples/cuda_graph_capture.py
+          test -f _site/examples/multimodal_pipeline.py
+          test -f _site/examples/serving_metrics.py
+          test -f _site/evidence/21.json
+          test -f _site/evidence/22.json
+          test -f _site/evidence/23.json
+          test -f _site/evidence/24.json
+          test -f _site/evidence/25.json
+          for i in $(seq -w 1 25); do test -f _site/$i.html; test -f _site/evidence/$i.json; done
       - uses: actions/upload-pages-artifact@v4
         with:
           path: _site

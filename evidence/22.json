@@ -1,0 +1,48 @@
+{
+  "article": "22.html",
+  "source_revision": "563813c0d60282fa848382fec600b40d28ddec98",
+  "claims": [
+    {
+      "claim": "SGLang quantized KV cache supports FP8 E4M3/E5M2 and experimental FP4 E2M1 recipes including nvfp4 and fp4_mx_block16",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/quantized_kv_cache.mdx#L16-L40",
+      "locator": "Supported formats and platform-registered format caveats",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "FP8 KV cache scaling factors are per-tensor scalar values; absent checkpoint or JSON scales default to 1.0 and may cause accuracy issues",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/quantized_kv_cache.mdx#L102-L138",
+      "locator": "Scaling factors and default behavior",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "Quantized KV cache can be slower when dequantization is not fused with the attention kernel, so attention backend compatibility must be checked",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/quantized_kv_cache.mdx#L6-L14",
+      "locator": "Performance warning and backend support note",
+      "kind": "engineering-guidance",
+      "status": "verified"
+    },
+    {
+      "claim": "The documented native NVFP4 recipe accounts for 0.5 bytes packed data plus 1/16 byte block scale per scalar, giving a theoretical BF16-to-NVFP4 token-capacity ratio of about 3.56x before other workspace effects",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/quantized_kv_cache.mdx#L141-L155",
+      "locator": "Memory savings and native NVFP4 scale overhead calculation",
+      "kind": "derived",
+      "status": "verified"
+    },
+    {
+      "claim": "Native NVFP4 prefill has architecture and shape constraints and does not support every speculative algorithm, PD disaggregation, HiCache or LMCache",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/quantized_kv_cache.mdx#L96-L100",
+      "locator": "SM100 native NVFP4 compatibility restrictions",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "KIVI studies asymmetric KV distributions and proposes per-channel key quantization with per-token value quantization",
+      "source_url": "https://proceedings.mlr.press/v235/liu24bz.html",
+      "locator": "ICML 2024 paper abstract and main method",
+      "kind": "paper",
+      "status": "verified"
+    }
+  ]
+}

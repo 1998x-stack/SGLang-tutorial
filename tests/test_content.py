@@ -26,11 +26,17 @@ from pd_lifecycle import Request as PDRequest, TransitionError
 from mooncake_planes import ObjectRef, PlaneStore
 from deepep_overlap import mode_for_phase, overlapped_time, skew
 from lora_scheduler import AdapterPool as SchedulerAdapterPool, PoolFull as SchedulerPoolFull
+from weight_quantization import quantize_row, quantize_matrix_per_row, estimate_packed_bytes, mse
+from kv_cache_quantization import bf16_bytes, fp8_bytes, nvfp4_bytes, block_quantize, capacity_multiplier, attention_access
+from cuda_graph_capture import GraphKey, GraphCache, replay_segments
+from multimodal_pipeline import MediaItem, expand_placeholders, transport_target, token_count
+from serving_metrics import request_metrics, percentile, throughput, benchmark_layer
 
 REV_FIRST = "0a8693fbe3a2e46ccc06470a461a2b85865672fd"
 REV_ADVANCED = "6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd"
 REV_THIRD = "ac0380c7faf9cece3ca32ffe75815af7c585acea"
 REV_FOURTH = "ac0243723b0dcba177f8792979daaa2f8d6ee6ea"
+REV_FIFTH = "563813c0d60282fa848382fec600b40d28ddec98"
 
 
 class Reader(HTMLParser):
@@ -58,11 +64,11 @@ class ArticleTest(unittest.TestCase):
     def test_course_map(self):
         page = read("index.html")
         self.assertEqual(len(page.tags.get("h1", [])), 1)
-        self.assertEqual(sum("data-category" in x for x in page.tags.get("article", [])), 20)
-        self.assertEqual(sum("data-filter" in x for x in page.tags.get("button", [])), 21)
+        self.assertEqual(sum("data-category" in x for x in page.tags.get("article", [])), 25)
+        self.assertEqual(sum("data-filter" in x for x in page.tags.get("button", [])), 26)
 
     def test_depth_and_interaction_contract(self):
-        for i in range(1, 21):
+        for i in range(1, 26):
             name = f"{i:02}.html"
             with self.subTest(article=name):
                 page = read(name)
@@ -83,7 +89,7 @@ class ArticleTest(unittest.TestCase):
                 self.assertNotIn("<script src=\"https:", html)
 
     def test_local_links_are_resolved(self):
-        names = ["index.html"] + [f"{i:02}.html" for i in range(1, 21)]
+        names = ["index.html"] + [f"{i:02}.html" for i in range(1, 26)]
         for name in names:
             page = read(name)
             for link in page.links:
@@ -100,7 +106,7 @@ class ArticleTest(unittest.TestCase):
 
     def test_svg_manifest(self):
         files = list((ROOT / "assets/diagrams").glob("*.svg"))
-        self.assertEqual(len(files), 40)
+        self.assertEqual(len(files), 50)
         ns = "{http://www.w3.org/2000/svg}"
         for path in files:
             with self.subTest(svg=path.name):
@@ -116,11 +122,11 @@ class ArticleTest(unittest.TestCase):
                 self.assertFalse(root.findall(".//" + ns + "script"))
 
     def test_evidence_revision_and_claims(self):
-        for i in range(1, 21):
+        for i in range(1, 26):
             n = f"{i:02}"
             evidence = json.loads((ROOT / "evidence" / f"{n}.json").read_text())
             self.assertEqual(evidence["article"], n + ".html")
-            expected = REV_FIRST if i <= 5 else (REV_ADVANCED if i <= 10 else (REV_THIRD if i <= 15 else REV_FOURTH))
+            expected = REV_FIRST if i <= 5 else (REV_ADVANCED if i <= 10 else (REV_THIRD if i <= 15 else (REV_FOURTH if i <= 20 else REV_FIFTH)))
             self.assertEqual(evidence["source_revision"], expected)
             self.assertGreaterEqual(len(evidence["claims"]), 4)
             for claim in evidence["claims"]:
@@ -327,6 +333,98 @@ class AdvancedLoRASchedulerTest(unittest.TestCase):
         p.load("A",pinned=True)
         with self.assertRaises(SchedulerPoolFull): p.load("B",pinned=True)
         with self.assertRaises(SchedulerPoolFull): p.load("C")
+
+
+class WeightQuantizationTest(unittest.TestCase):
+    def test_lower_bits_trade_storage_for_error(self):
+        values = [0.1, -0.7, 1.2, 0.4, -1.8, 0.25]
+        _, _, r4 = quantize_row(values, 4)
+        _, _, r8 = quantize_row(values, 8)
+        self.assertLess(mse(values, r8), mse(values, r4))
+        self.assertLess(estimate_packed_bytes(128, 4), estimate_packed_bytes(128, 8))
+
+    def test_per_row_scales_and_invalid_input(self):
+        matrix = [[0.1, 0.2], [10.0, -5.0]]
+        q, scales, restored = quantize_matrix_per_row(matrix, 4)
+        self.assertEqual(len(q), 2)
+        self.assertNotEqual(scales[0], scales[1])
+        self.assertEqual(len(restored[1]), 2)
+        with self.assertRaises(ValueError):
+            quantize_row([], 4)
+
+
+class KVCacheQuantizationTest(unittest.TestCase):
+    def test_scale_overhead_is_included(self):
+        self.assertEqual(bf16_bytes(1024), 2048)
+        self.assertEqual(fp8_bytes(1024), 1028)
+        self.assertEqual(nvfp4_bytes(1024, 16, 4), 580)
+        self.assertAlmostEqual(capacity_multiplier(2, 0.5 + 1/16), 3.5555555, places=5)
+
+    def test_block_quantization_and_backend_access(self):
+        values = [0.1, -0.4, 0.7, 1.2] * 8
+        restored, scales = block_quantize(values, 8)
+        self.assertEqual(len(restored), len(values))
+        self.assertEqual(len(scales), 4)
+        self.assertEqual(attention_access(True, False), "fused")
+        self.assertEqual(attention_access(False, True), "dequant-workspace")
+        with self.assertRaises(RuntimeError):
+            attention_access(False, False)
+
+
+class CudaGraphCaptureTest(unittest.TestCase):
+    def test_graph_key_and_static_buffer_identity(self):
+        cache = GraphCache()
+        key = GraphKey((8, 1024), (0, 512, 1024))
+        self.assertEqual(cache.run(key, "static-A"), "capture")
+        self.assertEqual(cache.run(key, "static-A"), "replay")
+        with self.assertRaises(RuntimeError):
+            cache.run(key, "new-address")
+        other = GraphKey((16, 1024), (0, 1024))
+        self.assertEqual(cache.run(other, "static-B"), "capture")
+        self.assertEqual(cache.graph_count, 2)
+
+    def test_breakable_replay_order(self):
+        self.assertEqual(
+            replay_segments(["attention", "mlp"], ["dynamic-op"]),
+            ["graph:attention", "eager:dynamic-op", "graph:mlp"],
+        )
+        with self.assertRaises(ValueError):
+            replay_segments(["one"], ["extra-break"])
+
+
+class MultimodalPipelineTest(unittest.TestCase):
+    def test_placeholder_expansion_preserves_order(self):
+        ids = [1, 900, 2, 901, 3]
+        expanded = expand_placeholders(ids, {900: [[10, 11]], 901: [[20, 21, 22]]})
+        self.assertEqual(expanded, [1, 10, 11, 2, 20, 21, 22, 3])
+
+    def test_partial_prefix_and_transport(self):
+        ids = [10, 11, 900, 12]
+        self.assertEqual(expand_placeholders(ids, {900: [[1, 2]]}, start_len=2), [10, 11, 1, 2, 12])
+        items = [MediaItem("image", 900, (1, 2, 3)), MediaItem("video", 901, (4, 5))]
+        self.assertEqual(token_count(items), 5)
+        self.assertEqual(transport_target("cuda_ipc"), "gpu")
+        self.assertEqual(transport_target("cpu"), "cpu")
+        with self.assertRaises(ValueError):
+            transport_target("rdma")
+
+
+class ServingMetricsTest(unittest.TestCase):
+    def test_request_latency_definitions(self):
+        result = request_metrics(0.0, 0.2, 1.2, 6)
+        self.assertAlmostEqual(result["ttft"], 0.2)
+        self.assertAlmostEqual(result["tpot"], 0.2)
+        self.assertAlmostEqual(result["e2e"], 1.2)
+        self.assertIsNone(request_metrics(0.0, 0.2, 0.5, 1)["tpot"])
+
+    def test_percentile_throughput_and_benchmark_layers(self):
+        self.assertEqual(percentile([0.1, 0.2, 0.3, 0.4], 0.95), 0.4)
+        self.assertEqual(throughput(100, 5), 20)
+        self.assertEqual(benchmark_layer("bench_serving")[0], "http")
+        self.assertEqual(benchmark_layer("bench_one_batch")[1], "ModelRunner")
+        with self.assertRaises(ValueError):
+            benchmark_layer("unknown")
+
 
 if __name__ == "__main__":
     unittest.main()

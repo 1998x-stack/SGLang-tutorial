@@ -1,0 +1,48 @@
+{
+  "article": "25.html",
+  "source_revision": "563813c0d60282fa848382fec600b40d28ddec98",
+  "claims": [
+    {
+      "claim": "SGLang exports Prometheus metrics when --enable-metrics is enabled, and the production metrics reference documents TTFT, throughput, token usage and cache hit rate",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/references/production_metrics.mdx#L1-L75",
+      "locator": "Production metrics enablement and language-model metric definitions",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "SGLang request-level TPOT is computed after the first token as (finish_time - first_token_time)/(completion_tokens - 1), excluding one-token, aborted and PD prefill requests",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/references/production_metrics.mdx#L118-L128",
+      "locator": "Request-level TPOT definition and inclusion/exclusion rules",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "SGLang distinguishes bench_serving, bench_one_batch_server, bench_offline_throughput and bench_one_batch by whether they include HTTP, scheduler, Engine or ModelRunner",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/developer_guide/benchmark_and_profiling.mdx#L1-L75",
+      "locator": "Benchmark tool comparison table and descriptions",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "The SGLang benchmark guide recommends at least five prompts per maximum concurrency for steady-state bench_serving measurements",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/developer_guide/benchmark_and_profiling.mdx#L30-L55",
+      "locator": "bench_serving steady-state guidance",
+      "kind": "engineering-guidance",
+      "status": "verified"
+    },
+    {
+      "claim": "Server request content is not logged by default; request logging and request dump/replay are explicit observability controls",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/observability.mdx#L1-L48",
+      "locator": "Production metrics, request logging and request dump/replay",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "Profiling through bench_serving uses start/stop admin endpoints and requires the same SGLANG_ADMIN_API_KEY on the server and client",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/developer_guide/benchmark_and_profiling.mdx#L90-L145",
+      "locator": "PyTorch profiler server profiling and admin authentication",
+      "kind": "implementation",
+      "status": "verified"
+    }
+  ]
+}

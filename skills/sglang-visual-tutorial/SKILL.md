@@ -102,3 +102,24 @@ python3 examples/speculative_sampling.py
 - Chromium 1440/768/390/360 × 21 pages（首页 + 20 章）。
 - 首页 20 张课程卡片必须全部在 .course-grid 内；搜索、原有类别与新增 Mooncake / Router 等分类均要交互验证。
 - Pages staging 和 public smoke check 覆盖全部 20 HTML、全部 SVG、examples 与 evidence。
+
+
+## Gate 0.85 · 第五批源码与论文去重（21–25）
+- 固定 SGLang snapshot：`563813c0d60282fa848382fec600b40d28ddec98`。先检查 01–20 文章、已有 labs、evidence 与 storyboard，确认没有重复主题，再读取上游 docs 与实现。
+- Weight quantization：metadata resolver → platform-aware registry → per-layer method → packed weights/scales → GEMM backend。区分 AWQ/GPTQ 论文算法、checkpoint 格式和当前 runtime kernel。
+- Quantized KV：量化写入、paged KV storage、prefill/decode attention access 分开。scale overhead、workspace 与 backend compatibility 必须进入成本模型。
+- CUDA Graph：固定 operation/shape/address、warmup/capture/replay、breakable graph segments、ViT graph cache key 和 Foundry persistence restrictions 分开说明。
+- Multimodal：raw media → media load/decode → isolated processor worker → features → token placeholder expansion → feature transport。与 EPD deployment topology / Mooncake payload planes 不混淆。
+- Observability：按指标真实定义写 TTFT / request-level TPOT / ITL / E2E；benchmark 工具按 stack coverage 分层，避免用 kernel benchmark 冒充在线 serving。
+
+## Gate 5.85 · 第五批 CPU 教学实验
+- weight_quantization.py：per-row symmetric quantization、scale 与 bit-width / MSE / packed bytes tradeoff；不宣称复现 AWQ/GPTQ。
+- kv_cache_quantization.py：block quantization、scale overhead、NVFP4 理论容量和 native/workspace access 抽象；不实现真实 FP4 packing。
+- cuda_graph_capture.py：shape+segmentation graph key、static buffer identity、breakable replay 顺序；不调用 CUDA。
+- multimodal_pipeline.py：placeholder expansion、prefix preservation、media token accounting 与 CPU/GPU transport mode；不做真实媒体 decode。
+- serving_metrics.py：TTFT、TPOT、E2E、percentile、throughput 与 benchmark layer map；不连接真实 server。
+
+## Gate 6.85 · 第五批回归
+- 25 篇文章、50 张 standalone SVG、25 份 evidence；SVG XML/title/desc/font >=14px；MathML namespace 与 geometry。
+- Chromium 首页 + 25 篇 × 1440/768/390/360，共 104 views；验证所有图加载、无横向溢出、stepper controls 与首页 25 cards / 26 filters。
+- CPU labs 全部执行；Pages artifact staging 和 public smoke check 覆盖所有 HTML、SVG、Python labs、evidence。

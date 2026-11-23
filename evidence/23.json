@@ -1,0 +1,48 @@
+{
+  "article": "23.html",
+  "source_revision": "563813c0d60282fa848382fec600b40d28ddec98",
+  "claims": [
+    {
+      "claim": "Breakable CUDA Graph splits a forward pass into captured graph segments separated by eager operations, preserving graph replay for compatible regions",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/breakable_cuda_graph.mdx#L7-L16",
+      "locator": "Motivation and segmented graph design",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "Breakable graph replay launches each captured segment and invokes recorded non-graph functions with stable tensor references between segments",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/breakable_cuda_graph.mdx#L130-L164",
+      "locator": "Capture and replay sequence",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "SGLang's multimodal ViT graph caches captures by sequence length and requires stable buffers plus matching segmentation patterns for a graph key",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/cuda_graph_for_multi_modal_encoder.mdx#L17-L55",
+      "locator": "Dynamic inputs, graph_key=S, stable addresses and attention backend arguments",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "CUDA graph persistence uses Foundry to save and restore captured graphs with their memory layout, and save/load must use the same model, flags, parallel layout and GPU type",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/cuda_graph_persistence.mdx#L6-L60",
+      "locator": "Persistence overview, installation, usage and configuration identity",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "PyTorch CUDA Graph replay assumes stable tensor shapes and virtual memory addresses; new values are copied into persistent static input buffers before replay",
+      "source_url": "https://docs.pytorch.org/docs/stable/notes/cuda",
+      "locator": "CUDA Graph semantics and replay constraints",
+      "kind": "external-documentation",
+      "status": "verified"
+    },
+    {
+      "claim": "A graph break adds graph launch, eager Python invocation and capture boundary work; graph replay benefit only applies to captured segments",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/breakable_cuda_graph.mdx#L179-L190",
+      "locator": "Breakable graph performance overhead",
+      "kind": "implementation",
+      "status": "verified"
+    }
+  ]
+}

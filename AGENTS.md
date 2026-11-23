@@ -62,3 +62,16 @@ python3 examples/prefix_match.py
 - Multi-LoRA：max_loras_per_batch 是 distinct adapter IDs，包含 base None；CPU max_loaded_loras 与 GPU slots 分开。Pinned adapters 上限 max_loras_per_batch - 1；pinned 不参与常规 eviction/drain。动态 load 是 admin API，需要 API key，rank/target-module shape contract 固定。Prefix KV reuse 必须尊重 adapter namespace。
 - 第四批固定源码：SGLang ac0243723b0dcba177f8792979daaa2f8d6ee6ea；SGLang DeepEP V2 branch ece7e40b2f4e53a2910a442d2bbc33fe4130c3e0；DeepEP V2.5 branch d30642958b04c4b1bd7b607ba7c551ea39e9140a；Mooncake 8cd2bd5b45c36dc7520cc28267018aa8ae0645c1。旧章节 evidence 保留历史 commit，不得批量改写。
 - 第四批 CPU labs：router_policy.py、pd_lifecycle.py、mooncake_planes.py、deepep_overlap.py、lora_scheduler.py。回归必须覆盖全部 20 篇文章与 evidence。
+
+
+## 第五批专属工程约束（21–25）
+
+- Weight quantization：严格区分 checkpoint 已量化（offline）与 runtime online quantization；区分 weight / activation / KV 三种对象。量化注册表按平台变化，不能把 CUDA 的方法名/兼容矩阵推广到 CPU、ROCm、XPU 或 NPU。说明 create_weights、checkpoint load、process_weights_after_loading、apply 与 GEMM backend 的阶段边界。AWQ/GPTQ 论文算法不能等同于 SGLang 的每一个 runtime kernel。
+- Quantized KV：FP8 scale 与 FP4 recipe 分开；必须把 scale metadata、packed layout、page size、head dimension、prefill/decode attention backend 和临时 workspace 一起核对。NVFP4 的 3.56× 是含 block-scale 的理论 scalar capacity ratio，不是实测 throughput。native NVFP4 的 SM100/shape/algorithm 限制不能泛化到所有 KV formats。
+- CUDA Graph：Capture/Replay 依赖固定 operation sequence、shape、control flow 与 memory addresses；新输入应 copy 到 static buffers。Full graph 与 breakable graph 分开，eager break 仍每次 replay 执行。ViT graph key 除 sequence length 还依赖 segmentation pattern。Foundry persistence 是可选且有 model/flags/parallel/GPU identity 与 backend 限制的功能。
+- Multimodal request path：区分 API content parts、raw media I/O、processor worker clone、per-item preprocessing、placeholder token expansion、M-RoPE/span metadata 与 CPU/CUDA IPC/VMM feature transport。token-space expansion 只替换 caller placeholders，已展开 prefix 保留，插入 tokens 不重复扫描。与第 15 章 EPD worker topology、第 18 章 Mooncake payload plane 严格区分。
+- Observability：Counter/Gauge/Histogram 不能混用。TTFT、request-level TPOT、token-weighted ITL 与 E2E latency 定义不同；TPOT 排除 first token 且有请求纳入条件。metrics labels 要关注 cardinality。默认不记录 request contents；request dump/crash dump 需说明敏感数据和访问控制。
+- Benchmark：bench_serving、bench_one_batch_server、bench_offline_throughput、bench_one_batch 覆盖不同 stack layers，不能互相替代。single-batch 结果不等于 steady state；固定 model/hardware/prompt-output distribution/concurrency/arrival rate/cache state/warmup/measurement window。Profiling admin endpoints 必须使用 admin key；PD prefill/decode profiler 分开。
+- 第五批源码基线：`sgl-project/sglang@563813c0d60282fa848382fec600b40d28ddec98`。evidence/21.json–evidence/25.json 中每条 claim 要有可定位 URL 与 locator；历史章节保留各自 commit。
+- 第五批 CPU labs：weight_quantization.py、kv_cache_quantization.py、cuda_graph_capture.py、multimodal_pipeline.py、serving_metrics.py。只验证通用教学模型和边界，不模拟真实 SGLang kernel、CUDA capture、媒体解码、CUDA IPC 或 server throughput。
+- 第五批回归：25 篇文章、50 张独立 SVG、25 份 evidence、26 个首页 filter buttons；Chromium 1440/768/390/360 × 26 pages（首页 + 25 章）。Pages staging 与 public smoke check 必须覆盖 25 HTML、50 SVG、全部 examples 与 25 evidence。

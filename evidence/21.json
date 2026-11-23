@@ -1,0 +1,55 @@
+{
+  "article": "21.html",
+  "source_revision": "563813c0d60282fa848382fec600b40d28ddec98",
+  "claims": [
+    {
+      "claim": "SGLang distinguishes offline loading of pre-quantized weights from online dynamic quantization; pre-quantized checkpoints should not also be passed through the online --quantization flag",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/quantization.mdx#L6-L21",
+      "locator": "Quantization overview: offline vs online and pre-quantized checkpoint warning",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "The quantization registry maps method names to QuantizationConfig classes and conditionally registers some methods by hardware platform",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/layers/quantization/__init__.py#L50-L150",
+      "locator": "BASE_QUANTIZATION_METHODS and platform-specific registry updates",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "Checkpoint quantization metadata is resolved from top-level quantization_config, text_config.quantization_config, then compression_config",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/model_loader/checkpoint_quantization.py#L24-L91",
+      "locator": "_select_hf_quant_metadata and resolve_checkpoint_quant_spec",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "SGLang quantization methods expose per-layer weight creation, apply, and post-load processing hooks; quantization config declares supported activation dtypes and minimum hardware capability",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/layers/quantization/base_config.py#L25-L210",
+      "locator": "QuantizeMethodBase, LinearMethodBase and QuantizationConfig contracts",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "AWQ uses activation statistics to identify salient channels and applies equivalent scaling transformations to reduce low-bit weight quantization error",
+      "source_url": "https://arxiv.org/abs/2306.00978",
+      "locator": "AWQ paper abstract and method",
+      "kind": "paper",
+      "status": "verified"
+    },
+    {
+      "claim": "GPTQ is a post-training weight quantization method based on approximate second-order information and sequential weight updates",
+      "source_url": "https://arxiv.org/abs/2210.17323",
+      "locator": "GPTQ paper abstract and algorithm",
+      "kind": "paper",
+      "status": "verified"
+    },
+    {
+      "claim": "SGLang recommends validating quantized models with benchmarks after quantization because quality regressions depend on the model and recipe",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/quantization.mdx#L15-L21",
+      "locator": "Post-quantization benchmark recommendation",
+      "kind": "engineering-guidance",
+      "status": "verified"
+    }
+  ]
+}
