@@ -21,10 +21,16 @@ from moe_dispatch import dispatch_topk, combine_outputs, imbalance_ratio
 from hicache_tiers import HiCacheToy, write_levels
 from lora_pool import AdapterPool, PoolFull
 from epd_pipeline import StageCapacity, end_to_end_latency_ms
+from router_policy import Worker, power_of_two, cache_aware
+from pd_lifecycle import Request as PDRequest, TransitionError
+from mooncake_planes import ObjectRef, PlaneStore
+from deepep_overlap import mode_for_phase, overlapped_time, skew
+from lora_scheduler import AdapterPool as SchedulerAdapterPool, PoolFull as SchedulerPoolFull
 
 REV_FIRST = "0a8693fbe3a2e46ccc06470a461a2b85865672fd"
 REV_ADVANCED = "6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd"
 REV_THIRD = "ac0380c7faf9cece3ca32ffe75815af7c585acea"
+REV_FOURTH = "ac0243723b0dcba177f8792979daaa2f8d6ee6ea"
 
 
 class Reader(HTMLParser):
@@ -52,11 +58,11 @@ class ArticleTest(unittest.TestCase):
     def test_course_map(self):
         page = read("index.html")
         self.assertEqual(len(page.tags.get("h1", [])), 1)
-        self.assertEqual(sum("data-category" in x for x in page.tags.get("article", [])), 15)
-        self.assertEqual(sum("data-filter" in x for x in page.tags.get("button", [])), 16)
+        self.assertEqual(sum("data-category" in x for x in page.tags.get("article", [])), 20)
+        self.assertEqual(sum("data-filter" in x for x in page.tags.get("button", [])), 21)
 
     def test_depth_and_interaction_contract(self):
-        for i in range(1, 16):
+        for i in range(1, 21):
             name = f"{i:02}.html"
             with self.subTest(article=name):
                 page = read(name)
@@ -77,7 +83,7 @@ class ArticleTest(unittest.TestCase):
                 self.assertNotIn("<script src=\"https:", html)
 
     def test_local_links_are_resolved(self):
-        names = ["index.html"] + [f"{i:02}.html" for i in range(1, 11)]
+        names = ["index.html"] + [f"{i:02}.html" for i in range(1, 21)]
         for name in names:
             page = read(name)
             for link in page.links:
@@ -94,7 +100,7 @@ class ArticleTest(unittest.TestCase):
 
     def test_svg_manifest(self):
         files = list((ROOT / "assets/diagrams").glob("*.svg"))
-        self.assertEqual(len(files), 30)
+        self.assertEqual(len(files), 40)
         ns = "{http://www.w3.org/2000/svg}"
         for path in files:
             with self.subTest(svg=path.name):
@@ -114,7 +120,7 @@ class ArticleTest(unittest.TestCase):
             n = f"{i:02}"
             evidence = json.loads((ROOT / "evidence" / f"{n}.json").read_text())
             self.assertEqual(evidence["article"], n + ".html")
-            expected = REV_FIRST if i <= 5 else (REV_ADVANCED if i <= 10 else REV_THIRD)
+            expected = REV_FIRST if i <= 5 else (REV_ADVANCED if i <= 10 else (REV_THIRD if i <= 15 else REV_FOURTH))
             self.assertEqual(evidence["source_revision"], expected)
             self.assertGreaterEqual(len(evidence["claims"]), 4)
             for claim in evidence["claims"]:
@@ -253,6 +259,74 @@ class EPDStageTest(unittest.TestCase):
     def test_latency(self):
         self.assertEqual(end_to_end_latency_ms(10,2,20,3,30,5),70)
         with self.assertRaises(ValueError): end_to_end_latency_ms(1,-1,1,1,1)
+
+
+class RouterPolicyTest(unittest.TestCase):
+    def test_cache_owner_and_admission(self):
+        workers=[Worker("A","prefill",2048,800),Worker("B","prefill",512,100),Worker("C","prefill",0,500)]
+        self.assertEqual(cache_aware(workers,min_prefix=1024,mode="prefer"),"A")
+        blocked=[Worker("A","prefill",4096,9000),Worker("B","prefill",0,200)]
+        self.assertEqual(cache_aware(blocked),"B")
+    def test_balanced_switch_requires_both_thresholds(self):
+        workers=[Worker("A","prefill",2048,3000),Worker("B","prefill",0,200)]
+        self.assertEqual(cache_aware(workers,mode="balanced",factor=2,gap=1024),"B")
+        workers=[Worker("A","prefill",2048,500),Worker("B","prefill",0,200)]
+        self.assertEqual(cache_aware(workers,mode="balanced",factor=2,gap=1024),"A")
+    def test_power_of_two_and_admission(self):
+        workers=[Worker("A","decode",waiting=10),Worker("B","decode",waiting=2),Worker("C","decode",waiting=5)]
+        self.assertEqual(power_of_two(workers),"B")
+
+class PDLifecycleTest(unittest.TestCase):
+    def test_early_reserves_before_prefill(self):
+        r=PDRequest("early"); r.handshake()
+        self.assertTrue(r.destination_allocated)
+        r.finish_prefill(); r.transfer()
+        self.assertTrue(r.transferred)
+    def test_prefill_complete_delays_allocation(self):
+        r=PDRequest("prefill_complete"); r.handshake()
+        self.assertFalse(r.destination_allocated)
+        with self.assertRaises(TransitionError): r.allocate_destination()
+        r.finish_prefill(); r.allocate_destination(); r.transfer()
+        self.assertTrue(r.transferred)
+    def test_abort_prevents_transfer(self):
+        r=PDRequest(); r.handshake(); r.abort()
+        with self.assertRaises(TransitionError): r.finish_prefill()
+
+class MooncakePlaneTest(unittest.TestCase):
+    def test_payload_types_and_planes_do_not_alias(self):
+        s=PlaneStore()
+        pd=ObjectRef("pd-transfer","same","key","language-kv")
+        hicache=ObjectRef("hicache-l3","same","key","kv-pages")
+        mm=ObjectRef("epd-embedding","same","key","vit-embedding")
+        s.put(pd,"request handoff"); s.put(hicache,"reusable pages"); s.put(mm,"encoder output")
+        self.assertEqual(s.get(pd),"request handoff")
+        self.assertEqual(s.get(hicache),"reusable pages")
+        self.assertEqual(s.get(mm),"encoder output")
+        self.assertEqual(len(s.objects),3)
+
+class DeepEPOverlapTest(unittest.TestCase):
+    def test_mode_by_phase(self):
+        self.assertEqual(mode_for_phase("prefill"),"normal")
+        self.assertEqual(mode_for_phase("decode"),"low_latency")
+        self.assertEqual(mode_for_phase("mixed"),"auto")
+    def test_overlap_bounds(self):
+        self.assertEqual(overlapped_time(4,7,3),8)
+        with self.assertRaises(ValueError): overlapped_time(4,7,5)
+    def test_expert_skew(self):
+        self.assertEqual(skew([10,10,10]),1.0)
+        self.assertEqual(skew([10,10,40]),2.0)
+
+class AdvancedLoRASchedulerTest(unittest.TestCase):
+    def test_none_slot_and_lru_eviction(self):
+        p=SchedulerAdapterPool(3); p.load("A",pinned=True); p.load("B"); p.load("C")
+        self.assertEqual(list(p.slots.keys()),[None,"A","C"])
+        self.assertTrue(p.distinct_ids_fit([None,"A","C"]))
+        self.assertFalse(p.distinct_ids_fit([None,"A","C","D"]))
+    def test_pinned_limit_and_exhaustion(self):
+        p=SchedulerAdapterPool(2)
+        p.load("A",pinned=True)
+        with self.assertRaises(SchedulerPoolFull): p.load("B",pinned=True)
+        with self.assertRaises(SchedulerPoolFull): p.load("C")
 
 if __name__ == "__main__":
     unittest.main()

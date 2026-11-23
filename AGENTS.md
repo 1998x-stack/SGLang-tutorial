@@ -53,3 +53,12 @@ python3 examples/prefix_match.py
 - Multi-LoRA：`max_loras_per_batch` 包含 base-model `None` ID；CPU loaded adapters 与 GPU slots 不同。区分 pinning、eviction、dynamic / overlap loading。
 - EPD：Encoder embeddings、Prefill 生成的 language KV 是不同数据；global multimodal embedding cache 不等于 HiCache。EPD 会增加 transfer/router/故障边界，不能声称默认更快。
 - 第三批实现快照：`sgl-project/sglang@ac0380c7faf9cece3ca32ffe75815af7c585acea`；旧章节 evidence 保留各自历史 commit。
+
+## 第四批专属工程约束（16–20）
+- Router：区分 bucket fit、worker admission、policy pick 与 dispatch retry。Admission 基于 load reports，不是原子 KV reservation；cache-aware 只适用于 plain/prefill 组，session bindings 是 router-local state，副本扩展需要 sticky routing。Power-of-Two 比较阶段相关 load vector，不能把不同量纲随意相加。
+- PD lifecycle：区分 bootstrap control plane 与 KV data plane。early 在 Prefill 完成前 reserve Decode slots；prefill_complete 延后 per-request reservation，不改变 global pool 容量，且不是普遍吞吐优化。按 pinned docs 核对支持条件、timeout 起点、abort ACK、retraction、同版本/同策略要求。
+- Mooncake：严格分开 PD request KV transfer、HiCache L3 reusable KV pages、EPD global multimodal embeddings。Master/Metadata 管理控制面；Store 与 SGLang client 直接传 payload。HiCache page 只有所有所需 TP ranks 完成后才可提交 radix tree。
+- DeepEP：A2A dispatcher 与 MoE runner 是两条配置轴；Normal / Low-Latency 是不同 batch regime。区分 V1 Buffer 与 SGLang V2 ElasticBuffer adapter；V2 capacity / hidden / top-k / scale-layout 是 correctness gates。TBO/SBO 只隐藏可重叠通信，不消除 collective ordering 和 buffer lifetime。EPLB 的 token-count balance 不等于端到端 latency balance。
+- Multi-LoRA：max_loras_per_batch 是 distinct adapter IDs，包含 base None；CPU max_loaded_loras 与 GPU slots 分开。Pinned adapters 上限 max_loras_per_batch - 1；pinned 不参与常规 eviction/drain。动态 load 是 admin API，需要 API key，rank/target-module shape contract 固定。Prefix KV reuse 必须尊重 adapter namespace。
+- 第四批固定源码：SGLang ac0243723b0dcba177f8792979daaa2f8d6ee6ea；DeepEP f6aa38fe06cd4a0489e7730365d4e0114970a2f3；Mooncake 8cd2bd5b45c36dc7520cc28267018aa8ae0645c1。旧章节 evidence 保留历史 commit，不得批量改写。
+- 第四批 CPU labs：router_policy.py、pd_lifecycle.py、mooncake_planes.py、deepep_overlap.py、lora_scheduler.py。回归必须覆盖全部 20 篇文章与 evidence。

@@ -25,6 +25,11 @@
 | [13 · HiCache](13.html) | KV 如何在 GPU、Host 与 Storage 间保留和回迁？ | 双 SVG + MathML + 交互 / CPU tier 实验 | 官方设计文档、工程博客与源码 |
 | [14 · Multi-LoRA](14.html) | 多 adapter 如何共享 base model 并管理 GPU slots？ | 双 SVG + MathML + 交互 / CPU pool 实验 | S-LoRA、Punica、官方文档与源码 |
 | [15 · EPD](15.html) | Encoder、Prefill、Decode 如何独立部署？ | 双 SVG + MathML + 交互 / CPU capacity 实验 | 官方 EPD 文档与源码 |
+| [16 · KV-aware Router](16.html) | Bucket、Admission、Power-of-Two 与 cache/session affinity 如何协同？ | 双 SVG + MathML + 交互 / CPU policy 实验 | 固定 Router 源码、架构与 metrics |
+| [17 · PD lifecycle](17.html) | Bootstrap、early/prefill_complete reservation、transfer 与 abort 如何协作？ | 双 SVG + MathML + 交互 / CPU 状态机 | 固定 PD docs、prefill/decode 与 backend 源码 |
+| [18 · Mooncake data planes](18.html) | PD KV transfer、HiCache L3 与 EPD embeddings 有何区别？ | 双 SVG + MathML + 交互 / CPU object-plane 实验 | Mooncake Store、HiCache 与 EPD 源码 |
+| [19 · DeepEP V2](19.html) | Normal/Low-Latency、ElasticBuffer、TBO/SBO 与 EPLB 如何协作？ | 双 SVG + MathML + 交互 / CPU overlap 实验 | SGLang EP docs、DeepEP 与固定 adapter |
+| [20 · Multi-LoRA scheduler](20.html) | GPU slots、None base ID、pinning、drain 与 dynamic load 如何调度？ | 双 SVG + MathML + 交互 / CPU pool 实验 | LoRA docs、manager、memory pool 与 S-LoRA/Punica |
 
 ## 第二批源码基线
 
@@ -50,6 +55,17 @@
 - [LoRA manager](https://github.com/sgl-project/sglang/blob/ac0380c7faf9cece3ca32ffe75815af7c585acea/python/sglang/srt/lora/lora_manager.py)
 - [EPD docs](https://github.com/sgl-project/sglang/blob/ac0380c7faf9cece3ca32ffe75815af7c585acea/docs/docs/advanced_features/epd_disaggregation.mdx)
 
+## 第四批源码基线
+
+第四批（16–20）以 SGLang 上游 sgl-project/sglang@ac0243723b0dcba177f8792979daaa2f8d6ee6ea 为实现快照（2026-11-23）。外部依赖分别固定为 DeepEP f6aa38fe06cd4a0489e7730365d4e0114970a2f3 与 Mooncake 8cd2bd5b45c36dc7520cc28267018aa8ae0645c1。Router、PD transfer、Mooncake L3、EPD embedding cache、DeepEP V1/V2 与 Multi-LoRA 的数据对象和运行路径分开记录在 evidence/16.json–evidence/20.json。
+
+关键入口：
+- [sgl-router README](https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/sgl-router/README.md) · [architecture](https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/sgl-router/ARCHITECTURE.md) · [metrics](https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/sgl-router/monitoring/README.md)
+- [PD disaggregation](https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/docs/docs/advanced_features/pd_disaggregation.mdx) · [prefill.py](https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/python/sglang/srt/disaggregation/prefill.py) · [decode.py](https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/python/sglang/srt/disaggregation/decode.py)
+- [Mooncake Store integration](https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/python/sglang/srt/mem_cache/storage/mooncake_store/README.md) · [EPD docs](https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/docs/docs/advanced_features/epd_disaggregation.mdx)
+- [Expert parallelism docs](https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/docs/docs/advanced_features/expert_parallelism.mdx) · [DeepEP V1 adapter](https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/python/sglang/srt/layers/moe/token_dispatcher/deepep.py) · [DeepEP V2 adapter](https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/python/sglang/srt/layers/moe/token_dispatcher/deepep_v2.py)
+- [LoRA docs](https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/docs/docs/advanced_features/lora.mdx) · [manager](https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/python/sglang/srt/lora/lora_manager.py) · [memory pool](https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/python/sglang/srt/lora/mem_pool.py)
+
 ## 可视化规范
 
 - 每图回答一个明确问题；图形先定义数据依赖，再定义形状、边和颜色。
@@ -72,6 +88,11 @@ python3 examples/moe_dispatch.py
 python3 examples/hicache_tiers.py
 python3 examples/lora_pool.py
 python3 examples/epd_pipeline.py
+python3 examples/router_policy.py
+python3 examples/pd_lifecycle.py
+python3 examples/mooncake_planes.py
+python3 examples/deepep_overlap.py
+python3 examples/lora_scheduler.py
 python3 scripts/browser_qa.py --out reports/browser-qa
 ```
 
@@ -88,6 +109,9 @@ python3 scripts/browser_qa.py --out reports/browser-qa
 9. Sheng et al., [S-LoRA](https://arxiv.org/abs/2311.03285), 2023.
 10. Chen et al., [Punica](https://proceedings.mlsys.org/paper_files/paper/2024/hash/054de805fcceb78a201f5e9d53c85908-Abstract-Conference.html), MLSys 2024.
 11. [SGLang HiCache engineering blog](https://lmsys.org/blog/2025-09-10-sglang-hicache/) and [EPD documentation](https://docs.sglang.io/advanced_features/epd_disaggregation.html).
+12. [Mooncake: A KVCache-centric Disaggregated Architecture](https://arxiv.org/abs/2407.00079), OSDI 2024.
+13. [DeepEP repository](https://github.com/deepseek-ai/DeepEP) and [SGLang Large-Scale EP](https://lmsys.org/blog/2025-05-05-large-scale-ep/).
+14. [S-LoRA](https://arxiv.org/abs/2311.03285) and [Punica](https://proceedings.mlsys.org/paper_files/paper/2024/hash/054de805fcceb78a201f5e9d53c85908-Abstract-Conference.html).
 
 ## 生产流程
 

@@ -1,27 +1,16 @@
-"""Check public GitHub Pages after successful Actions deploy."""
+"""Check every published course page and generated asset after Pages deploy."""
 import argparse
 import time
+from pathlib import Path
 from urllib.request import urlopen
 from urllib.parse import urljoin
 
-FILES = [
-    "index.html", "01.html", "05.html", "06.html", "10.html", "11.html", "12.html", "13.html", "14.html", "15.html",
-    "assets/css/site.css", "assets/js/site.js",
-    "assets/diagrams/06-memory-mapping.svg",
-    "assets/diagrams/10-eagle-draft-tree.svg",
-    "assets/diagrams/11-parallelism-axes.svg", "assets/diagrams/11-rank-grid.svg",
-    "assets/diagrams/12-moe-routing.svg", "assets/diagrams/12-moe-overlap.svg",
-    "assets/diagrams/13-hicache-tiers.svg", "assets/diagrams/13-hicache-flow.svg",
-    "assets/diagrams/14-lora-batch.svg", "assets/diagrams/14-lora-pool.svg",
-    "assets/diagrams/15-epd-topology.svg", "assets/diagrams/15-epd-dataflow.svg",
-    "examples/prefix_match.py", "examples/page_allocator.py",
-    "examples/chunk_budget.py", "examples/online_softmax.py",
-    "examples/speculative_sampling.py", "examples/parallel_topology.py",
-    "examples/moe_dispatch.py", "examples/hicache_tiers.py", "examples/lora_pool.py", "examples/epd_pipeline.py",
-    "evidence/01.json", "evidence/06.json", "evidence/10.json", "evidence/11.json",
-    "evidence/12.json", "evidence/13.json", "evidence/14.json", "evidence/15.json",
-]
-
+ROOT = Path(__file__).resolve().parents[1]
+FILES = ["index.html"] + [f"{i:02}.html" for i in range(1, 21)]
+FILES += ["assets/css/site.css", "assets/js/site.js"]
+FILES += [f"assets/diagrams/{p.name}" for p in sorted((ROOT / "assets/diagrams").glob("*.svg"))]
+FILES += [f"examples/{p.name}" for p in sorted((ROOT / "examples").glob("*.py"))]
+FILES += [f"evidence/{i:02}.json" for i in range(1, 21)]
 
 def verify(base_url):
     for path in FILES:
@@ -38,7 +27,6 @@ def verify(base_url):
                 if attempt == 4:
                     raise
                 time.sleep(8)
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

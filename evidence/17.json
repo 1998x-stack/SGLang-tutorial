@@ -1,0 +1,64 @@
+{
+  "article": "17.html",
+  "source_revision": "ac0243723b0dcba177f8792979daaa2f8d6ee6ea",
+  "retrieved_at": "2026-11-23",
+  "external_revisions": {
+    "sglang": "ac0243723b0dcba177f8792979daaa2f8d6ee6ea"
+  },
+  "claims": [
+    {
+      "id": "17-01",
+      "claim": "Prefill and Decode maintain separate sender/receiver queues and complete the KV handoff asynchronously.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/python/sglang/srt/disaggregation/prefill.py",
+      "locator": "Disaggregation prefill queue and transfer processing",
+      "status": "verified",
+      "notes": "The article diagram is a simplified state machine."
+    },
+    {
+      "id": "17-02",
+      "claim": "The default early allocation policy reserves Decode destination KV slots before Prefill completes.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/docs/docs/advanced_features/pd_disaggregation.mdx",
+      "locator": "Decode allocation policy",
+      "status": "verified",
+      "notes": "Per-request reservation timing, not global KV pool creation."
+    },
+    {
+      "id": "17-03",
+      "claim": "prefill_complete delays Decode slot allocation until Prefill accepts its final result and signals readiness.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/docs/docs/advanced_features/pd_disaggregation.mdx",
+      "locator": "Decode allocation policy",
+      "status": "verified",
+      "notes": "Not a general throughput improvement; it changes overlap and retention tradeoffs."
+    },
+    {
+      "id": "17-04",
+      "claim": "The prefill_complete implementation has explicit topology/backend restrictions and requires consistent policy and revision across communicating workers.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/docs/docs/advanced_features/pd_disaggregation.mdx",
+      "locator": "Decode allocation policy / supported configurations",
+      "status": "verified",
+      "notes": "Restrictions are pinned to the cited source revision."
+    },
+    {
+      "id": "17-05",
+      "claim": "Abort, timeout, retraction and bootstrap-room cleanup participate in the transfer lifecycle.",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/python/sglang/srt/disaggregation/common/conn.py",
+      "locator": "Abort notification, deferred ACK, timeout and room lifecycle",
+      "status": "verified",
+      "notes": "Backend-specific behavior also exists in Mooncake and NIXL implementations."
+    },
+    {
+      "id": "17-06",
+      "claim": "TTFT can be decomposed into queue, Prefill, bootstrap, KV transfer, Decode admission and first Decode work.",
+      "kind": "derived",
+      "source_url": "https://github.com/sgl-project/sglang/blob/ac0243723b0dcba177f8792979daaa2f8d6ee6ea/docs/docs/advanced_features/pd_disaggregation.mdx",
+      "locator": "Decode allocation policy and profiling guidance",
+      "status": "derived",
+      "notes": "Measurement decomposition; spans may overlap and should be evaluated on the critical path."
+    }
+  ]
+}
