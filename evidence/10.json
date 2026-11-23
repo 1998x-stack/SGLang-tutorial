@@ -32,10 +32,10 @@
     },
     {
       "id": "eagle3",
-      "claim": "EAGLE-3 explores multi-layer feature fusion and direct token prediction",
+      "claim": "EAGLE-3 removes the feature-prediction objective, incorporates low- and mid-layer features, and is trained on-policy",
       "kind": "paper",
       "source_url": "https://arxiv.org/abs/2503.01840",
-      "locator": "EAGLE-3 paper",
+      "locator": "EAGLE-3 paper and SGLang speculative decoding documentation",
       "status": "verified",
       "notes": "Pinned source snapshot; recheck when upstream revision changes"
     },

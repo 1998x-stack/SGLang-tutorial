@@ -56,6 +56,15 @@
       "locator": "constructed budget example",
       "status": "illustrative",
       "notes": "Teaching example only; not a GPU measurement"
+    },
+    {
+      "id": "chunk-size-cap",
+      "claim": "The documented --chunked-prefill-size parameter is the maximum number of tokens in a chunk; -1 disables chunked prefill",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/docs/docs/advanced_features/server_arguments.mdx#L488-L489",
+      "locator": "Server Arguments parameter description",
+      "status": "verified",
+      "notes": "This is a configuration upper bound, not a guarantee that every runtime chunk equals the cap"
     }
   ]
 }
