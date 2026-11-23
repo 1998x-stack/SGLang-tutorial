@@ -114,3 +114,8 @@ article a{overflow-wrap:anywhere}
 @media(max-width:940px){
   figure.diagram{display:block;width:100%;max-width:100%;min-width:0;box-sizing:border-box;overflow-x:auto;overflow-y:hidden}
 }
+
+/* The article column clips only outer overflow; each diagram keeps its own horizontal scroll viewport. */
+@media(max-width:940px){
+  .reading article{overflow-x:clip}
+}
