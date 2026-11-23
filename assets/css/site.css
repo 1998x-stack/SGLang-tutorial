@@ -99,3 +99,10 @@ code{font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospac
   .toc li{flex:0 0 auto;min-width:0}
   figure.diagram{min-width:0;max-width:100%}
 }
+
+/* Wrap the mobile table of contents instead of letting a long flex row widen the document. */
+@media(max-width:940px){
+  .toc ol{display:flex;flex-wrap:wrap;gap:8px 14px;width:100%;min-width:0;max-width:100%;white-space:normal;overflow:visible}
+  .toc li{flex:0 1 auto;min-width:0;max-width:100%;margin:0}
+  .toc a{white-space:normal;overflow-wrap:anywhere}
+}
