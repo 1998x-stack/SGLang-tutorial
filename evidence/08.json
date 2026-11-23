@@ -1,0 +1,61 @@
+{
+  "article": "08.html",
+  "source_revision": "6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd",
+  "review_date": "2026-11-23",
+  "claims": [
+    {
+      "id": "chunk-budget",
+      "claim": "PrefillAdder combines remaining input and chunk token budget with memory budget checks",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/managers/schedule_policy.py#L1075-L1200",
+      "locator": "PrefillAdder initialization",
+      "status": "verified",
+      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+    },
+    {
+      "id": "chunk-continuation",
+      "claim": "_add_chunked_req computes available chunk tokens, fits memory, aligns and records continuation",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/managers/schedule_policy.py#L1735-L1868",
+      "locator": "_add_chunked_req",
+      "status": "verified",
+      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+    },
+    {
+      "id": "mixed-batch",
+      "claim": "ScheduleBatch.mix_with_running merges running decode rows into a mixed forward",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/managers/schedule_batch.py#L2834-L2925",
+      "locator": "mix_with_running",
+      "status": "verified",
+      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+    },
+    {
+      "id": "scheduler-stash",
+      "claim": "Scheduler stashes unfinished chunks and continues them in subsequent schedule steps",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/managers/scheduler.py#L4241-L4525",
+      "locator": "chunked_req / stash / get_next_batch_to_run",
+      "status": "verified",
+      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+    },
+    {
+      "id": "multimodal-guard",
+      "claim": "Specific multimodal Transformers backend path disables chunked prefill",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/managers/scheduler.py#L1457-L1486",
+      "locator": "init_chunked_prefill",
+      "status": "verified",
+      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+    },
+    {
+      "id": "chunk-toy",
+      "claim": "4/3/5 chunk example illustrates variable budgets and is not an observed runtime trace",
+      "kind": "illustrative",
+      "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/managers/schedule_policy.py#L1735-L1868",
+      "locator": "constructed budget example",
+      "status": "illustrative",
+      "notes": "Teaching example only; not a GPU measurement"
+    }
+  ]
+}
