@@ -45,3 +45,11 @@ python3 examples/prefix_match.py
 - **Speculative Decoding：**区分 EAGLE draft topology、target verification、accepted-prefix commit、token-wise rejection sampling 与 block verification。当前官方文档所述 stochastic EAGLE/EAGLE3/NEXTN block-verification 路径要求 `--speculative-eagle-topk 1`；不能将 block verification 误画成 `topk>1` 树。链式 acceptance/residual 公式不能冒充 EAGLE tree 的完整算法；所有 speedup 必须有受控 benchmark。
 - 新增 CPU-only 示例：`page_allocator.py`、`chunk_budget.py`、`online_softmax.py`、`speculative_sampling.py`；验证正常、空预算、页耗尽、对齐、概率归一化等边界。
 - 第二批实现快照：`sgl-project/sglang@6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd`。第一批 evidence 仍保留其原始快照，不要无证据地批量重写历史 claim。
+
+## 第三批专属约束（11–15）
+- Parallelism：TP 切层内权重，PP 切层深度，DP 切请求副本，EP 切 MoE experts，CP/DCP 切上下文。`initialize_model_parallel()` 的主 world-size 为 TP×PP；Attention-DP/CP 与 MoE-EP/DP 是子组，禁止无条件相乘。
+- MoE EP：区分 Router Top-K IDs / gate weights、dispatch、expert GEMM 与 combine。通信 backend 和 runner backend 是不同维度；TBO/SBO 不会消除依赖。
+- HiCache：L1/L2 为单 instance 私有；L3 是否共享取决于 backend/namespace。区分 metadata lookup、prefetch、write-back 与 Host layout。
+- Multi-LoRA：`max_loras_per_batch` 包含 base-model `None` ID；CPU loaded adapters 与 GPU slots 不同。区分 pinning、eviction、dynamic / overlap loading。
+- EPD：Encoder embeddings、Prefill 生成的 language KV 是不同数据；global multimodal embedding cache 不等于 HiCache。EPD 会增加 transfer/router/故障边界，不能声称默认更快。
+- 第三批实现快照：`sgl-project/sglang@ac0380c7faf9cece3ca32ffe75815af7c585acea`；旧章节 evidence 保留各自历史 commit。
