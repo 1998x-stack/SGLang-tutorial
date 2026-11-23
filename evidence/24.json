@@ -1,0 +1,48 @@
+{
+  "article": "24.html",
+  "source_revision": "563813c0d60282fa848382fec600b40d28ddec98",
+  "claims": [
+    {
+      "claim": "Token-space multimodal processing receives raw image, video and audio data plus caller input IDs containing media placeholders",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/multimodal/token_space_mm_process/processor.py#L80-L160",
+      "locator": "TokenSpaceProcessor.process arguments, media loading and item preparation",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "TokenSpaceProcessor processes media items concurrently through processor workers, then builds the model-facing output",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/multimodal/token_space_mm_process/processor.py#L160-L250",
+      "locator": "_process_items, _process_item and output construction path",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "Multimodal placeholder expansion preserves an already-expanded prefix, replaces placeholders with their corresponding token runs, and does not scan inserted tokens again",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/multimodal/token_space_mm_process/expansion.py#L1-L58",
+      "locator": "expand_token_placeholders contract and ordered splice algorithm",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "SGLang multimodal processor workers use isolated processor clones and fall back to synchronous processing if the processor cannot be cloned",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/multimodal/multimodal_processor_mixin.py#L32-L165",
+      "locator": "processor concurrency, executor setup and fallback",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "Multimodal feature transport can keep features on GPU for CUDA IPC/VMM or move them to CPU, with pool-backed IPC wrapping and CPU fallback",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/python/sglang/srt/multimodal/transport/feature_transport.py#L1-L145",
+      "locator": "keeps_mm_features_on_device and MultimodalFeatureTransport",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "Per-request multimodal preprocessing is distinct from EPD deployment disaggregation: the former transforms raw media to features and token spans, while EPD separates encoder/prefill/decode workers",
+      "source_url": "https://github.com/sgl-project/sglang/blob/563813c0d60282fa848382fec600b40d28ddec98/docs/docs/advanced_features/epd_disaggregation.mdx",
+      "locator": "EPD deployment topology compared with token-space request processing",
+      "kind": "derived",
+      "status": "verified"
+    }
+  ]
+}
