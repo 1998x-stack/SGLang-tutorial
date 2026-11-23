@@ -75,3 +75,14 @@ python3 examples/prefix_match.py
 - 第五批源码基线：`sgl-project/sglang@563813c0d60282fa848382fec600b40d28ddec98`。evidence/21.json–evidence/25.json 中每条 claim 要有可定位 URL 与 locator；历史章节保留各自 commit。
 - 第五批 CPU labs：weight_quantization.py、kv_cache_quantization.py、cuda_graph_capture.py、multimodal_pipeline.py、serving_metrics.py。只验证通用教学模型和边界，不模拟真实 SGLang kernel、CUDA capture、媒体解码、CUDA IPC 或 server throughput。
 - 第五批回归：25 篇文章、50 张独立 SVG、25 份 evidence、26 个首页 filter buttons；Chromium 1440/768/390/360 × 26 pages（首页 + 25 章）。Pages staging 与 public smoke check 必须覆盖 25 HTML、50 SVG、全部 examples 与 25 evidence。
+
+## 第六批专属工程约束（26–30）
+
+- Structured generation：严格区分 request constraint、grammar compiler、matcher state、vocabulary bitmask、logits masking 与 sampler。一个请求只选择 JSON Schema / regex / EBNF / structural tag 中适用的约束参数；backend 能力与 tokenizer 支持要逐项核对。语法合法不等于语义真实或业务授权。GrammarManager 异步编译、缓存与 DP/TP/PP rank sync 必须分层解释。第 04 章是 frontend/DSL；第 26 章是 runtime backend。
+- Tool parser：parser registry 选择 model-format detector；non-stream 与 streaming 路径分开。必须覆盖 partial marker、chunk boundary、incomplete JSON、multiple calls、final flush 和普通文本保留。ToolCallItem 是 serving protocol normalization，不是工具执行。工具执行、授权、参数验证、sandbox、审计与 prompt-injection 防护属于应用层。
+- Deterministic inference：说明浮点非结合性、batch-shape-dependent reduction order、batch-invariant operators 与 per-request RNG state。后端兼容矩阵、Radix Cache / chunked prefill / CUDA Graph / non-greedy sampling 约束必须基于固定源码文档。temperature=0 不等于完整确定性；确定性也不自动证明 training-inference parity。
+- Adaptive speculative decoding：第 10 章讲 EAGLE 算法；第 29 章讲自适应运行时策略。当前文档限制为 EAGLE/EAGLE3 且 speculative_eagle_topk=1；不得泛化到任意 speculative algorithm/top-k tree。区分 per-BS EMA slot、warmup、update interval、hysteresis、candidate steps 与 prebuilt SpecRuntimeState。切换是完整 state reference swap，不是在线 graph recapture。候选状态数增加会影响启动时间与显存。
+- Checkpoint Engine：区分 model loader、Checkpoint Engine worker、Parameter Server、Broadcast/P2P/All、IPC endpoint 与 post-load hooks。dummy load + wait-weights-before-ready 的 Server 在真实权重到齐和 post-load 完成前不得标记 Ready。`/update_weights_from_ipc` 是 admin control endpoint，server/update worker 使用相同 SGLANG_ADMIN_API_KEY；不能写入日志或公开。Rank mapping、TP size、device UUID、quantization post hook、barrier 与 weight consistency 都是关键正确性条件。
+- 第六批源码基线：`sgl-project/sglang@563813c0d60282fa848382fec600b40d28ddec98`。evidence/26.json–evidence/30.json 的每条 claim 必须含可定位 URL、locator、kind 和 status；研究论文贡献与当前 SGLang 实现分开写。
+- 第六批 CPU labs：grammar_mask.py、tool_parser.py、deterministic_inference.py、adaptive_spec.py、checkpoint_engine.py。只验证有限状态 grammar、增量 parser、float32 reduction order、EMA policy 和 rank readiness；不得声称实现真实 GPU bitmask、真实模型 tool parser、CUDA batch-invariant kernel、EAGLE worker 或 IPC transport。
+- 第六批回归：30 篇文章、60 张独立 SVG、30 份 evidence、31 个首页 filter buttons；Chromium 1440/768/390/360 × 31 pages（首页 + 30 章），共 124 views。Pages staging 与 public smoke check 覆盖 30 HTML、60 SVG、全部 examples 与 30 evidence。

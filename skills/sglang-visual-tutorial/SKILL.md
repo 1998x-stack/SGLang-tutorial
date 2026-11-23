@@ -123,3 +123,25 @@ python3 examples/speculative_sampling.py
 - 25 篇文章、50 张 standalone SVG、25 份 evidence；SVG XML/title/desc/font >=14px；MathML namespace 与 geometry。
 - Chromium 首页 + 25 篇 × 1440/768/390/360，共 104 views；验证所有图加载、无横向溢出、stepper controls 与首页 25 cards / 26 filters。
 - CPU labs 全部执行；Pages artifact staging 和 public smoke check 覆盖所有 HTML、SVG、Python labs、evidence。
+
+## Gate 0.86 · 第六批源码与论文去重（26–30）
+- 固定上游快照 `563813c0d60282fa848382fec600b40d28ddec98`。先检查 01–25 文章、evidence、SVG、CPU labs 与 storyboard，避免重复主题。
+- Chapter 26 深入 XGrammar grammar compiler/matcher、tokenizer-aware vocab bitmask、grammar cache、async GrammarManager queue 与 DP/TP/PP synchronization；与 Chapter 04 frontend DSL 清楚分层。
+- Chapter 27 分析 parser registry、model-specific detector、non-stream/stream parser、partial marker、incremental JSON、ToolCallItem 与 SSE flush。明确 tool execution 和安全策略在应用层。
+- Chapter 28 从 float32 non-associativity 推导 dynamic batch nondeterminism；区分 batch-invariant kernels、request RNG seed、cache history 和 training-inference parity；严格引用 backend compatibility matrix。
+- Chapter 29 从 EAGLE draft/verify 算法分离出 adaptive control policy；解释 per-BS EMA/hysteresis、candidate steps、prebuilt runtime state 和 memory/startup trade-off。仅写当前官方支持组合。
+- Chapter 30 追踪 checkpoint shard read、Parameter Server、Broadcast/P2P、device UUID、IPC update endpoint、post-load hook、rank barrier 与 Ready gate；明确 admin-key 安全边界。
+
+## Gate 5.86 · 第六批 CPU 教学实验
+- grammar_mask.py：有限状态 grammar、allowed token set、mask、reject、rollback 与 cache hit；不实现通用 CFG parser。
+- tool_parser.py：partial marker、分片 JSON、多工具调用、普通文本与 final flush；不执行外部工具。
+- deterministic_inference.py：显式 float32 rounding、reduction-order sensitivity、fixed-order sum 与 per-request seeded sampling；不模拟 CUDA kernel。
+- adaptive_spec.py：per-batch-size EMA slots、candidate steps、warmup/update interval/hysteresis 与 prebuilt state pool；不运行 EAGLE。
+- checkpoint_engine.py：shard assignment、transport plan、admin key 与 rank readiness barrier；不连接 ZMQ/IPC/NCCL。
+- 所有示例均须有确定输出、正反例与边界断言。
+
+## Gate 6.86 · 第六批回归
+- 30 篇文章、60 张 standalone SVG、30 份 evidence；每篇至少 8 个正文 section、2 张图、1 组 MathML、3 个可切换交互项。
+- SVG 必须通过 XML parse、title/desc、viewBox、5+ text nodes、font >=14px 和无 script 检查。
+- Chromium 首页 + 30 篇 × 1440/768/390/360，共 124 views；验证图加载、MathML namespace/geometry、无横向溢出、stepper 与 5 个新增首页筛选。
+- 运行全部 25 个 CPU labs；Pages artifact staging 与 public smoke check 覆盖 30 HTML、60 SVG、全部 Python labs 与 30 evidence。

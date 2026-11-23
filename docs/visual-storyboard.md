@@ -75,3 +75,16 @@
 | 25 | 生产指标与 benchmark 分别观察哪一层？ | TTFT/TPOT/ITL/E2E timeline | four benchmark tools and stack boundaries | serving/engine/kernel selector；serving_metrics.py |
 
 关键不变量：W/A quantization 与 KV quantization 是不同对象；NVFP4 ratio 计入 scale overhead 但不代表吞吐；graph replay 更新 buffer 内容而非替换地址；multimodal placeholder expansion 不重复扫描插入 token；request-level TPOT 与 token-weighted ITL 统计口径不同；single-batch kernel benchmark 不能冒充 steady-state serving。
+
+ 
+## 第六批（26–30）：约束生成、协议解析、确定性与模型权重生命周期
+
+| 章 | 学习问题 | Figure A | Figure B | 交互 / CPU 实验 |
+|---|---|---|---|---|
+| 26 | JSON Schema 如何编译为 grammar state 与逐 token mask？ | request → compiler/cache → matcher → bitmask → sampler | context-independent / context-dependent vocabulary 与 persistent stack | XGrammar / Outlines / Llguidance；grammar_mask.py |
+| 27 | 不同模型 tool-call serialization 如何归一化并流式返回？ | model protocol → detector registry → ToolCallItem → SSE → client | partial marker / JSON buffer / incremental parser state machine | non-stream / stream / client executor；tool_parser.py |
+| 28 | 动态 Batch 为什么影响 logits，如何复现同一请求？ | batch shape → reduction tree → float32 rounding | request seed → batch-invariant ops → stable logits | batch / cache / sampler verification；deterministic_inference.py |
+| 29 | 如何根据接受长度与 Batch Size 选择 EAGLE speculative steps？ | batch slot → draft/verify → EMA/hysteresis feedback | prebuilt step-1/3/5 runtime state and graph swap | small / large / stable workload；adaptive_spec.py |
+| 30 | Checkpoint shards 如何跨节点进入 SGLang Ready 状态？ | loader workers → Parameter Server → Broadcast/P2P → inference ranks | dummy init → IPC → post-load → rank barrier → Ready | broadcast / p2p / all；checkpoint_engine.py |
+
+关键不变量：grammar mask 只约束结构，不保证语义；Tool Parser 只规范化协议，不执行工具；temperature=0 不代表跨 batch 的 logits 完全一致；adaptive speculative 当前支持范围受 EAGLE/EAGLE3 与 topk=1 限制；Checkpoint Engine admin endpoint 必须保护，Ready 需要真实权重与 post-load 全部完成。
