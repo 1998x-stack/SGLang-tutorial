@@ -1,0 +1,43 @@
+{
+  "article": "04.html",
+  "source_revision": "0a8693fbe3a2e46ccc06470a461a2b85865672fd",
+  "review_date": "2026-11-23",
+  "claims": [
+    {
+      "id": "frontend",
+      "claim": "SGLang front-end supports function/gen/fork and multi-turn programs",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/0a8693fbe3a2e46ccc06470a461a2b85865672fd/docs/docs/references/frontend/frontend_tutorial.mdx",
+      "locator": "Basic Usage / Parallelism",
+      "status": "verified",
+      "notes": "Recheck when upstream revision changes"
+    },
+    {
+      "id": "paper",
+      "claim": "Original SGLang paper links frontend language and runtime prefix reuse",
+      "kind": "paper",
+      "source_url": "https://arxiv.org/abs/2312.07104",
+      "locator": "abstract and design",
+      "status": "verified",
+      "notes": "Recheck when upstream revision changes"
+    },
+    {
+      "id": "grammar",
+      "claim": "Runtime supports constrained decoding; frontend tutorial includes regex constraints",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/0a8693fbe3a2e46ccc06470a461a2b85865672fd/docs/docs/references/frontend/frontend_tutorial.mdx",
+      "locator": "Constrained Decoding",
+      "status": "verified",
+      "notes": "Recheck when upstream revision changes"
+    },
+    {
+      "id": "fsm-toy",
+      "claim": "Three-state character example is illustrative, not actual tokenizer or grammar backend",
+      "kind": "illustrative",
+      "source_url": "https://arxiv.org/abs/2312.07104",
+      "locator": "conceptual state machine",
+      "status": "illustrative",
+      "notes": "Toy explanation, no performance claim"
+    }
+  ]
+}

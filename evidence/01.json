@@ -1,0 +1,43 @@
+{
+  "article": "01.html",
+  "source_revision": "0a8693fbe3a2e46ccc06470a461a2b85865672fd",
+  "review_date": "2026-11-23",
+  "claims": [
+    {
+      "id": "prefill-decode",
+      "claim": "Prefill builds history K/V; decoding reuses historical K/V rather than recomputing every historical projection",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/0a8693fbe3a2e46ccc06470a461a2b85865672fd/python/sglang/srt/managers/scheduler.py",
+      "locator": "runtime request lifecycle",
+      "status": "verified",
+      "notes": "Pin upstream SHA before asserting implementation-specific behavior"
+    },
+    {
+      "id": "kv-formula",
+      "claim": "Standard MHA/GQA KV memory estimate uses layers, KV heads, head dimension, bytes and token count",
+      "kind": "derived",
+      "source_url": "https://arxiv.org/abs/1706.03762",
+      "locator": "attention K/V shapes, additional GQA assumptions disclosed",
+      "status": "derived",
+      "notes": "Pin upstream SHA before asserting implementation-specific behavior"
+    },
+    {
+      "id": "example-one-gib",
+      "claim": "For assumed 32 layers, 8 KV heads, dim128, 8192 tokens, FP16, theoretical KV = 1 GiB",
+      "kind": "derived",
+      "source_url": "https://arxiv.org/abs/1706.03762",
+      "locator": "arithmetic with explicitly stated assumptions",
+      "status": "derived",
+      "notes": "Pin upstream SHA before asserting implementation-specific behavior"
+    },
+    {
+      "id": "token-timing",
+      "claim": "TTFT and ITL refer to different timestamp boundaries",
+      "kind": "implementation",
+      "source_url": "https://docs.sglang.io/",
+      "locator": "runtime and benchmark semantics; avoid claiming fixed default",
+      "status": "verified",
+      "notes": "Pin upstream SHA before asserting implementation-specific behavior"
+    }
+  ]
+}

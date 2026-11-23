@@ -1,0 +1,43 @@
+{
+  "article": "02.html",
+  "source_revision": "0a8693fbe3a2e46ccc06470a461a2b85865672fd",
+  "review_date": "2026-11-23",
+  "claims": [
+    {
+      "id": "radix-paper",
+      "claim": "SGLang paper describes radix-tree KV caching for cross-request prefix reuse",
+      "kind": "paper",
+      "source_url": "https://arxiv.org/abs/2312.07104",
+      "locator": "RadixAttention / runtime design",
+      "status": "verified",
+      "notes": "Pin upstream SHA before asserting implementation-specific behavior"
+    },
+    {
+      "id": "key-fields",
+      "claim": "RadixKey includes token_ids, extra_key and cache_salt with compatibility checks",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/0a8693fbe3a2e46ccc06470a461a2b85865672fd/python/sglang/srt/mem_cache/radix_cache.py",
+      "locator": "RadixKey.__slots__ and _check_compatible",
+      "status": "verified",
+      "notes": "Pin upstream SHA before asserting implementation-specific behavior"
+    },
+    {
+      "id": "alignment",
+      "claim": "RadixKey exposes page_aligned and matched prefix logic",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/0a8693fbe3a2e46ccc06470a461a2b85865672fd/python/sglang/srt/mem_cache/radix_cache.py",
+      "locator": "RadixKey.page_aligned and match",
+      "status": "verified",
+      "notes": "Pin upstream SHA before asserting implementation-specific behavior"
+    },
+    {
+      "id": "toy-lcp",
+      "claim": "The toy example A/B shares exactly three prefix IDs",
+      "kind": "illustrative",
+      "source_url": "https://github.com/sgl-project/sglang/blob/0a8693fbe3a2e46ccc06470a461a2b85865672fd/python/sglang/srt/mem_cache/radix_cache.py",
+      "locator": "independently calculated token arrays",
+      "status": "illustrative",
+      "notes": "Toy example, not a GPU measurement"
+    }
+  ]
+}

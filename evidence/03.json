@@ -1,0 +1,43 @@
+{
+  "article": "03.html",
+  "source_revision": "0a8693fbe3a2e46ccc06470a461a2b85865672fd",
+  "review_date": "2026-11-23",
+  "claims": [
+    {
+      "id": "batch-dynamics",
+      "claim": "Online scheduling may vary the active request set across iterations",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/0a8693fbe3a2e46ccc06470a461a2b85865672fd/python/sglang/srt/managers/scheduler.py",
+      "locator": "Scheduler batching and request lifecycle",
+      "status": "verified",
+      "notes": "Pin upstream SHA before asserting implementation-specific behavior"
+    },
+    {
+      "id": "cpu-overlap",
+      "claim": "SGLang scheduler includes overlap scheduling path",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/0a8693fbe3a2e46ccc06470a461a2b85865672fd/python/sglang/srt/managers/scheduler.py",
+      "locator": "overlap event loop and configuration-dependent execution",
+      "status": "verified",
+      "notes": "Pin upstream SHA before asserting implementation-specific behavior"
+    },
+    {
+      "id": "timeline",
+      "claim": "A B C timeline is conceptual, not an observed trace",
+      "kind": "illustrative",
+      "source_url": "https://github.com/sgl-project/sglang/blob/0a8693fbe3a2e46ccc06470a461a2b85865672fd/python/sglang/srt/managers/scheduler.py",
+      "locator": "constructed educational example",
+      "status": "illustrative",
+      "notes": "Toy example, not a GPU measurement"
+    },
+    {
+      "id": "batch-budget",
+      "claim": "Actual admission depends on token budget and cache resource constraints",
+      "kind": "implementation",
+      "source_url": "https://github.com/sgl-project/sglang/blob/0a8693fbe3a2e46ccc06470a461a2b85865672fd/python/sglang/srt/managers/scheduler.py",
+      "locator": "scheduler batch decisions",
+      "status": "verified",
+      "notes": "Pin upstream SHA before asserting implementation-specific behavior"
+    }
+  ]
+}
