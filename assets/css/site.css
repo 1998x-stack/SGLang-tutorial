@@ -87,3 +87,6 @@ code{font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospac
 @media(max-width:480px){body{font-size:16px}.nav-inner{padding:11px 17px}.nav-links{gap:10px;font-size:.73rem}.home-hero{padding:40px 17px 12px}.catalog-shell{padding:0 17px}.reading{padding:25px 17px 75px}.stepper{padding:16px 14px}.outcomes{padding:18px}.course-card{padding:20px}article h2{margin-top:58px}figure.diagram{margin:28px 0}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
 @media print{body{color:#111;background:#fff;font-size:12pt}.site-nav,.toc,.step-controls,.catalog-toolbar{display:none!important}.reading{display:block;padding:0}.article-head{padding-bottom:15px}article h2{break-after:avoid;margin-top:30px}.diagram{break-inside:avoid}pre{white-space:pre-wrap;color:#111;background:#f7f7f7}.math-scroll{overflow:visible}.math-scroll math[display=block]{font-size:1rem}}
+
+/* Preserve diagram label legibility while containing horizontal scroll inside the figure. */
+@media(max-width:650px){figure.diagram{overflow-x:auto;overscroll-behavior-x:contain}figure.diagram img{width:760px;max-width:none}figure.diagram figcaption{max-width:100%;min-width:0}}
