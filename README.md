@@ -98,6 +98,11 @@ python3 examples/pd_lifecycle.py
 python3 examples/mooncake_planes.py
 python3 examples/deepep_overlap.py
 python3 examples/lora_scheduler.py
+python3 examples/weight_quantization.py
+python3 examples/kv_cache_quantization.py
+python3 examples/cuda_graph_capture.py
+python3 examples/multimodal_pipeline.py
+python3 examples/serving_metrics.py
 python3 scripts/browser_qa.py --out reports/browser-qa
 ```
 
