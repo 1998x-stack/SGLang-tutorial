@@ -66,3 +66,10 @@
 
 ## 验收
 公式定义域、维度、退化边界、例子和语义；SVG 图文一致性、标签碰撞、箭头与移动端；源码 SHA/path/symbol/line range；前置知识关系。CI artifact: reports/quality-audit.json、browser-qa/svg-geometry.json。未逐个联网核验所有历史证据 URL，未逐像素人工核看110张图，未执行真实 GPU、集群或存储实验。
+
+
+## P0 deep review (01–10)
+
+- All ten article sections and 20 SVG source labels/arrows read. Historical code files and symbol locations reviewed; paper abstracts cross-checked, without claiming full PDF reread. Six SVGs adjusted, including first-token lifecycle and PD control/data separation. Actual screenshots and full QA pending CI.
+- Core mathematical boundaries: cached payload, lookup cap vs forward reuse, grammar support mass, non-overlap PD accounting, page indices, split vs insert, root sentinel, alignment and zero progress, masked online softmax, speculative conservation. Added five regression tests and strengthened existing CPU online-softmax demo.
+- Read evidence records and pinned source paths. Exact per-claim recheck status tracked in P0 review record; no GPU benchmark claimed.

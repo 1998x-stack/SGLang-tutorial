@@ -656,5 +656,46 @@ class EleventhBatchTest(unittest.TestCase):
         from object_streaming_budget import selftest
         selftest()
 
+
+class P0CoreSemanticTests(unittest.TestCase):
+    def test_kv_payload(self):
+        self.assertEqual(2*32*8*128*8192*2, 2**30)
+
+    def test_prefix_lookup_is_not_reusable_forward(self):
+        # Ordinary generation at pinned revision: retain last input position.
+        for n,p,lcp,expected in [(5,1,5,4),(5,4,5,4),(8,4,8,4),(1,4,1,0)]:
+            self.assertEqual(min(lcp,max(n-1,0))//p*p,expected)
+
+    def test_grammar_mass(self):
+        from fractions import Fraction as F
+        p=[F(1,2),F(3,10),F(1,5)]
+        mass=p[0]+p[2]
+        self.assertEqual([p[0]/mass,F(0),p[2]/mass],[F(5,7),F(0),F(2,7)])
+        self.assertEqual(sum([p[0]/mass,p[2]/mass]),1)
+
+    def test_online_softmax_masked_tiles(self):
+        from math import inf,isclose
+        from online_softmax import online_weighted_sum,full_weighted_sum
+        scores=[-inf,-inf,1000,999,-inf];values=[99,99,2,4,99]
+        expected=full_weighted_sum(scores,values)
+        for tile in (1,2,3,5):
+            self.assertTrue(isclose(online_weighted_sum(scores,values,tile),expected,rel_tol=1e-12))
+        for bad in ([-inf,-inf],[inf,0],[float("nan"),0]):
+            with self.assertRaises(ValueError):
+                online_weighted_sum(bad,[1,2])
+        with self.assertRaises(ValueError):
+            online_weighted_sum([1],[2],0)
+
+    def test_speculative_probability_conservation(self):
+        from fractions import Fraction as F
+        p=(F(3,5),F(2,5));q=(F(2,5),F(3,5))
+        accepted=[min(a,b) for a,b in zip(p,q)]
+        residual=[max(a-b,F(0)) for a,b in zip(p,q)]
+        z=1-sum(accepted)
+        self.assertEqual(sum(residual),z)
+        self.assertEqual(tuple(a+b for a,b in zip(accepted,residual)),p)
+        self.assertEqual(z,F(1,5))
+        self.assertEqual(sum(max(a-b,F(0)) for a,b in zip(p,p)),0)
+
 if __name__ == "__main__":
     unittest.main()
