@@ -1,0 +1,55 @@
+{
+  "article": "39.html",
+  "source_revision": "b1ef3a60797aa6c29bcfa4cc3bc135dd2f19ec22",
+  "claims": [
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b1ef3a60797aa6c29bcfa4cc3bc135dd2f19ec22/docs/docs/advanced_features/unified_memory.mdx",
+      "locator": "What changes / Sub-pools and bands",
+      "claim": "Unified memory uses one device arena with runtime-resizable bands; virtual IDs decouple request rows from physical pages.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b1ef3a60797aa6c29bcfa4cc3bc135dd2f19ec22/docs/docs/advanced_features/unified_memory_design.mdx",
+      "locator": "From declarations to an arena / Ids",
+      "claim": "Layer declarations, storage plan, sizing and build establish sub-pools, request table and virtual-to-physical maps.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b1ef3a60797aa6c29bcfa4cc3bc135dd2f19ec22/docs/docs/advanced_features/unified_memory_design.mdx",
+      "locator": "Capacity and admission / Allocation",
+      "claim": "Concrete vector demand is tested on host-side snapshots; NO_MOVE, FLUSH_ENDS, RELAYOUT differ in rearrangement cost.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b1ef3a60797aa6c29bcfa4cc3bc135dd2f19ec22/python/sglang/srt/mem_cache/kv/alloc/chain.py#L518-L567",
+      "locator": "ChainAllocator.pricing_snapshot / plan_in_place",
+      "claim": "Allocator snapshots and in-place plans separate admission reasoning from physical allocation.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b1ef3a60797aa6c29bcfa4cc3bc135dd2f19ec22/python/sglang/srt/mem_cache/kv/alloc/page_usage.py#L44-L120",
+      "locator": "Consumer / Hazard / CLEARANCE",
+      "claim": "Page reuse hazards distinguish forward, copy, network and fixed rows; ordering depends on consumer.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b1ef3a60797aa6c29bcfa4cc3bc135dd2f19ec22/docs/docs/advanced_features/unified_memory.mdx",
+      "locator": "Supported models",
+      "claim": "Feature is limited to supported hybrid models and audited layouts/backends; not plain full-only attention or DeepSeek V4.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b1ef3a60797aa6c29bcfa4cc3bc135dd2f19ec22/docs/docs/advanced_features/unified_memory.mdx",
+      "locator": "Teaching derivation in article; see numbered sections and CPU lab",
+      "claim": "The numerical toy example uses explicit simplified assumptions and is not a production benchmark.",
+      "kind": "derivation",
+      "status": "derived"
+    }
+  ]
+}

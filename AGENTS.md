@@ -94,3 +94,12 @@ python3 examples/prefix_match.py
 - Paged Experts：逻辑 expert ID 与物理 slot 分开，wave 不可重复或漏算 routed entry；原始 gate weights 不在 wave 内重新归一化。K 与 KV 预算竞争；tokens×top_k≤K 是有界 graph 路径的充分条件。
 - RL：行为 logprob 与采样语义及 token mask 对齐；weight_versions 为 output 半开区间，prefill attribution 独立。pause/refit/resume 区分 abort/retract/in_place；更新返回失败不保证权重回滚。Admin endpoints 不暴露凭证。确定性不等于训练推理一致。
 - 固定上游 75ed36d976113c693f8e6f64925e119573a93fda；新增 5 个 CPU toy labs、10 SVG、5 evidence。回归 35 章、70 SVG、35 evidence、36 filters、144 browser views、30 labs。CI 通过后方合并；独立验证 Pages；未执行的检查不得声称通过。
+
+
+## 第八批专属工程约束（36–40）
+- PCP：zigzag 每请求重启 2C blocks；interleave 按 flattened new-token index，保留请求内 position 和 causal extent。区分 query layout、KV page ownership、DSA LayerSplit、DCP 与 TP/DP/EP。
+- DCP：virtual v → owner=v mod c、physical=floor(v/c)；LSE merge 使用 backend 对应指数底，空 shard 权重 0，不能平均局部 softmax。DCP 必须嵌套 attention TP replica，KDA state 不因此扩容。
+- Session cache：session_id 不重建 prompt；引用为软保护非 pin，close 取消引用不删除 KV；Full 与 SWA/Mamba 淘汰规则及 cascade 分开，拒绝旧 generation 的迟到注册。
+- Unified Memory：共享 arena 不是 CUDA UVM；区分 virtual/physical ID、vector demand、capacity estimate 和可达布局。Pending、network、fixed page 的 hazard clearance 必须先满足；PP 各 stage 共同可行。具体支持组合见 pinned docs。
+- RAC：prompt + dense on-policy decode calibration 与 pruning solver 分离；不能把权重剪枝等同于生成 token 剪枝或 RL。比较 accuracy、completion length、wall clock；toy 不是 SparseGPT benchmark。
+- 固定上游 b1ef3a60797aa6c29bcfa4cc3bc135dd2f19ec22，历史 claims 不重写。40 章、80 SVG、40 evidence、41 filters、35 CPU labs、164 browser views。所有 QA 未执行时标 not verified；CI 通过后合并并检查 Pages。

@@ -1,0 +1,48 @@
+{
+  "article": "36.html",
+  "source_revision": "b1ef3a60797aa6c29bcfa4cc3bc135dd2f19ec22",
+  "claims": [
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b1ef3a60797aa6c29bcfa4cc3bc135dd2f19ec22/docs/docs/advanced_features/prefill_cp.mdx",
+      "locator": "Strategy interface / Zigzag strategy",
+      "claim": "ContextParallelStrategy separates layout policy from execution; zigzag splits each request into 2C blocks and assigns paired early/late blocks.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b1ef3a60797aa6c29bcfa4cc3bc135dd2f19ec22/docs/docs/advanced_features/prefill_cp.mdx",
+      "locator": "Interleave strategy / Attention backend integration",
+      "claim": "Interleave uses flattened new-token indices across the batch; positions and request boundaries remain intact.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b1ef3a60797aa6c29bcfa4cc3bc135dd2f19ec22/python/sglang/srt/layers/cp/zigzag.py#L215-L410",
+      "locator": "ZigzagCPStrategy.build_metadata / shard / gather",
+      "claim": "Zigzag builds per-forward metadata and provides separate shard and gather operations.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b1ef3a60797aa6c29bcfa4cc3bc135dd2f19ec22/python/sglang/srt/layers/cp/interleave.py#L190-L291",
+      "locator": "InterleaveCPStrategy.build_metadata / shard_per_request",
+      "claim": "Interleave exposes per-request sharding and gather operations.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b1ef3a60797aa6c29bcfa4cc3bc135dd2f19ec22/docs/docs/advanced_features/prefill_cp.mdx",
+      "locator": "Compositions",
+      "claim": "PCP may compose with supported TP, EP, PP, graph and PD configurations; DSA LayerSplit is a separate cache ownership strategy.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b1ef3a60797aa6c29bcfa4cc3bc135dd2f19ec22/docs/docs/advanced_features/prefill_cp.mdx",
+      "locator": "Teaching derivation in article; see numbered sections and CPU lab",
+      "claim": "The numerical toy example uses explicit simplified assumptions and is not a production benchmark.",
+      "kind": "derivation",
+      "status": "derived"
+    }
+  ]
+}

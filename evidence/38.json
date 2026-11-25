@@ -1,0 +1,48 @@
+{
+  "article": "38.html",
+  "source_revision": "b1ef3a60797aa6c29bcfa4cc3bc135dd2f19ec22",
+  "claims": [
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b1ef3a60797aa6c29bcfa4cc3bc135dd2f19ec22/docs/docs/advanced_features/session_radix_cache.mdx",
+      "locator": "Enable the cache / Pass and close the session",
+      "claim": "Session-aware radix works only with UnifiedRadixCache; session_id labels cache references, not conversation reconstruction.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b1ef3a60797aa6c29bcfa4cc3bc135dd2f19ec22/docs/docs/advanced_features/session_radix_cache.mdx",
+      "locator": "Eviction behavior",
+      "claim": "Full attention eviction prioritizes unreferenced nodes then fewer session refs then configured policy; SWA and Mamba use two passes.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b1ef3a60797aa6c29bcfa4cc3bc135dd2f19ec22/docs/docs/advanced_features/session_radix_cache.mdx",
+      "locator": "Eviction behavior / cascade",
+      "claim": "Internal Full eviction cascades to SWA and Mamba; SWA eviction cascades to Mamba; leaf eviction removes all components.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b1ef3a60797aa6c29bcfa4cc3bc135dd2f19ec22/python/sglang/srt/mem_cache/unified_cache/session_ref_tracker.py#L50-L81",
+      "locator": "UnifiedSessionRefTracker.register_session_ref",
+      "claim": "Finished request leaf registration checks session generation and ignores stale or closed sessions.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b1ef3a60797aa6c29bcfa4cc3bc135dd2f19ec22/python/sglang/srt/mem_cache/unified_cache/session_ref_tracker.py#L83-L122",
+      "locator": "open_radix_session / release_radix_session",
+      "claim": "Session release removes references and tracks closed IDs; reopening creates a new generation.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b1ef3a60797aa6c29bcfa4cc3bc135dd2f19ec22/docs/docs/advanced_features/session_radix_cache.mdx",
+      "locator": "Teaching derivation in article; see numbered sections and CPU lab",
+      "claim": "The numerical toy example uses explicit simplified assumptions and is not a production benchmark.",
+      "kind": "derivation",
+      "status": "derived"
+    }
+  ]
+}

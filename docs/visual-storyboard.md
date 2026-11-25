@@ -121,3 +121,40 @@
 - `35-rollout-data.svg`：Rollout 到 Trainer 的数据与权重回路。推理输出 token/logprob/version，reward/advantage 由训练侧添加；更新后的权重再注入 rollout engine。
 - `35-version-barrier.svg`：暂停、权重更新、缓存与版本门槛。先建立 quiescence；refit 后校验 cache/version，成功才恢复；partial rollout 的 token 版本分段。
 - 交互：单一版本 → 跨版本续跑 → 错误覆盖；CPU lab `rl_rollout_versions.py`；不以 toy 推断真实 GPU 性能。
+
+
+## 第八批故事板
+
+### 36 Prefill Context Parallelism：Zigzag 与 Interleave
+
+- `36-zigzag-work.svg`：Zigzag 的两端配对。16-token 单请求，早晚 blocks 成对分配；每 rank score 数 34。
+- `36-interleave-boundaries.svg`：Interleave 跨请求边界。A 长 5、B 长 3；flattened index 决定 rank，局部 position 不被重编号。
+- 状态选择：连续切分 → Zigzag → Interleave；实验 `prefill_cp_layout.py`。
+
+
+### 37 Decode Context Parallelism：MLA 分片与精确 LSE 合并
+
+- `37-virtual-stripe.svg`：DCP 虚拟 slot 与物理 row。8 virtual slots，DCP4，四 rank 各两行；owner=v mod 4。
+- `37-partial-merge.svg`：局部输出与全局 softmax。两个 shard 提供 output 与 LSE，通过权重归约得到全局值 8，而非平均值 6。
+- 状态选择：错误：直接平均 → 正确：LSE 合并 → 空 shard；实验 `dcp_lse_merge.py`。
+
+
+### 38 Session-Aware Radix Cache：多轮会话的软保护与淘汰
+
+- `38-session-references.svg`：Session 与可复用 leaf 的引用。A、B 引用共享路径 X；A 另有 Y，Z 属一次性流量。
+- `38-soft-eviction.svg`：淘汰优先级与压力递增。无引用优先；Full 中引用数量较少者次之；强压力时引用节点仍可能回收。
+- 状态选择：正常压力 → 高压力 → 关闭 A；实验 `session_eviction.py`。
+
+
+### 39 Unified Memory：共享 Arena、动态 Bands 与安全 Compaction
+
+- `39-arena-bands.svg`：一个 Arena 中的三条 Band。state 从低端向上，full 从高端向下，window float 居中；空白是共享余量。
+- `39-virtual-compaction.svg`：移动物理页而保持虚拟 ID。虚拟 ID 7 指向物理页 5，安全移动后改映射到页 2；仍在读取的旧页不可提前覆写。
+- 状态选择：固定池失败 → 共享 Arena → 不可移动障碍；实验 `unified_arena.py`。
+
+
+### 40 Reasoning-Aware Compression：On-policy CoT 校准与模型剪枝
+
+- `40-activation-shift.svg`：Prompt 与 Decode 激活分布改变剪枝选择。同一 W 与稀疏约束下，prompt-only 与联合校准的重建误差排序反转。
+- `40-rac-pipeline.svg`：三阶段校准、剪枝与服务评估。SGLang 生成 traces；llm-compressor 剪枝；SGLang 服务稀疏 checkpoint 后同时评估质量与延迟。
+- 状态选择：Prompt-only → Prompt + CoT → 端到端评估；实验 `rac_calibration.py`。
