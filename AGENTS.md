@@ -121,3 +121,19 @@ python3 examples/prefix_match.py
 - Reasoning：模板 hint、grammar hard budget、custom processor、parser 分层。多 token terminator、partial match、reasoning_in_grammar 交集、total output limit 分开；native require_reasoning 与 chat 参数映射须依据固定文档。
 - llm-d：SGLang scheduler 与 EPP 集群层分开；precise index 不是 KV tensor；SGLang reference dedicated render pool；区分 community 与 validated，不能移用 vLLM 实测。固定 llm-d 9059ad4050a3e1713d14b954685dac87cfe932cc 推荐 KEDA+EPP，WVA deprecated；不声称真实集群已部署。
 - 固定 SGLang b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7；50 章、100 SVG、50 evidence、51 filters、45 CPU labs、204 browser views。CI 通过方合并，独立验证 Pages；未执行检查如实标记。
+
+
+## 第十一批专属工程约束（51–55）
+- Kernel：固定快照统一 sglang.kernels，历史 jit_kernel 不重写旧证据；AOT/JIT、registry/selector、FFI、stream、dtype/stride、尾部 guard 分开。
+- Boundary：token rows 与 sum group 分开，exactly-once completion 与 residual update，EP A2A 属 compute。opaque handle 不作为普通 tensor。
+- Checkpoints：共同可用 state/KV boundary；level2/3 与 SWA 例外；软 cap 不等于 slot 上限，CoW 与 host-backup 单独核对。
+- HiCache attach/detach：strict idle + admin；DP partial success 无自动 rollback；drain→stop→release→drain；失败保留 bookkeeping；detach 不删远端数据。
+- Object storage：metadata 与 weight URI 分离；streamer buffer 非全局峰值，distributed world 与 stage-local fallback 分开；不泄露凭证。
+- 固定上游 0fde0356cc44bca9a7727a3a2e2c2d10cd5bd30f；55 章、110 SVG、55 evidence、56 filters、50 CPU labs、224 browser views；通过 CI 后再合并与验证 Pages。
+
+
+## 55 章质量治理
+- assets/course-graph.json 是结构化 DAG；site.js 内嵌镜像由 audit 检查。8 一级领域、55 细分专题、全部，共64 filters。
+- 公式需明确量纲、定义域、假设、边界和数值；SVG 箭头实际长度、文字边界、图文一致性分别检查；流程 MathML 不冒充推导。
+- 保留历史 SHA，迁移单独补充。每个 claim 的 path/symbol/line 必须复核，自动清单不代表语义通过。
+- CI 输出 reports/quality-audit.json 与 browser-qa/svg-geometry.json；结构与零长度箭头阻断，bbox 越界和移动来源进入审阅队列。详见 docs/quality-audit.md。

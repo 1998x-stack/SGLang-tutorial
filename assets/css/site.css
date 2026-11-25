@@ -119,3 +119,5 @@ article a{overflow-wrap:anywhere}
 @media(max-width:940px){
   .reading article{overflow-x:clip}
 }
+
+.domain-filters,.topic-filters{flex:1 1 100%;min-width:0}.domain-filters,.topic-filters>div{display:flex;flex-wrap:wrap;gap:8px}.topic-filters{border:1px solid var(--faint);border-radius:10px;padding:10px 12px;background:#fff}.topic-filters summary{cursor:pointer;color:var(--teal);font-size:.88rem;font-weight:600}.topic-filters>div{margin-top:12px}.knowledge-links{border:1px solid var(--faint);border-radius:12px;padding:16px 20px;background:#f6f9f8;margin:36px 0 20px;overflow-wrap:anywhere}.knowledge-links h2{font-size:1.05rem;margin:0 0 10px}.knowledge-links p{font-size:.87rem;line-height:1.8;margin:8px 0}.knowledge-links a:focus-visible,.chip:focus-visible,.topic-filters summary:focus-visible{outline:3px solid var(--teal);outline-offset:3px}

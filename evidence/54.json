@@ -1,0 +1,41 @@
+{
+  "article": "54.html",
+  "source_revision": "0fde0356cc44bca9a7727a3a2e2c2d10cd5bd30f",
+  "claims": [
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/0fde0356cc44bca9a7727a3a2e2c2d10cd5bd30f/docs/docs/advanced_features/hicache_storage_runtime_attach_detach.mdx",
+      "locator": "Architecture / Idle-state requirement",
+      "claim": "Runtime attach/detach requires strict idle and admin authorization.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/0fde0356cc44bca9a7727a3a2e2c2d10cd5bd30f/docs/docs/advanced_features/hicache_storage_runtime_attach_detach.mdx",
+      "locator": "DP semantics",
+      "claim": "All DP responses aggregate; partial success is possible and automatic cross-rank rollback is absent.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/0fde0356cc44bca9a7727a3a2e2c2d10cd5bd30f/python/sglang/srt/mem_cache/unified_cache/storage_attachment.py#L49-L207",
+      "locator": "StorageAttachment.attach",
+      "claim": "Attach creates/configures the storage attachment.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/0fde0356cc44bca9a7727a3a2e2c2d10cd5bd30f/python/sglang/srt/mem_cache/unified_cache/storage_attachment.py#L208-L250",
+      "locator": "StorageAttachment.detach",
+      "claim": "Drain control queues, stop threads, release pending operations, drain again; thread-stop failure preserves bookkeeping.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/0fde0356cc44bca9a7727a3a2e2c2d10cd5bd30f/docs/docs/advanced_features/hicache_storage_runtime_attach_detach.mdx",
+      "locator": "Teaching example and CPU lab",
+      "claim": "All numerical examples are derived teaching abstractions, not measured GPU or cluster performance.",
+      "kind": "derivation",
+      "status": "derived"
+    }
+  ]
+}

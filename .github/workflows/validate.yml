@@ -24,6 +24,8 @@ jobs:
           python-version: "3.12"
       - name: Offline test suite
         run: python3 -m unittest discover -s tests -v
+      - name: Full repository quality inventory
+        run: python3 scripts/quality_audit.py --out reports/quality-audit.json
       - name: CPU-only reproducible examples
         run: |
           python3 examples/prefix_match.py
@@ -71,6 +73,11 @@ jobs:
           python3 examples/streaming_detokenize.py
           python3 examples/reasoning_budget.py
           python3 examples/fleet_routing.py
+          python3 examples/kernel_contract.py
+          python3 examples/layer_boundary_contract.py
+          python3 examples/hybrid_checkpoint_reuse.py
+          python3 examples/storage_lifecycle.py
+          python3 examples/object_streaming_budget.py
       - name: Install Playwright Chromium
         run: |
           python3 -m pip install playwright
@@ -149,12 +156,17 @@ jobs:
           test -f _site/examples/streaming_detokenize.py
           test -f _site/examples/reasoning_budget.py
           test -f _site/examples/fleet_routing.py
+          test -f _site/examples/kernel_contract.py
+          test -f _site/examples/layer_boundary_contract.py
+          test -f _site/examples/hybrid_checkpoint_reuse.py
+          test -f _site/examples/storage_lifecycle.py
+          test -f _site/examples/object_streaming_budget.py
           test -f _site/evidence/21.json
           test -f _site/evidence/22.json
           test -f _site/evidence/23.json
           test -f _site/evidence/24.json
           test -f _site/evidence/25.json
-          for i in $(seq -w 1 50); do test -f _site/$i.html; test -f _site/evidence/$i.json; done
+          for i in $(seq -w 1 55); do test -f _site/$i.html; test -f _site/evidence/$i.json; done
       - uses: actions/upload-pages-artifact@v4
         with:
           path: _site

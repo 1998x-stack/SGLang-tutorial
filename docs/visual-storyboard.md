@@ -232,3 +232,31 @@
 - `50-fleet-path.svg`：Kubernetes 推理入口与 SGLang worker。Gateway / EPP 选择 ready worker；KV event index 反馈缓存位置。
 - `50-scaling-loop.svg`：SLO 信号驱动扩容与 Ready gate。KEDA/HPA 调整 replica；冷启动、Ready 和 drain 约束实际容量。
 - 状态选择：Warm 但拥塞 → Warm 且空闲 → Not Ready；实验 `fleet_routing.py`。
+
+
+## 第十一批故事板
+
+### 51 Unified Kernel Architecture：AOT、JIT、Registry 与 Backend Selection
+- `51-kernel-dispatch.svg`：Kernel registry 与 Python/C++ 调用链。Registry/selector 决定后端；JIT FFI wrapper 检查契约，AOT 走预编译实现。
+- `51-kernel-tail.svg`：三个 block 的尾部覆盖。block0/1 各64 active，block2 仅2 active；62 inactive threads 不能访存。
+- 64 elements → 130 elements → 0 elements；`kernel_contract.py`。
+
+### 52 Layer Boundary：布局契约、延迟归约与 Residual Stream
+- `52-layout-sums.svg`：Token rows 与 partial sum 是不同维度。同一 token row 在两 rank 上贡献2、3；完成 sum 后更新 residual。
+- `52-residual-stream.svg`：ResidualStream 状态与完成顺序。Pending → complete → fold → Written；完整 readout 不允许重复 fold。
+- Pending → Complete → Fold + read；`layer_boundary_contract.py`。
+
+### 53 Hybrid Cache Checkpoints：Level 2/3、分叉与 Recurrent State 恢复
+- `53-reuse-boundary.svg`：Full KV 与 recurrent checkpoint 边界。850 KV hit 不等于850可恢复；最近可用 state 决定恢复位置。
+- `53-checkpoint-levels.svg`：Level 2/3 的教学时间轴。fork/end 与 chunk/interval 的位置不同；真实有 SWA 例外及软 cap。
+- Level 2 → Level 3 → 状态被淘汰；`hybrid_checkpoint_reuse.py`。
+
+### 54 HiCache Dynamic Storage：运行时 Attach/Detach 与一致性门禁
+- `54-attach-control.svg`：Attach/Detach 控制面路径。Admin API fanout 后由每个 scheduler 检查 idle，再管理 L3 backend。
+- `54-detach-order.svg`：四步 detach 与失败分支。先 drain，stop threads 后再 release，最后 drain；stop 失败保留状态。
+- Busy → DP partial → Detach；`storage_lifecycle.py`。
+
+### 55 Model Object Storage：Metadata、Safetensors Streaming 与分布式 I/O
+- `55-object-weights.svg`：Metadata 与权重流式加载两阶段。配置/tokenizer 本地缓存，权重 URI 传给 streamer，named tensors 进入 model loader。
+- `55-stream-budget.svg`：并发 buffer 与固定预算。2、6、8 streams 对应512、1024、1280 MiB；1GiB 是教学预算。
+- C=2 → C=6 → C=8；`object_streaming_budget.py`。

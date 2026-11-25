@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Chromium QA for all thirty chapters at desktop, tablet and mobile widths."""
+"""Chromium QA for all chapters at desktop, tablet and mobile widths."""
 import argparse
 import json
 from pathlib import Path
@@ -7,7 +7,7 @@ from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
 WIDTHS = (1440, 768, 390, 360)
-PAGES = ["index.html"] + [f"{i:02}.html" for i in range(1, 51)]
+PAGES = ["index.html"] + [f"{i:02}.html" for i in range(1, 56)]
 
 
 def main():
@@ -80,6 +80,7 @@ def main():
                     if page.locator(".course-card:not([hidden])").count() != 1:
                         fail.append("catalog search failed")
                     search.fill("")
+                    page.locator("#topic-filters summary").click()
                     page.locator('[data-filter="kernel"]').click()
                     if page.locator(".course-card:not([hidden])").count() != 1:
                         fail.append("category filter failed")
@@ -87,13 +88,21 @@ def main():
                     if page.locator(".course-card:not([hidden])").count() != 1:
                         fail.append("Mooncake category filter failed")
                     page.locator("[data-filter='all']").click()
-                    if page.locator(".course-grid .course-card").count() != 50:
-                        fail.append("course grid must contain all 50 chapter cards")
-                    for category in ("quantization", "kv-quantization", "cuda-graph", "multimodal-pipeline", "observability", "structured-output", "tool-parser", "deterministic", "adaptive-spec", "checkpoint-engine", "hisparse", "hybrid-kv", "kv-sharing", "paged-experts", "sglang-rl", "prefill-cp", "decode-cp", "session-radix", "unified-memory", "reasoning-compression", "pipeline-runtime", "engram", "radix-eviction", "rfork", "simulator", "sampling-runtime", "model-loading", "tokenizer-stream", "reasoning-control", "llmd-kubernetes"):
+                    if page.locator(".course-grid .course-card").count() != 55:
+                        fail.append("course grid must contain all 55 chapter cards")
+                    for category in ("quantization", "kv-quantization", "cuda-graph", "multimodal-pipeline", "observability", "structured-output", "tool-parser", "deterministic", "adaptive-spec", "checkpoint-engine", "hisparse", "hybrid-kv", "kv-sharing", "paged-experts", "sglang-rl", "prefill-cp", "decode-cp", "session-radix", "unified-memory", "reasoning-compression", "pipeline-runtime", "engram", "radix-eviction", "rfork", "simulator", "sampling-runtime", "model-loading", "tokenizer-stream", "reasoning-control", "llmd-kubernetes", "kernel-architecture", "layer-boundary", "hybrid-checkpoints", "hicache-dynamic", "object-storage"):
                         page.locator(f"[data-filter='{category}']").click()
                         if page.locator(".course-card:not([hidden])").count() != 1:
                             fail.append(f"{category} category filter failed")
                     page.locator("[data-filter='all']").click()
+                    page.locator("#topic-filters summary").click()
+                    for domain, expected in [["domain-foundations",6],["domain-cache-memory",14],["domain-parallel-execution",10],["domain-model-runtime",7],["domain-kernel-systems",4],["domain-generation-control",6],["domain-weight-io",4],["domain-fleet-operations",4]]:
+                        page.locator(f"[data-filter='{domain}']").click()
+                        if page.locator(".course-card:not([hidden])").count() != expected:
+                            fail.append(f"{domain} domain filter failed")
+                    page.locator("[data-filter='all']").click()
+                if name != "index.html" and page.locator(".knowledge-links").count() != 1:
+                    fail.append("knowledge dependency panel missing")
                 fail.extend(page_errors)
                 fail.extend(f"request failed: {url}" for url in request_errors)
                 page.screenshot(path=str(out / f"{name[:-5] or 'index'}-{width}.png"), full_page=True)
@@ -101,6 +110,23 @@ def main():
                                 "images": len(shape["images"]), "math": len(shape["math"])})
                 errors.extend(f"{name}@{width}: {message}" for message in fail)
                 page.close()
+        svg_records = []
+        for path in sorted((ROOT / "assets/diagrams").glob("*.svg")):
+            page = browser.new_page(viewport={"width": 1100, "height": 700})
+            page.goto(path.as_uri(), wait_until="load")
+            info = page.evaluate("""() => {
+                const s=document.documentElement,v=s.viewBox.baseVal;
+                const outside=[...s.querySelectorAll('text')].filter(t=>{
+                    const b=t.getBBox();return b.x<v.x-1||b.y<v.y-1||b.x+b.width>v.x+v.width+1||b.y+b.height>v.y+v.height+1;
+                }).map(t=>t.textContent);
+                const degenerate=[...s.querySelectorAll('path[marker-end]')].filter(p=>{try{return p.getTotalLength()<=0}catch{return true}}).map(p=>p.getAttribute('d'));
+                return {outside,degenerate,text_nodes:s.querySelectorAll('text').length};
+            }""")
+            svg_records.append({"svg":path.name,**info})
+            if info["degenerate"]:
+                errors.append(f"{path.name}: zero-length arrow: {info['degenerate']}")
+            page.close()
+        (out / "svg-geometry.json").write_text(json.dumps(svg_records,ensure_ascii=False,indent=2)+"\n")
         browser.close()
     (out / "report.json").write_text(json.dumps(records, ensure_ascii=False, indent=2) + "\n")
     print(f"Recorded {len(records)} browser views, {len(errors)} issues; see {out}")

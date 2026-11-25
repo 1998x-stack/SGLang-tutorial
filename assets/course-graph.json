@@ -1,0 +1,716 @@
+{
+  "schema": 1,
+  "groups": [
+    {
+      "id": "foundations",
+      "label": "推理基础与服务生命周期",
+      "chapters": [
+        1,
+        3,
+        4,
+        8,
+        25,
+        48
+      ]
+    },
+    {
+      "id": "cache-memory",
+      "label": "KV Cache 与内存系统",
+      "chapters": [
+        2,
+        6,
+        7,
+        13,
+        18,
+        22,
+        31,
+        32,
+        33,
+        38,
+        39,
+        43,
+        53,
+        54
+      ]
+    },
+    {
+      "id": "parallel-execution",
+      "label": "并行与分布式执行",
+      "chapters": [
+        5,
+        11,
+        12,
+        15,
+        17,
+        19,
+        36,
+        37,
+        41,
+        52
+      ]
+    },
+    {
+      "id": "model-runtime",
+      "label": "模型与扩展运行时",
+      "chapters": [
+        14,
+        20,
+        21,
+        24,
+        34,
+        40,
+        42
+      ]
+    },
+    {
+      "id": "kernel-systems",
+      "label": "算子与 GPU 执行",
+      "chapters": [
+        9,
+        23,
+        28,
+        51
+      ]
+    },
+    {
+      "id": "generation-control",
+      "label": "生成、采样与约束",
+      "chapters": [
+        10,
+        26,
+        27,
+        29,
+        46,
+        49
+      ]
+    },
+    {
+      "id": "weight-io",
+      "label": "权重加载与存储 I/O",
+      "chapters": [
+        30,
+        44,
+        47,
+        55
+      ]
+    },
+    {
+      "id": "fleet-operations",
+      "label": "路由、RL 与集群运维",
+      "chapters": [
+        16,
+        35,
+        45,
+        50
+      ]
+    }
+  ],
+  "chapters": [
+    {
+      "n": 1,
+      "tag": "intro",
+      "title": "从请求到 token",
+      "group": "foundations",
+      "prerequisites": []
+    },
+    {
+      "n": 2,
+      "tag": "cache",
+      "title": "RadixAttention：共享前缀不是魔法",
+      "group": "cache-memory",
+      "prerequisites": [
+        1
+      ]
+    },
+    {
+      "n": 3,
+      "tag": "scheduler",
+      "title": "动态批处理与 CPU–GPU Overlap",
+      "group": "foundations",
+      "prerequisites": [
+        1
+      ]
+    },
+    {
+      "n": 4,
+      "tag": "program",
+      "title": "SGLang Frontend 与结构化生成",
+      "group": "foundations",
+      "prerequisites": [
+        1
+      ]
+    },
+    {
+      "n": 5,
+      "tag": "distributed",
+      "title": "Prefill–Decode 分离",
+      "group": "parallel-execution",
+      "prerequisites": [
+        1,
+        3
+      ]
+    },
+    {
+      "n": 6,
+      "tag": "memory",
+      "title": "KV Pool：从请求行到物理页",
+      "group": "cache-memory",
+      "prerequisites": [
+        1,
+        2
+      ]
+    },
+    {
+      "n": 7,
+      "tag": "cache-internals",
+      "title": "RadixCache：拆分、锁引用与淘汰",
+      "group": "cache-memory",
+      "prerequisites": [
+        2,
+        6
+      ]
+    },
+    {
+      "n": 8,
+      "tag": "prefill",
+      "title": "Chunked Prefill：预算驱动的长输入切片",
+      "group": "foundations",
+      "prerequisites": [
+        3,
+        6
+      ]
+    },
+    {
+      "n": 9,
+      "tag": "kernel",
+      "title": "Attention Backend：从页表到 Kernel",
+      "group": "kernel-systems",
+      "prerequisites": [
+        6,
+        8
+      ]
+    },
+    {
+      "n": 10,
+      "tag": "speculative",
+      "title": "EAGLE：Draft Tree 与 Target Verification",
+      "group": "generation-control",
+      "prerequisites": [
+        1,
+        3,
+        9
+      ]
+    },
+    {
+      "n": 11,
+      "tag": "parallelism",
+      "title": "TP、PP、DP、EP 与 Attention-DP",
+      "group": "parallel-execution",
+      "prerequisites": [
+        1,
+        5
+      ]
+    },
+    {
+      "n": 12,
+      "tag": "moe",
+      "title": "MoE Expert Parallelism 与 DeepEP",
+      "group": "parallel-execution",
+      "prerequisites": [
+        11
+      ]
+    },
+    {
+      "n": 13,
+      "tag": "hicache",
+      "title": "HiCache：GPU、Host 与 Storage",
+      "group": "cache-memory",
+      "prerequisites": [
+        6,
+        7
+      ]
+    },
+    {
+      "n": 14,
+      "tag": "lora",
+      "title": "Multi-LoRA Serving",
+      "group": "model-runtime",
+      "prerequisites": [
+        1,
+        11
+      ]
+    },
+    {
+      "n": 15,
+      "tag": "multimodal",
+      "title": "EPD：Encoder、Prefill、Decode 分离",
+      "group": "parallel-execution",
+      "prerequisites": [
+        5,
+        11
+      ]
+    },
+    {
+      "n": 16,
+      "tag": "router",
+      "title": "SGLang Router：Admission、Prefix 与 Session",
+      "group": "fleet-operations",
+      "prerequisites": [
+        2,
+        3,
+        5
+      ]
+    },
+    {
+      "n": 17,
+      "tag": "pd-lifecycle",
+      "title": "PD：Bootstrap、KV Reservation 与恢复",
+      "group": "parallel-execution",
+      "prerequisites": [
+        5,
+        6,
+        16
+      ]
+    },
+    {
+      "n": 18,
+      "tag": "mooncake",
+      "title": "Mooncake：Transfer、HiCache L3 与 Embeddings",
+      "group": "cache-memory",
+      "prerequisites": [
+        13,
+        17
+      ]
+    },
+    {
+      "n": 19,
+      "tag": "deepep-v2",
+      "title": "DeepEP V2：ElasticBuffer、Overlap 与 EPLB",
+      "group": "parallel-execution",
+      "prerequisites": [
+        11,
+        12
+      ]
+    },
+    {
+      "n": 20,
+      "tag": "lora-advanced",
+      "title": "Multi-LoRA：GPU Slots、Pinning 与 Dynamic Load",
+      "group": "model-runtime",
+      "prerequisites": [
+        14,
+        3
+      ]
+    },
+    {
+      "n": 21,
+      "tag": "quantization",
+      "title": "Weight Quantization：从 checkpoint 到 GEMM Kernel",
+      "group": "model-runtime",
+      "prerequisites": [
+        9,
+        11
+      ]
+    },
+    {
+      "n": 22,
+      "tag": "kv-quantization",
+      "title": "Quantized KV Cache：FP8、FP4 与 Attention Backend",
+      "group": "cache-memory",
+      "prerequisites": [
+        6,
+        9,
+        21
+      ]
+    },
+    {
+      "n": 23,
+      "tag": "cuda-graph",
+      "title": "CUDA Graph：Capture、Replay 与 Breakable Execution",
+      "group": "kernel-systems",
+      "prerequisites": [
+        3,
+        9
+      ]
+    },
+    {
+      "n": 24,
+      "tag": "multimodal-pipeline",
+      "title": "Multimodal Processing：Media I/O 与 Token Expansion",
+      "group": "model-runtime",
+      "prerequisites": [
+        15,
+        1
+      ]
+    },
+    {
+      "n": 25,
+      "tag": "observability",
+      "title": "Observability & Benchmarking：TTFT、TPOT 与性能剖析",
+      "group": "foundations",
+      "prerequisites": [
+        1,
+        3
+      ]
+    },
+    {
+      "n": 26,
+      "tag": "structured-output",
+      "title": "XGrammar：Structured Generation 的编译与 Token Mask",
+      "group": "generation-control",
+      "prerequisites": [
+        4,
+        9
+      ]
+    },
+    {
+      "n": 27,
+      "tag": "tool-parser",
+      "title": "Function Calling：Tool Parser 与 Streaming Protocol",
+      "group": "generation-control",
+      "prerequisites": [
+        4,
+        26
+      ]
+    },
+    {
+      "n": 28,
+      "tag": "deterministic",
+      "title": "Deterministic Inference：Batch-Invariant Kernels",
+      "group": "kernel-systems",
+      "prerequisites": [
+        9,
+        23
+      ]
+    },
+    {
+      "n": 29,
+      "tag": "adaptive-spec",
+      "title": "Adaptive Speculative Decoding：EMA 与 Runtime State",
+      "group": "generation-control",
+      "prerequisites": [
+        10,
+        23,
+        28
+      ]
+    },
+    {
+      "n": 30,
+      "tag": "checkpoint-engine",
+      "title": "Distributed Checkpoint Engine：并行加载与 IPC",
+      "group": "weight-io",
+      "prerequisites": [
+        11,
+        21
+      ]
+    },
+    {
+      "n": 31,
+      "tag": "hisparse",
+      "title": "HiSparse：从完整 Host KV 到 GPU Working Set",
+      "group": "cache-memory",
+      "prerequisites": [
+        6,
+        9,
+        13
+      ]
+    },
+    {
+      "n": 32,
+      "tag": "hybrid-kv",
+      "title": "Hybrid KV Cache：全局 KV、滑窗与循环状态",
+      "group": "cache-memory",
+      "prerequisites": [
+        6,
+        7,
+        13
+      ]
+    },
+    {
+      "n": 33,
+      "tag": "kv-sharing",
+      "title": "KV Cache Sharing：前缀复用与 CP 页分片",
+      "group": "cache-memory",
+      "prerequisites": [
+        7,
+        11,
+        13
+      ]
+    },
+    {
+      "n": 34,
+      "tag": "paged-experts",
+      "title": "Paged Experts：逻辑专家、物理槽与 Waves",
+      "group": "model-runtime",
+      "prerequisites": [
+        12,
+        21
+      ]
+    },
+    {
+      "n": 35,
+      "tag": "sglang-rl",
+      "title": "SGLang for RL：Rollout 数据、权重版本与引擎协同",
+      "group": "fleet-operations",
+      "prerequisites": [
+        10,
+        25,
+        28,
+        30
+      ]
+    },
+    {
+      "n": 36,
+      "tag": "prefill-cp",
+      "title": "Prefill Context Parallelism：Zigzag 与 Interleave",
+      "group": "parallel-execution",
+      "prerequisites": [
+        8,
+        11,
+        33
+      ]
+    },
+    {
+      "n": 37,
+      "tag": "decode-cp",
+      "title": "Decode Context Parallelism：MLA 分片与精确 LSE 合并",
+      "group": "parallel-execution",
+      "prerequisites": [
+        9,
+        11,
+        36
+      ]
+    },
+    {
+      "n": 38,
+      "tag": "session-radix",
+      "title": "Session-Aware Radix Cache：多轮会话的软保护与淘汰",
+      "group": "cache-memory",
+      "prerequisites": [
+        7,
+        13,
+        16
+      ]
+    },
+    {
+      "n": 39,
+      "tag": "unified-memory",
+      "title": "Unified Memory：共享 Arena、动态 Bands 与安全 Compaction",
+      "group": "cache-memory",
+      "prerequisites": [
+        32,
+        33,
+        38
+      ]
+    },
+    {
+      "n": 40,
+      "tag": "reasoning-compression",
+      "title": "Reasoning-Aware Compression：On-policy CoT 校准与模型剪枝",
+      "group": "model-runtime",
+      "prerequisites": [
+        21,
+        25,
+        35
+      ]
+    },
+    {
+      "n": 41,
+      "tag": "pipeline-runtime",
+      "title": "Pipeline Parallelism：Microbatch、动态 Chunking 与异步 P2P",
+      "group": "parallel-execution",
+      "prerequisites": [
+        3,
+        8,
+        11,
+        17,
+        36
+      ]
+    },
+    {
+      "n": 42,
+      "tag": "engram",
+      "title": "Engram：条件记忆表、N-gram Hash 与分布式 Lookup",
+      "group": "model-runtime",
+      "prerequisites": [
+        11,
+        21,
+        32,
+        34
+      ]
+    },
+    {
+      "n": 43,
+      "tag": "radix-eviction",
+      "title": "Radix Eviction Policies：从 LRU 到 Tail Latency 与 State Cost",
+      "group": "cache-memory",
+      "prerequisites": [
+        7,
+        13,
+        25,
+        32,
+        38,
+        39
+      ]
+    },
+    {
+      "n": 44,
+      "tag": "rfork",
+      "title": "R-Fork：Seed 实例、GPU-to-GPU 权重传输与 Ready Gate",
+      "group": "weight-io",
+      "prerequisites": [
+        17,
+        18,
+        30,
+        35
+      ]
+    },
+    {
+      "n": 45,
+      "tag": "simulator",
+      "title": "SGLang Simulator：真实调度逻辑、预测时钟与容量规划",
+      "group": "fleet-operations",
+      "prerequisites": [
+        3,
+        8,
+        13,
+        25,
+        39,
+        41
+      ]
+    },
+    {
+      "n": 46,
+      "tag": "sampling-runtime",
+      "title": "Logits Processor & Sampler：概率分布、截断与 Logprob 语义",
+      "group": "generation-control",
+      "prerequisites": [
+        9,
+        10,
+        26,
+        28,
+        35
+      ]
+    },
+    {
+      "n": 47,
+      "tag": "model-loading",
+      "title": "Model Loading：Checkpoint、Safetensors、Weight Loader 与分片",
+      "group": "weight-io",
+      "prerequisites": [
+        11,
+        21,
+        30,
+        44
+      ]
+    },
+    {
+      "n": 48,
+      "tag": "tokenizer-stream",
+      "title": "Tokenizer Manager & Detokenizer：异步分词、增量解码与流式响应",
+      "group": "foundations",
+      "prerequisites": [
+        1,
+        3,
+        24,
+        27
+      ]
+    },
+    {
+      "n": 49,
+      "tag": "reasoning-control",
+      "title": "Reasoning Control：Thinking Budget、Reasoning Parser 与 Grammar 状态",
+      "group": "generation-control",
+      "prerequisites": [
+        26,
+        27,
+        28,
+        40,
+        46,
+        48
+      ]
+    },
+    {
+      "n": 50,
+      "tag": "llmd-kubernetes",
+      "title": "SGLang × Kubernetes / llm-d：集群级推理调度与弹性部署",
+      "group": "fleet-operations",
+      "prerequisites": [
+        5,
+        13,
+        16,
+        17,
+        25,
+        38,
+        44,
+        45
+      ]
+    },
+    {
+      "n": 51,
+      "tag": "kernel-architecture",
+      "title": "Unified Kernel Architecture：AOT、JIT、Registry 与 Backend Selection",
+      "group": "kernel-systems",
+      "prerequisites": [
+        9,
+        21,
+        23,
+        28,
+        46
+      ]
+    },
+    {
+      "n": 52,
+      "tag": "layer-boundary",
+      "title": "Layer Boundary：布局契约、延迟归约与 Residual Stream",
+      "group": "parallel-execution",
+      "prerequisites": [
+        11,
+        12,
+        19,
+        36,
+        37,
+        41
+      ]
+    },
+    {
+      "n": 53,
+      "tag": "hybrid-checkpoints",
+      "title": "Hybrid Cache Checkpoints：Level 2/3、分叉与 Recurrent State 恢复",
+      "group": "cache-memory",
+      "prerequisites": [
+        7,
+        13,
+        32,
+        38,
+        39,
+        43
+      ]
+    },
+    {
+      "n": 54,
+      "tag": "hicache-dynamic",
+      "title": "HiCache Dynamic Storage：运行时 Attach/Detach 与一致性门禁",
+      "group": "cache-memory",
+      "prerequisites": [
+        13,
+        18,
+        38,
+        39,
+        50
+      ]
+    },
+    {
+      "n": 55,
+      "tag": "object-storage",
+      "title": "Model Object Storage：Metadata、Safetensors Streaming 与分布式 I/O",
+      "group": "weight-io",
+      "prerequisites": [
+        30,
+        44,
+        47,
+        50
+      ]
+    }
+  ]
+}
