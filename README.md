@@ -265,3 +265,6 @@ python3 examples/checkpoint_engine.py
 ## 质量治理与学习地图
 
 [逐章审计](docs/quality-audit.md) · [课程依赖图](assets/course-graph.json)。55章归入8个一级领域；55细分专题默认折叠。64 filters。CI 自动生成结构、证据、SVG 几何和依赖报告；完整语义/硬件验证独立记录。
+
+
+P0 基础章深审：[01–10 验收与证据复核记录](docs/p0-core-review.md)。

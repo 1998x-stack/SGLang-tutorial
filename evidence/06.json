@@ -1,25 +1,33 @@
 {
   "article": "06.html",
   "source_revision": "6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd",
-  "review_date": "2026-11-23",
+  "review_date": "2026-11-25",
   "claims": [
     {
       "id": "request-row",
       "claim": "ReqToTokenPool stores a request-to-token location table with request rows and token-position columns",
       "kind": "implementation",
-      "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/mem_cache/memory_pool.py#L382-L435",
-      "locator": "ReqToTokenPool.__init__/alloc/write",
+      "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/mem_cache/memory_pool.py#L382-L478",
+      "locator": "ReqToTokenPool allocation, write and row ownership",
       "status": "verified",
-      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+      "notes": "Pinned source snapshot; recheck when upstream revision changes",
+      "p0_review": {
+        "scope": "pinned source file and cited symbol/line locator reopened",
+        "date": "2026-11-25"
+      }
     },
     {
       "id": "allocator",
       "claim": "PagedTokenToKVPoolAllocator allocates page-aligned slot indices by expanding page IDs",
       "kind": "implementation",
-      "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/mem_cache/allocator/paged.py#L133-L219",
-      "locator": "alloc / alloc_extend",
+      "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/mem_cache/allocator/paged.py#L185-L292",
+      "locator": "merge_and_sort_free / alloc / alloc_extend",
       "status": "verified",
-      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+      "notes": "Pinned source snapshot; recheck when upstream revision changes",
+      "p0_review": {
+        "scope": "pinned source file and cited symbol/line locator reopened",
+        "date": "2026-11-25"
+      }
     },
     {
       "id": "decode",
@@ -28,16 +36,24 @@
       "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/mem_cache/allocator/paged.py#L293-L365",
       "locator": "alloc_decode",
       "status": "verified",
-      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+      "notes": "Pinned source snapshot; recheck when upstream revision changes",
+      "p0_review": {
+        "scope": "pinned source file and cited symbol/line locator reopened",
+        "date": "2026-11-25"
+      }
     },
     {
       "id": "staged-free",
       "claim": "Freed pages may be staged and guarded before reuse",
       "kind": "implementation",
       "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/mem_cache/allocator/paged.py#L365-L465",
-      "locator": "free / _release_page_ids / reuse guard",
+      "locator": "free / _release_page_ids; merge_and_sort_free L185–194 waits staged guard",
       "status": "verified",
-      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+      "notes": "Pinned source snapshot; recheck when upstream revision changes",
+      "p0_review": {
+        "scope": "pinned source file and cited symbol/line locator reopened",
+        "date": "2026-11-25"
+      }
     },
     {
       "id": "page-formula",
@@ -46,7 +62,11 @@
       "source_url": "https://arxiv.org/abs/2309.06180",
       "locator": "paged slot arithmetic; explicit teaching model",
       "status": "derived",
-      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+      "notes": "Pinned source snapshot; recheck when upstream revision changes",
+      "p0_review": {
+        "scope": "teaching derivation/example; not runtime measurement",
+        "date": "2026-11-25"
+      }
     },
     {
       "id": "mha-layout",
@@ -55,7 +75,12 @@
       "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/mem_cache/memory_pool.py#L2282-L2533",
       "locator": "MHATokenToKVPool initialization and _create_buffers",
       "status": "verified",
-      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+      "notes": "Pinned source snapshot; recheck when upstream revision changes",
+      "p0_review": {
+        "scope": "pinned source file and cited symbol/line locator reopened",
+        "date": "2026-11-25"
+      }
     }
-  ]
+  ],
+  "review_scope": "P0: article and evidence ledger read, pinned implementation files reopened; exact locator ranges checked or refined. External arXiv title/abstract and pinned docs cross-checked, not a full PDF re-review. Teaching claims independently reasoned or tested in CPU CI."
 }

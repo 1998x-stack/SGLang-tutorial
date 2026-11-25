@@ -1,7 +1,7 @@
 {
   "article": "08.html",
   "source_revision": "6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd",
-  "review_date": "2026-11-23",
+  "review_date": "2026-11-25",
   "claims": [
     {
       "id": "chunk-budget",
@@ -10,16 +10,24 @@
       "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/managers/schedule_policy.py#L1075-L1200",
       "locator": "PrefillAdder initialization",
       "status": "verified",
-      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+      "notes": "Pinned source snapshot; recheck when upstream revision changes",
+      "p0_review": {
+        "scope": "pinned source file and cited symbol/line locator reopened",
+        "date": "2026-11-25"
+      }
     },
     {
       "id": "chunk-continuation",
       "claim": "_add_chunked_req computes available chunk tokens, fits memory, aligns and records continuation",
       "kind": "implementation",
-      "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/managers/schedule_policy.py#L1735-L1868",
-      "locator": "_add_chunked_req",
+      "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/managers/schedule_policy.py#L1743-L1868",
+      "locator": "_add_chunked_req / available_chunk_tokens / fit_chunk",
       "status": "verified",
-      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+      "notes": "Pinned source snapshot; recheck when upstream revision changes",
+      "p0_review": {
+        "scope": "pinned source file and cited symbol/line locator reopened",
+        "date": "2026-11-25"
+      }
     },
     {
       "id": "mixed-batch",
@@ -28,7 +36,11 @@
       "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/managers/schedule_batch.py#L2834-L2925",
       "locator": "mix_with_running",
       "status": "verified",
-      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+      "notes": "Pinned source snapshot; recheck when upstream revision changes",
+      "p0_review": {
+        "scope": "pinned source file and cited symbol/line locator reopened",
+        "date": "2026-11-25"
+      }
     },
     {
       "id": "scheduler-stash",
@@ -37,7 +49,11 @@
       "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/managers/scheduler.py#L4241-L4525",
       "locator": "chunked_req / stash / get_next_batch_to_run",
       "status": "verified",
-      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+      "notes": "Pinned source snapshot; recheck when upstream revision changes",
+      "p0_review": {
+        "scope": "pinned source file and cited symbol/line locator reopened",
+        "date": "2026-11-25"
+      }
     },
     {
       "id": "multimodal-guard",
@@ -46,7 +62,11 @@
       "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/managers/scheduler.py#L1457-L1486",
       "locator": "init_chunked_prefill",
       "status": "verified",
-      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+      "notes": "Pinned source snapshot; recheck when upstream revision changes",
+      "p0_review": {
+        "scope": "pinned source file and cited symbol/line locator reopened",
+        "date": "2026-11-25"
+      }
     },
     {
       "id": "chunk-toy",
@@ -55,7 +75,11 @@
       "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/managers/schedule_policy.py#L1735-L1868",
       "locator": "constructed budget example",
       "status": "illustrative",
-      "notes": "Teaching example only; not a GPU measurement"
+      "notes": "Teaching example only; not a GPU measurement",
+      "p0_review": {
+        "scope": "teaching derivation/example; not runtime measurement",
+        "date": "2026-11-25"
+      }
     },
     {
       "id": "chunk-size-cap",
@@ -64,7 +88,12 @@
       "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/docs/docs/advanced_features/server_arguments.mdx#L488-L489",
       "locator": "Server Arguments parameter description",
       "status": "verified",
-      "notes": "This is a configuration upper bound, not a guarantee that every runtime chunk equals the cap"
+      "notes": "This is a configuration upper bound, not a guarantee that every runtime chunk equals the cap",
+      "p0_review": {
+        "scope": "pinned source file and cited symbol/line locator reopened",
+        "date": "2026-11-25"
+      }
     }
-  ]
+  ],
+  "review_scope": "P0: article and evidence ledger read, pinned implementation files reopened; exact locator ranges checked or refined. External arXiv title/abstract and pinned docs cross-checked, not a full PDF re-review. Teaching claims independently reasoned or tested in CPU CI."
 }

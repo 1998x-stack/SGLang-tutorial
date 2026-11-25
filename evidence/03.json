@@ -1,25 +1,33 @@
 {
   "article": "03.html",
   "source_revision": "0a8693fbe3a2e46ccc06470a461a2b85865672fd",
-  "review_date": "2026-11-23",
+  "review_date": "2026-11-25",
   "claims": [
     {
       "id": "batch-dynamics",
       "claim": "Online scheduling may vary the active request set across iterations",
       "kind": "implementation",
-      "source_url": "https://github.com/sgl-project/sglang/blob/0a8693fbe3a2e46ccc06470a461a2b85865672fd/python/sglang/srt/managers/scheduler.py",
-      "locator": "Scheduler batching and request lifecycle",
+      "source_url": "https://github.com/sgl-project/sglang/blob/0a8693fbe3a2e46ccc06470a461a2b85865672fd/python/sglang/srt/managers/scheduler.py#L2231-L2264",
+      "locator": "event_loop_normal: ingest, get next batch, run, process",
       "status": "verified",
-      "notes": "Pin upstream SHA before asserting implementation-specific behavior"
+      "notes": "Pin upstream SHA before asserting implementation-specific behavior",
+      "p0_review": {
+        "scope": "pinned source file and cited symbol/line locator reopened",
+        "date": "2026-11-25"
+      }
     },
     {
       "id": "cpu-overlap",
       "claim": "SGLang scheduler includes overlap scheduling path",
       "kind": "implementation",
-      "source_url": "https://github.com/sgl-project/sglang/blob/0a8693fbe3a2e46ccc06470a461a2b85865672fd/python/sglang/srt/managers/scheduler.py",
-      "locator": "overlap event loop and configuration-dependent execution",
+      "source_url": "https://github.com/sgl-project/sglang/blob/0a8693fbe3a2e46ccc06470a461a2b85865672fd/python/sglang/srt/managers/scheduler.py#L2266-L2348",
+      "locator": "event_loop_overlap, result_queue, WAR barrier, sample dependencies",
       "status": "verified",
-      "notes": "Pin upstream SHA before asserting implementation-specific behavior"
+      "notes": "Pin upstream SHA before asserting implementation-specific behavior",
+      "p0_review": {
+        "scope": "pinned source file and cited symbol/line locator reopened",
+        "date": "2026-11-25"
+      }
     },
     {
       "id": "timeline",
@@ -28,16 +36,25 @@
       "source_url": "https://github.com/sgl-project/sglang/blob/0a8693fbe3a2e46ccc06470a461a2b85865672fd/python/sglang/srt/managers/scheduler.py",
       "locator": "constructed educational example",
       "status": "illustrative",
-      "notes": "Toy example, not a GPU measurement"
+      "notes": "Toy example, not a GPU measurement",
+      "p0_review": {
+        "scope": "teaching derivation/example; not runtime measurement",
+        "date": "2026-11-25"
+      }
     },
     {
       "id": "batch-budget",
       "claim": "Actual admission depends on token budget and cache resource constraints",
       "kind": "implementation",
-      "source_url": "https://github.com/sgl-project/sglang/blob/0a8693fbe3a2e46ccc06470a461a2b85865672fd/python/sglang/srt/managers/scheduler.py",
-      "locator": "scheduler batch decisions",
+      "source_url": "https://github.com/sgl-project/sglang/blob/0a8693fbe3a2e46ccc06470a461a2b85865672fd/python/sglang/srt/managers/schedule_policy.py#L1077-L1457",
+      "locator": "PrefillAdder budgets and resource checks",
       "status": "verified",
-      "notes": "Pin upstream SHA before asserting implementation-specific behavior"
+      "notes": "Pin upstream SHA before asserting implementation-specific behavior",
+      "p0_review": {
+        "scope": "pinned source file and cited symbol/line locator reopened",
+        "date": "2026-11-25"
+      }
     }
-  ]
+  ],
+  "review_scope": "P0: article and evidence ledger read, pinned implementation files reopened; exact locator ranges checked or refined. External arXiv title/abstract and pinned docs cross-checked, not a full PDF re-review. Teaching claims independently reasoned or tested in CPU CI."
 }

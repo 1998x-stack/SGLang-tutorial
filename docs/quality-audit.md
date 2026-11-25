@@ -73,3 +73,5 @@
 - All ten article sections and 20 SVG source labels/arrows read. Historical code files and symbol locations reviewed; paper abstracts cross-checked, without claiming full PDF reread. Six SVGs adjusted, including first-token lifecycle and PD control/data separation. Actual screenshots and full QA pending CI.
 - Core mathematical boundaries: cached payload, lookup cap vs forward reuse, grammar support mass, non-overlap PD accounting, page indices, split vs insert, root sentinel, alignment and zero progress, masked online softmax, speculative conservation. Added five regression tests and strengthened existing CPU online-softmax demo.
 - Read evidence records and pinned source paths. Exact per-claim recheck status tracked in P0 review record; no GPU benchmark claimed.
+
+- [P0 01–10 独立逐章审查记录](p0-core-review.md)；最终 CI 和部署以 PR #13 对应运行记录为准。

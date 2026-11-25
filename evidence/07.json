@@ -1,7 +1,7 @@
 {
   "article": "07.html",
   "source_revision": "6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd",
-  "review_date": "2026-11-23",
+  "review_date": "2026-11-25",
   "claims": [
     {
       "id": "key-namespace",
@@ -10,16 +10,24 @@
       "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/mem_cache/radix_cache.py#L60-L150",
       "locator": "RadixKey fields and matching",
       "status": "verified",
-      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+      "notes": "Pinned source snapshot; recheck when upstream revision changes",
+      "p0_review": {
+        "scope": "pinned source file and cited symbol/line locator reopened",
+        "date": "2026-11-25"
+      }
     },
     {
       "id": "partial-match",
-      "claim": "match_prefix can split a compressed edge when a match ends inside it",
+      "claim": "Matching may split an existing compressed edge; it does not insert an unmatched new suffix.",
       "kind": "implementation",
-      "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/mem_cache/radix_cache.py#L369-L432",
-      "locator": "match_prefix / _match_prefix_helper",
+      "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/mem_cache/radix_cache.py#L658-L682",
+      "locator": "_match_prefix_helper; match_prefix L369–416",
       "status": "verified",
-      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+      "notes": "Pinned source snapshot; recheck when upstream revision changes",
+      "p0_review": {
+        "scope": "pinned source file and cited symbol/line locator reopened",
+        "date": "2026-11-25"
+      }
     },
     {
       "id": "split-index",
@@ -28,16 +36,24 @@
       "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/mem_cache/radix_cache.py#L684-L712",
       "locator": "_split_node",
       "status": "verified",
-      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+      "notes": "Pinned source snapshot; recheck when upstream revision changes",
+      "p0_review": {
+        "scope": "pinned source file and cited symbol/line locator reopened",
+        "date": "2026-11-25"
+      }
     },
     {
       "id": "lock-path",
-      "claim": "inc_lock_ref and dec_lock_ref update protected/evictable sizes along ancestor path",
+      "claim": "Non-root path nodes update protected/evictable sizes on 0↔1 transitions; root is excluded.",
       "kind": "implementation",
       "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/mem_cache/radix_cache.py#L589-L627",
-      "locator": "lock ref methods",
+      "locator": "inc_lock_ref / dec_lock_ref (while node != self.root_node)",
       "status": "verified",
-      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+      "notes": "Pinned source snapshot; recheck when upstream revision changes",
+      "p0_review": {
+        "scope": "pinned source file and cited symbol/line locator reopened",
+        "date": "2026-11-25"
+      }
     },
     {
       "id": "evict-leaf",
@@ -46,16 +62,25 @@
       "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/mem_cache/radix_cache.py#L559-L588",
       "locator": "evict",
       "status": "verified",
-      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+      "notes": "Pinned source snapshot; recheck when upstream revision changes",
+      "p0_review": {
+        "scope": "pinned source file and cited symbol/line locator reopened",
+        "date": "2026-11-25"
+      }
     },
     {
       "id": "toy-split",
       "claim": "Example edge split is a constructed token-ID demonstration, not a live tree dump",
       "kind": "illustrative",
       "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/mem_cache/radix_cache.py#L684-L740",
-      "locator": "hand-built before/after example",
+      "locator": "hand-built split followed by separate later insertion",
       "status": "illustrative",
-      "notes": "Teaching example only; not a GPU measurement"
+      "notes": "Teaching example only; not a GPU measurement",
+      "p0_review": {
+        "scope": "teaching derivation/example; not runtime measurement",
+        "date": "2026-11-25"
+      }
     }
-  ]
+  ],
+  "review_scope": "P0: article and evidence ledger read, pinned implementation files reopened; exact locator ranges checked or refined. External arXiv title/abstract and pinned docs cross-checked, not a full PDF re-review. Teaching claims independently reasoned or tested in CPU CI."
 }

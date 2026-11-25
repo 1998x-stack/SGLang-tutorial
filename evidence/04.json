@@ -1,16 +1,20 @@
 {
   "article": "04.html",
   "source_revision": "0a8693fbe3a2e46ccc06470a461a2b85865672fd",
-  "review_date": "2026-11-23",
+  "review_date": "2026-11-25",
   "claims": [
     {
       "id": "frontend",
       "claim": "SGLang front-end supports function/gen/fork and multi-turn programs",
       "kind": "implementation",
-      "source_url": "https://github.com/sgl-project/sglang/blob/0a8693fbe3a2e46ccc06470a461a2b85865672fd/docs/docs/references/frontend/frontend_tutorial.mdx",
-      "locator": "Basic Usage / Parallelism",
+      "source_url": "https://github.com/sgl-project/sglang/blob/0a8693fbe3a2e46ccc06470a461a2b85865672fd/docs/docs/references/frontend/frontend_tutorial.mdx#L36-L127",
+      "locator": "Basic Usage, Control flow, Parallelism",
       "status": "verified",
-      "notes": "Recheck when upstream revision changes"
+      "notes": "Recheck when upstream revision changes",
+      "p0_review": {
+        "scope": "pinned source file and cited symbol/line locator reopened",
+        "date": "2026-11-25"
+      }
     },
     {
       "id": "paper",
@@ -19,16 +23,24 @@
       "source_url": "https://arxiv.org/abs/2312.07104",
       "locator": "abstract and design",
       "status": "verified",
-      "notes": "Recheck when upstream revision changes"
+      "notes": "Recheck when upstream revision changes",
+      "p0_review": {
+        "scope": "paper abstract/title and relevant pinned documentation; full paper review not claimed",
+        "date": "2026-11-25"
+      }
     },
     {
       "id": "grammar",
       "claim": "Runtime supports constrained decoding; frontend tutorial includes regex constraints",
       "kind": "implementation",
-      "source_url": "https://github.com/sgl-project/sglang/blob/0a8693fbe3a2e46ccc06470a461a2b85865672fd/docs/docs/references/frontend/frontend_tutorial.mdx",
-      "locator": "Constrained Decoding",
+      "source_url": "https://github.com/sgl-project/sglang/blob/0a8693fbe3a2e46ccc06470a461a2b85865672fd/docs/docs/references/frontend/frontend_tutorial.mdx#L129-L181",
+      "locator": "Constrained Decoding: regex and JSON example",
       "status": "verified",
-      "notes": "Recheck when upstream revision changes"
+      "notes": "Recheck when upstream revision changes",
+      "p0_review": {
+        "scope": "pinned source file and cited symbol/line locator reopened",
+        "date": "2026-11-25"
+      }
     },
     {
       "id": "fsm-toy",
@@ -37,7 +49,12 @@
       "source_url": "https://arxiv.org/abs/2312.07104",
       "locator": "conceptual state machine",
       "status": "illustrative",
-      "notes": "Toy explanation, no performance claim"
+      "notes": "Toy explanation, no performance claim",
+      "p0_review": {
+        "scope": "teaching derivation/example; not runtime measurement",
+        "date": "2026-11-25"
+      }
     }
-  ]
+  ],
+  "review_scope": "P0: article and evidence ledger read, pinned implementation files reopened; exact locator ranges checked or refined. External arXiv title/abstract and pinned docs cross-checked, not a full PDF re-review. Teaching claims independently reasoned or tested in CPU CI."
 }

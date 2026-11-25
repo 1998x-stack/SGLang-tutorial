@@ -1,16 +1,20 @@
 {
   "article": "01.html",
   "source_revision": "0a8693fbe3a2e46ccc06470a461a2b85865672fd",
-  "review_date": "2026-11-23",
+  "review_date": "2026-11-25",
   "claims": [
     {
       "id": "prefill-decode",
-      "claim": "Prefill builds history K/V; decoding reuses historical K/V rather than recomputing every historical projection",
+      "claim": "Ordinary extend without input-logprob special handling selects last-position hidden states; the model runner samples next token logits. Ordinary decoding appends KV for the previous output token.",
       "kind": "implementation",
-      "source_url": "https://github.com/sgl-project/sglang/blob/0a8693fbe3a2e46ccc06470a461a2b85865672fd/python/sglang/srt/managers/scheduler.py",
-      "locator": "runtime request lifecycle",
+      "source_url": "https://github.com/sgl-project/sglang/blob/0a8693fbe3a2e46ccc06470a461a2b85865672fd/python/sglang/srt/layers/logits_processor.py#L908-L971",
+      "locator": "_get_pruned_states: final extend position; ModelRunner.sample L2209–2242",
       "status": "verified",
-      "notes": "Pin upstream SHA before asserting implementation-specific behavior"
+      "notes": "Pin upstream SHA before asserting implementation-specific behavior",
+      "p0_review": {
+        "scope": "pinned source file and cited symbol/line locator reopened",
+        "date": "2026-11-25"
+      }
     },
     {
       "id": "kv-formula",
@@ -19,7 +23,11 @@
       "source_url": "https://arxiv.org/abs/1706.03762",
       "locator": "attention K/V shapes, additional GQA assumptions disclosed",
       "status": "derived",
-      "notes": "Pin upstream SHA before asserting implementation-specific behavior"
+      "notes": "Pin upstream SHA before asserting implementation-specific behavior",
+      "p0_review": {
+        "scope": "teaching derivation/example; not runtime measurement",
+        "date": "2026-11-25"
+      }
     },
     {
       "id": "example-one-gib",
@@ -28,16 +36,37 @@
       "source_url": "https://arxiv.org/abs/1706.03762",
       "locator": "arithmetic with explicitly stated assumptions",
       "status": "derived",
-      "notes": "Pin upstream SHA before asserting implementation-specific behavior"
+      "notes": "Pin upstream SHA before asserting implementation-specific behavior",
+      "p0_review": {
+        "scope": "teaching derivation/example; not runtime measurement",
+        "date": "2026-11-25"
+      }
     },
     {
       "id": "token-timing",
-      "claim": "TTFT and ITL refer to different timestamp boundaries",
+      "claim": "Streaming TTFT ends at first detokenized output (possibly nonprintable); non-streaming at scheduler's first token. ITL describes intervals, not the same clock boundary.",
       "kind": "implementation",
-      "source_url": "https://docs.sglang.io/",
-      "locator": "runtime and benchmark semantics; avoid claiming fixed default",
+      "source_url": "https://github.com/sgl-project/sglang/blob/0a8693fbe3a2e46ccc06470a461a2b85865672fd/docs/docs/references/production_metrics.mdx#L10-L12",
+      "locator": "Language model metrics; streaming vs non-streaming TTFT",
       "status": "verified",
-      "notes": "Pin upstream SHA before asserting implementation-specific behavior"
+      "notes": "Pin upstream SHA before asserting implementation-specific behavior",
+      "p0_review": {
+        "scope": "pinned source file and cited symbol/line locator reopened",
+        "date": "2026-11-25"
+      }
+    },
+    {
+      "id": "sample-next",
+      "claim": "ModelRunner.sample consumes logits and returns next_token_ids.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/0a8693fbe3a2e46ccc06470a461a2b85865672fd/python/sglang/srt/model_executor/model_runner.py#L2209-L2242",
+      "locator": "ModelRunner.sample",
+      "kind": "implementation",
+      "status": "verified",
+      "p0_review": {
+        "scope": "pinned source file and cited symbol/line locator reopened",
+        "date": "2026-11-25"
+      }
     }
-  ]
+  ],
+  "review_scope": "P0: article and evidence ledger read, pinned implementation files reopened; exact locator ranges checked or refined. External arXiv title/abstract and pinned docs cross-checked, not a full PDF re-review. Teaching claims independently reasoned or tested in CPU CI."
 }
