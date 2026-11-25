@@ -1,0 +1,41 @@
+{
+  "article": "31.html",
+  "source_revision": "75ed36d976113c693f8e6f64925e119573a93fda",
+  "claims": [
+    {
+      "claim": "HiSparse is decode-only in PD disaggregation; supported sparse model families keep complete eligible KV in pinned host memory and a bounded hot device buffer.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/75ed36d976113c693f8e6f64925e119573a93fda/docs/docs/advanced_features/hisparse_guide.mdx",
+      "locator": "Prerequisites / Decode Workflow",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "Prefill can write directly to decode host pool; DeepSeek V4 uses direct-to-host for C4 KV only.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/75ed36d976113c693f8e6f64925e119573a93fda/docs/docs/advanced_features/hisparse_guide.mdx",
+      "locator": "PD Disaggregation Integration (Direct-to-Host)",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "Anchor index miss plans can be replayed by skip layers on a side stream; eligibility excludes PP and speculative decoding for this prefetch.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/75ed36d976113c693f8e6f64925e119573a93fda/docs/docs/advanced_features/hisparse_guide.mdx",
+      "locator": "Shared-index prefetch (automatic)",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "The device pool implements logical-to-device location translation.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/75ed36d976113c693f8e6f64925e119573a93fda/python/sglang/srt/mem_cache/hisparse_memory_pool.py#L31-L139",
+      "locator": "HiSparseDSATokenToKVPool / translate_loc_to_hisparse_device",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "Toy formula and examples use simplified memory/placement/probability assumptions, not measured performance.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/75ed36d976113c693f8e6f64925e119573a93fda/docs/docs/advanced_features/hisparse_guide.mdx",
+      "locator": "Teaching abstraction in article section 4 or 3",
+      "kind": "derivation",
+      "status": "derived"
+    }
+  ]
+}

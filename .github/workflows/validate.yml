@@ -51,6 +51,11 @@ jobs:
           python3 examples/deterministic_inference.py
           python3 examples/adaptive_spec.py
           python3 examples/checkpoint_engine.py
+          python3 examples/hisparse_working_set.py
+          python3 examples/hybrid_pool_budget.py
+          python3 examples/kv_sharing_pages.py
+          python3 examples/paged_expert_waves.py
+          python3 examples/rl_rollout_versions.py
       - name: Install Playwright Chromium
         run: |
           python3 -m pip install playwright
@@ -109,12 +114,17 @@ jobs:
           test -f _site/evidence/28.json
           test -f _site/evidence/29.json
           test -f _site/evidence/30.json
+          test -f _site/examples/hisparse_working_set.py
+          test -f _site/examples/hybrid_pool_budget.py
+          test -f _site/examples/kv_sharing_pages.py
+          test -f _site/examples/paged_expert_waves.py
+          test -f _site/examples/rl_rollout_versions.py
           test -f _site/evidence/21.json
           test -f _site/evidence/22.json
           test -f _site/evidence/23.json
           test -f _site/evidence/24.json
           test -f _site/evidence/25.json
-          for i in $(seq -w 1 30); do test -f _site/$i.html; test -f _site/evidence/$i.json; done
+          for i in $(seq -w 1 35); do test -f _site/$i.html; test -f _site/evidence/$i.json; done
       - uses: actions/upload-pages-artifact@v4
         with:
           path: _site

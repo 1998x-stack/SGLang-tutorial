@@ -1,0 +1,48 @@
+{
+  "article": "33.html",
+  "source_revision": "75ed36d976113c693f8e6f64925e119573a93fda",
+  "claims": [
+    {
+      "claim": "KV cache sharing shards persistent pages among prefill ranks, with shared logical radix tree and request-to-token mapping.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/75ed36d976113c693f8e6f64925e119573a93fda/docs/docs/advanced_features/kv_cache_sharing.mdx",
+      "locator": "Shared logical tree, distributed pages",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "Owner and local row are arithmetic functions of logical slot, shard size and page size.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/75ed36d976113c693f8e6f64925e119573a93fda/python/sglang/srt/mem_cache/page_interleave.py#L85-L113",
+      "locator": "PageInterleavePlacement.owner_of / local_index",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "Per-layer all-gather restores logical order in alternating temporary buffers; HiCache preserves ownership and PD sends owned pages.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/75ed36d976113c693f8e6f64925e119573a93fda/docs/docs/advanced_features/kv_cache_sharing.mdx",
+      "locator": "Gather one layer at a time / HiCache and MTP integration",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "Layer prefetch and scratch-slot acquisition are separated.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/75ed36d976113c693f8e6f64925e119573a93fda/python/sglang/srt/mem_cache/page_interleave_pool.py#L539-L602",
+      "locator": "_prefetch_layer / _acquire_slot_for_read",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "Cross-instance sharing depends on L3 backend; local tiers are not automatically a cluster-wide shared pool.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/75ed36d976113c693f8e6f64925e119573a93fda/docs/docs/advanced_features/hicache_design.mdx",
+      "locator": "Tier Sharing Scope",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "Toy formula and examples use simplified memory/placement/probability assumptions, not measured performance.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/75ed36d976113c693f8e6f64925e119573a93fda/docs/docs/advanced_features/kv_cache_sharing.mdx",
+      "locator": "Teaching abstraction in article section 4 or 3",
+      "kind": "derivation",
+      "status": "derived"
+    }
+  ]
+}
