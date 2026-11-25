@@ -40,7 +40,6 @@
 | [28 · Deterministic Inference](28.html) | Dynamic batch 为什么改变浮点 reduction，如何验证 batch-invariant execution？ | 双 SVG + MathML + 交互 / CPU float32 与 seeded sampler | Deterministic Inference docs、batch_invariant_ops、LLM-42 与 Vosti |
 | [29 · Adaptive Speculative Decoding](29.html) | 接受长度 EMA、batch-size slots 与预构建 graph state 如何共同调整 EAGLE steps？ | 双 SVG + MathML + 交互 / CPU adaptive policy | Adaptive Speculative docs、adaptive_spec_params、AdaptiveController、BanditSpec |
 | [30 · Distributed Checkpoint Engine](30.html) | 多节点 checkpoint 如何经 Parameter Server、Broadcast/P2P 和 IPC 进入 Ready 状态？ | 双 SVG + MathML + 交互 / CPU shard/readiness 实验 | Checkpoint Engine docs、checkpoint worker、weight updater 与 IPC endpoint |
-
 | [31 · HiSparse](31.html) | 稀疏模型怎样按 top-k 调入活跃 KV，并把搬运藏在计算之后？ | 双 SVG + MathML + CPU hisparse_working_set | 固定 commit 官方文档与源码 |
 | [32 · Hybrid KV Cache](32.html) | 混合模型为什么要分别为 token KV 和 recurrent checkpoints 分配内存？ | 双 SVG + MathML + CPU hybrid_pool_budget | 固定 commit 官方文档与源码 |
 | [33 · KV Cache Sharing](33.html) | 相同 prefix 如何跨请求复用？CP ranks 如何只保存每页的一份持久副本？ | 双 SVG + MathML + CPU kv_sharing_pages | 固定 commit 官方文档与源码 |

@@ -541,9 +541,6 @@ class CheckpointEngineTest(unittest.TestCase):
 
 
 
-if __name__ == "__main__":
-    unittest.main()
-
 
 class SeventhBatchTest(unittest.TestCase):
     def test_hisparse_working_set(self):
@@ -565,3 +562,7 @@ class SeventhBatchTest(unittest.TestCase):
     def test_rl_rollout_versions(self):
         from rl_rollout_versions import selftest
         selftest()
+
+
+if __name__ == "__main__":
+    unittest.main()
