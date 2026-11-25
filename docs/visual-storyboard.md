@@ -158,3 +158,40 @@
 - `40-activation-shift.svg`：Prompt 与 Decode 激活分布改变剪枝选择。同一 W 与稀疏约束下，prompt-only 与联合校准的重建误差排序反转。
 - `40-rac-pipeline.svg`：三阶段校准、剪枝与服务评估。SGLang 生成 traces；llm-compressor 剪枝；SGLang 服务稀疏 checkpoint 后同时评估质量与延迟。
 - 状态选择：Prompt-only → Prompt + CoT → 端到端评估；实验 `rac_calibration.py`。
+
+
+## 第九批故事板
+
+### 41 Pipeline Parallelism：Microbatch、动态 Chunking 与异步 P2P
+
+- `41-microbatch-timeline.svg`：三阶段四 Chunk 的流水线时空图。同一 chunk 向下游传播；同一 stage 按顺序处理，空白是 fill/drain 气泡。
+- `41-async-pp.svg`：PP metadata、forward 与异步通信。send work 与等待分离；在消费和缓冲复用前建立依赖。
+- 状态选择：单 chunk → 四 chunks → 慢中间 stage；实验 `pipeline_chunking.py`。
+
+
+### 42 Engram：条件记忆表、N-gram Hash 与分布式 Lookup
+
+- `42-hash-lookup.svg`：从 N-gram 窗口到静态记忆行。压缩 ID、乘法、XOR 与 modulus 决定 row；示例只演示一个 hash head。
+- `42-table-placement.svg`：Engram 表分片及查表路径。每个 rank 可保存静态表的一部分；请求 row 由 owner 或集体通信返回。
+- 状态选择：GPU 分片 → Host 分片 → 每节点复制；实验 `engram_lookup.py`。
+
+
+### 43 Radix Eviction Policies：从 LRU 到 Tail Latency 与 State Cost
+
+- `43-leaf-candidates.svg`：Radix tree 的候选与锁定边界。仅可回收 leaf 进入 policy；叶被释放后父节点重新检查。
+- `43-policy-orders.svg`：不同策略对同一组 candidates 的排序。LRU: A B C；LFU: C B A；SLRU threshold2: B C A。
+- 状态选择：LRU → LFU → SLRU；实验 `radix_policy.py`。
+
+
+### 44 R-Fork：Seed 实例、GPU-to-GPU 权重传输与 Ready Gate
+
+- `44-rank-transfer.svg`：Seed 与 Client 的对应 Rank 传输。HTTP control 建立连接或查询元数据；对应 rank payload 走 GPU transport。
+- `44-ready-gate.svg`：远程加载与就绪状态机。接收、校验与必要初始化完成才能服务；异常转入失败处理。
+- 状态选择：全部 rank 到齐 → rank 缺失 → 版本不符；实验 `rfork_readiness.py`。
+
+
+### 45 SGLang Simulator：真实调度逻辑、预测时钟与容量规划
+
+- `45-real-vs-mock.svg`：Simulator 保留与替换的运行时组件。scheduler 与 cache 真实运行；model forward / sample 被 mock，predictor 产生时延。
+- `45-logical-time.svg`：FCFS 教学时序与 TTFT。A 0→8ms；B 3ms 到达、8ms 开始、10ms 首 token、12ms 完成。
+- 状态选择：低负载 → 排队 → 预测偏差；实验 `serving_simulation.py`。
