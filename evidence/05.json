@@ -1,16 +1,20 @@
 {
   "article": "05.html",
   "source_revision": "0a8693fbe3a2e46ccc06470a461a2b85865672fd",
-  "review_date": "2026-11-23",
+  "review_date": "2026-11-25",
   "claims": [
     {
       "id": "pd",
       "claim": "Official docs describe separate prefill and decode stages and KV transfer",
       "kind": "implementation",
-      "source_url": "https://github.com/sgl-project/sglang/blob/0a8693fbe3a2e46ccc06470a461a2b85865672fd/docs/docs/advanced_features/pd_disaggregation.mdx",
-      "locator": "PD Disaggregation overview",
+      "source_url": "https://github.com/sgl-project/sglang/blob/0a8693fbe3a2e46ccc06470a461a2b85865672fd/docs/docs/advanced_features/pd_disaggregation.mdx#L6-L21",
+      "locator": "Why and What is PD Disaggregation",
       "status": "verified",
-      "notes": "Recheck when upstream revision changes"
+      "notes": "Recheck when upstream revision changes",
+      "p0_review": {
+        "scope": "pinned source file and cited symbol/line locator reopened",
+        "date": "2026-11-25"
+      }
     },
     {
       "id": "latency",
@@ -19,16 +23,24 @@
       "source_url": "https://github.com/sgl-project/sglang/blob/0a8693fbe3a2e46ccc06470a461a2b85865672fd/docs/docs/advanced_features/pd_disaggregation.mdx",
       "locator": "diagram-derived accounting model",
       "status": "derived",
-      "notes": "Recheck when upstream revision changes"
+      "notes": "Recheck when upstream revision changes",
+      "p0_review": {
+        "scope": "teaching derivation/example; not runtime measurement",
+        "date": "2026-11-25"
+      }
     },
     {
       "id": "transfer",
       "claim": "KV transfer is an additional path when workers are separate",
       "kind": "implementation",
-      "source_url": "https://github.com/sgl-project/sglang/blob/0a8693fbe3a2e46ccc06470a461a2b85865672fd/docs/docs/advanced_features/pd_disaggregation.mdx",
-      "locator": "transfer architecture",
+      "source_url": "https://github.com/sgl-project/sglang/blob/0a8693fbe3a2e46ccc06470a461a2b85865672fd/docs/docs/advanced_features/pd_disaggregation.mdx#L23-L75",
+      "locator": "Decode allocation policy, KV transfer handshake",
       "status": "verified",
-      "notes": "Recheck when upstream revision changes"
+      "notes": "Recheck when upstream revision changes",
+      "p0_review": {
+        "scope": "pinned source file and cited symbol/line locator reopened",
+        "date": "2026-11-25"
+      }
     },
     {
       "id": "benefits",
@@ -37,7 +49,24 @@
       "source_url": "https://github.com/sgl-project/sglang/blob/0a8693fbe3a2e46ccc06470a461a2b85865672fd/docs/docs/advanced_features/pd_disaggregation.mdx",
       "locator": "design motivation; no universal speedup claim",
       "status": "derived",
-      "notes": "Recheck when upstream revision changes"
+      "notes": "Recheck when upstream revision changes",
+      "p0_review": {
+        "scope": "teaching derivation/example; not runtime measurement",
+        "date": "2026-11-25"
+      }
+    },
+    {
+      "id": "pd-allocation",
+      "claim": "Pinned early policy reserves destination slots before prefill completes; prefill_complete defers reservation and removes chunked-prefill/transfer overlap subject to documented constraints.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/0a8693fbe3a2e46ccc06470a461a2b85865672fd/docs/docs/advanced_features/pd_disaggregation.mdx#L23-L75",
+      "locator": "Decode allocation policy",
+      "kind": "implementation",
+      "status": "verified",
+      "p0_review": {
+        "scope": "pinned source file and cited symbol/line locator reopened",
+        "date": "2026-11-25"
+      }
     }
-  ]
+  ],
+  "review_scope": "P0: article and evidence ledger read, pinned implementation files reopened; exact locator ranges checked or refined. External arXiv title/abstract and pinned docs cross-checked, not a full PDF re-review. Teaching claims independently reasoned or tested in CPU CI."
 }

@@ -1,7 +1,7 @@
 {
   "article": "10.html",
   "source_revision": "6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd",
-  "review_date": "2026-11-23",
+  "review_date": "2026-11-25",
   "claims": [
     {
       "id": "eagle-draft",
@@ -10,7 +10,11 @@
       "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/speculative/eagle_worker_v2.py#L738-L865",
       "locator": "draft / build_eagle_verify_input",
       "status": "verified",
-      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+      "notes": "Pinned source snapshot; recheck when upstream revision changes",
+      "p0_review": {
+        "scope": "pinned source file and cited symbol/line locator reopened",
+        "date": "2026-11-25"
+      }
     },
     {
       "id": "eagle-verify",
@@ -19,7 +23,11 @@
       "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/python/sglang/srt/speculative/eagle_worker_v2.py#L2283-L2306",
       "locator": "verify",
       "status": "verified",
-      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+      "notes": "Pinned source snapshot; recheck when upstream revision changes",
+      "p0_review": {
+        "scope": "pinned source file and cited symbol/line locator reopened",
+        "date": "2026-11-25"
+      }
     },
     {
       "id": "eagle2",
@@ -28,7 +36,11 @@
       "source_url": "https://arxiv.org/abs/2406.16858",
       "locator": "EAGLE-2 paper",
       "status": "verified",
-      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+      "notes": "Pinned source snapshot; recheck when upstream revision changes",
+      "p0_review": {
+        "scope": "paper abstract/title and relevant pinned documentation; full paper review not claimed",
+        "date": "2026-11-25"
+      }
     },
     {
       "id": "eagle3",
@@ -37,7 +49,11 @@
       "source_url": "https://arxiv.org/abs/2503.01840",
       "locator": "EAGLE-3 paper and SGLang speculative decoding documentation",
       "status": "verified",
-      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+      "notes": "Pinned source snapshot; recheck when upstream revision changes",
+      "p0_review": {
+        "scope": "paper abstract/title and relevant pinned documentation; full paper review not claimed",
+        "date": "2026-11-25"
+      }
     },
     {
       "id": "chain-sampling",
@@ -46,7 +62,11 @@
       "source_url": "https://arxiv.org/abs/2211.17192",
       "locator": "speculative decoding algorithm",
       "status": "verified",
-      "notes": "Pinned source snapshot; recheck when upstream revision changes"
+      "notes": "Pinned source snapshot; recheck when upstream revision changes",
+      "p0_review": {
+        "scope": "paper abstract/title and relevant pinned documentation; full paper review not claimed",
+        "date": "2026-11-25"
+      }
     },
     {
       "id": "block-vs-chain",
@@ -55,7 +75,11 @@
       "source_url": "https://github.com/sgl-project/sglang/blob/6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd/docs/docs/advanced_features/speculative_decoding.mdx#L414-L440",
       "locator": "Block verification mode, topk=1 constraint, every-prefix check and correction distribution",
       "status": "verified",
-      "notes": "Compatibility is model/device/path-specific; this must not be represented as topk>1 tree verification"
+      "notes": "Compatibility is model/device/path-specific; this must not be represented as topk>1 tree verification",
+      "p0_review": {
+        "scope": "pinned source file and cited symbol/line locator reopened",
+        "date": "2026-11-25"
+      }
     },
     {
       "id": "toy-reject",
@@ -64,7 +88,36 @@
       "source_url": "https://arxiv.org/abs/2211.17192",
       "locator": "exact Fraction toy example",
       "status": "illustrative",
-      "notes": "Teaching example only; not a GPU measurement"
+      "notes": "Teaching example only; not a GPU measurement",
+      "p0_review": {
+        "scope": "teaching derivation/example; not runtime measurement",
+        "date": "2026-11-25"
+      }
+    },
+    {
+      "id": "block-paper",
+      "claim": "Pinned SGLang docs link to block verification as a separate correction algorithm, not a topk>1 tree synonym.",
+      "source_url": "https://arxiv.org/abs/2403.10444",
+      "locator": "Block verification paper; also pinned doc L414–440",
+      "kind": "paper",
+      "status": "verified",
+      "p0_review": {
+        "scope": "paper abstract/title and relevant pinned documentation; full paper review not claimed",
+        "date": "2026-11-25"
+      }
+    },
+    {
+      "id": "chain-mass",
+      "claim": "For each token v, accepted mass min(p(v),q(v)) plus rejection correction mass max(p(v)-q(v),0) equals p(v); if p=q no correction needed.",
+      "source_url": "https://arxiv.org/abs/2211.17192",
+      "locator": "independent single-step probability calculation",
+      "kind": "derived",
+      "status": "derived",
+      "p0_review": {
+        "scope": "teaching derivation/example; not runtime measurement",
+        "date": "2026-11-25"
+      }
     }
-  ]
+  ],
+  "review_scope": "P0: article and evidence ledger read, pinned implementation files reopened; exact locator ranges checked or refined. External arXiv title/abstract and pinned docs cross-checked, not a full PDF re-review. Teaching claims independently reasoned or tested in CPU CI."
 }

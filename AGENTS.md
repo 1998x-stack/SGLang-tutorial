@@ -137,3 +137,9 @@ python3 examples/prefix_match.py
 - 公式需明确量纲、定义域、假设、边界和数值；SVG 箭头实际长度、文字边界、图文一致性分别检查；流程 MathML 不冒充推导。
 - 保留历史 SHA，迁移单独补充。每个 claim 的 path/symbol/line 必须复核，自动清单不代表语义通过。
 - CI 输出 reports/quality-audit.json 与 browser-qa/svg-geometry.json；结构与零长度箭头阻断，bbox 越界和移动来源进入审阅队列。详见 docs/quality-audit.md。
+
+
+## P0 基础章审查规范
+- 普通生成按 Prefill 产首 token、Decode 消费前一 token 绘图；逻辑 LCP 与 forward reuse 上限分开；根哨兵和普通引用计数、match split 与后续 insert 分开。
+- 每个 CPU 教学示例与图、页号、输出断言一致；公式必须覆盖退化边界：全 mask、空支持、对齐零推进、p=q 无 correction；不要把 block verification 当 tree topology。
+- Evidence 增加逐 claim `p0_review` 与具体历史行号；论文摘要核对不能宣称全文复核，源码文件/定位核查不能宣称 GPU 复现。详见 docs/p0-core-review.md。
