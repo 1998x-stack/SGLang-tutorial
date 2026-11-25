@@ -260,3 +260,8 @@ python3 examples/checkpoint_engine.py
 - [Model Object Storage：Metadata、Safetensors Streaming 与分布式 I/O](55.html) · [CPU lab](examples/object_streaming_budget.py) · [evidence](evidence/55.json)
 
 回归目标：55 HTML、110 SVG、55 evidence、56 filters、50 CPU labs、224 browser views。GPU、真实存储及 Kubernetes 未实测。
+
+
+## 质量治理与学习地图
+
+[逐章审计](docs/quality-audit.md) · [课程依赖图](assets/course-graph.json)。55章归入8个一级领域；55细分专题默认折叠。64 filters。CI 自动生成结构、证据、SVG 几何和依赖报告；完整语义/硬件验证独立记录。

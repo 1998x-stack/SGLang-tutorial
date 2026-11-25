@@ -130,3 +130,10 @@ python3 examples/prefix_match.py
 - HiCache attach/detach：strict idle + admin；DP partial success 无自动 rollback；drain→stop→release→drain；失败保留 bookkeeping；detach 不删远端数据。
 - Object storage：metadata 与 weight URI 分离；streamer buffer 非全局峰值，distributed world 与 stage-local fallback 分开；不泄露凭证。
 - 固定上游 0fde0356cc44bca9a7727a3a2e2c2d10cd5bd30f；55 章、110 SVG、55 evidence、56 filters、50 CPU labs、224 browser views；通过 CI 后再合并与验证 Pages。
+
+
+## 55 章质量治理
+- assets/course-graph.json 是结构化 DAG；site.js 内嵌镜像由 audit 检查。8 一级领域、55 细分专题、全部，共64 filters。
+- 公式需明确量纲、定义域、假设、边界和数值；SVG 箭头实际长度、文字边界、图文一致性分别检查；流程 MathML 不冒充推导。
+- 保留历史 SHA，迁移单独补充。每个 claim 的 path/symbol/line 必须复核，自动清单不代表语义通过。
+- CI 输出 reports/quality-audit.json 与 browser-qa/svg-geometry.json；结构与零长度箭头阻断，bbox 越界和移动来源进入审阅队列。详见 docs/quality-audit.md。

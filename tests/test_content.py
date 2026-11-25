@@ -76,7 +76,7 @@ class ArticleTest(unittest.TestCase):
         page = read("index.html")
         self.assertEqual(len(page.tags.get("h1", [])), 1)
         self.assertEqual(sum("data-category" in x for x in page.tags.get("article", [])), 55)
-        self.assertEqual(sum("data-filter" in x for x in page.tags.get("button", [])), 56)
+        self.assertEqual(sum("data-filter" in x for x in page.tags.get("button", [])), 64)
 
     def test_depth_and_interaction_contract(self):
         for i in range(1, 56):

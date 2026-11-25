@@ -24,6 +24,8 @@ jobs:
           python-version: "3.12"
       - name: Offline test suite
         run: python3 -m unittest discover -s tests -v
+      - name: Full repository quality inventory
+        run: python3 scripts/quality_audit.py --out reports/quality-audit.json
       - name: CPU-only reproducible examples
         run: |
           python3 examples/prefix_match.py
