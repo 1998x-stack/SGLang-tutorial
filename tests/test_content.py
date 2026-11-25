@@ -46,6 +46,7 @@ REV_SIXTH = "563813c0d60282fa848382fec600b40d28ddec98"
 REV_SEVENTH = "75ed36d976113c693f8e6f64925e119573a93fda"
 REV_EIGHTH = "b1ef3a60797aa6c29bcfa4cc3bc135dd2f19ec22"
 REV_NINTH = "b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7"
+REV_TENTH = "b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7"
 
 
 class Reader(HTMLParser):
@@ -73,11 +74,11 @@ class ArticleTest(unittest.TestCase):
     def test_course_map(self):
         page = read("index.html")
         self.assertEqual(len(page.tags.get("h1", [])), 1)
-        self.assertEqual(sum("data-category" in x for x in page.tags.get("article", [])), 45)
-        self.assertEqual(sum("data-filter" in x for x in page.tags.get("button", [])), 46)
+        self.assertEqual(sum("data-category" in x for x in page.tags.get("article", [])), 50)
+        self.assertEqual(sum("data-filter" in x for x in page.tags.get("button", [])), 51)
 
     def test_depth_and_interaction_contract(self):
-        for i in range(1, 46):
+        for i in range(1, 51):
             name = f"{i:02}.html"
             with self.subTest(article=name):
                 page = read(name)
@@ -98,7 +99,7 @@ class ArticleTest(unittest.TestCase):
                 self.assertNotIn("<script src=\"https:", html)
 
     def test_local_links_are_resolved(self):
-        names = ["index.html"] + [f"{i:02}.html" for i in range(1, 46)]
+        names = ["index.html"] + [f"{i:02}.html" for i in range(1, 51)]
         for name in names:
             page = read(name)
             for link in page.links:
@@ -115,7 +116,7 @@ class ArticleTest(unittest.TestCase):
 
     def test_svg_manifest(self):
         files = list((ROOT / "assets/diagrams").glob("*.svg"))
-        self.assertEqual(len(files), 90)
+        self.assertEqual(len(files), 100)
         ns = "{http://www.w3.org/2000/svg}"
         for path in files:
             with self.subTest(svg=path.name):
@@ -131,11 +132,11 @@ class ArticleTest(unittest.TestCase):
                 self.assertFalse(root.findall(".//" + ns + "script"))
 
     def test_evidence_revision_and_claims(self):
-        for i in range(1, 46):
+        for i in range(1, 51):
             n = f"{i:02}"
             evidence = json.loads((ROOT / "evidence" / f"{n}.json").read_text())
             self.assertEqual(evidence["article"], n + ".html")
-            expected = REV_FIRST if i <= 5 else (REV_ADVANCED if i <= 10 else (REV_THIRD if i <= 15 else (REV_FOURTH if i <= 20 else (REV_FIFTH if i <= 25 else (REV_SIXTH if i <= 30 else (REV_SEVENTH if i <= 35 else (REV_EIGHTH if i <= 40 else REV_NINTH)))))))
+            expected = REV_FIRST if i <= 5 else (REV_ADVANCED if i <= 10 else (REV_THIRD if i <= 15 else (REV_FOURTH if i <= 20 else (REV_FIFTH if i <= 25 else (REV_SIXTH if i <= 30 else (REV_SEVENTH if i <= 35 else (REV_EIGHTH if i <= 40 else (REV_NINTH if i <= 45 else REV_TENTH))))))))
             self.assertEqual(evidence["source_revision"], expected)
             self.assertGreaterEqual(len(evidence["claims"]), 4)
             for claim in evidence["claims"]:
@@ -608,6 +609,28 @@ class NinthBatchTest(unittest.TestCase):
 
     def test_serving_simulation(self):
         from serving_simulation import selftest
+        selftest()
+
+
+class TenthBatchTest(unittest.TestCase):
+    def test_sampling_distribution(self):
+        from sampling_distribution import selftest
+        selftest()
+
+    def test_checkpoint_shards(self):
+        from checkpoint_shards import selftest
+        selftest()
+
+    def test_streaming_detokenize(self):
+        from streaming_detokenize import selftest
+        selftest()
+
+    def test_reasoning_budget(self):
+        from reasoning_budget import selftest
+        selftest()
+
+    def test_fleet_routing(self):
+        from fleet_routing import selftest
         selftest()
 
 if __name__ == "__main__":

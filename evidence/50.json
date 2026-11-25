@@ -1,0 +1,48 @@
+{
+  "article": "50.html",
+  "source_revision": "b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7",
+  "claims": [
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/docs/docs/advanced_features/llm-d.mdx",
+      "locator": "What llm-d adds / Kubernetes-native gateway",
+      "claim": "llm-d adds fleet-level routing, KV management, PD and autoscaling using Gateway API Inference Extension resources.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/llm-d/llm-d/blob/9059ad4050a3e1713d14b954685dac87cfe932cc/guides/optimized-baseline/README.md",
+      "locator": "Overview / Supported Accelerators and Model Servers",
+      "claim": "Baseline uses prefix affinity filtering with saturation override and token-load scoring; guide has specific validated combinations.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/llm-d/llm-d/blob/9059ad4050a3e1713d14b954685dac87cfe932cc/guides/precise-prefix-cache-routing/README.md",
+      "locator": "Overview / Supported Accelerators and Model Servers",
+      "claim": "Precise routing consumes KV events over ZMQ; the SGLang reference uses dedicated vLLM render pool and lists community support for selected configurations.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/llm-d/llm-d/blob/9059ad4050a3e1713d14b954685dac87cfe932cc/guides/workload-autoscaling/README.md",
+      "locator": "Warning / KEDA + EPP Metrics",
+      "claim": "WVA is deprecated in the pinned guide; KEDA plus EPP metrics is recommended.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/llm-d/llm-d/blob/9059ad4050a3e1713d14b954685dac87cfe932cc/README.md",
+      "locator": "What does llm-d offer to production inference?",
+      "claim": "llm-d provides orchestration above model servers including inference routing and operational controls.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/docs/docs/advanced_features/llm-d.mdx",
+      "locator": "Numbered teaching derivation and CPU lab",
+      "claim": "All numerical cases and readiness/capacity estimates are simplified teaching abstractions, not measured production performance.",
+      "kind": "derivation",
+      "status": "derived"
+    }
+  ]
+}

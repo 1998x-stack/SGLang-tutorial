@@ -55,6 +55,11 @@
 | [43 · Radix Eviction Policies](43.html) | 缓存不足时应该先回收哪个 leaf？如何把重算代价和延迟目标变成可解释策略？ | 双 SVG + MathML + CPU radix_policy | 固定 commit 源码与官方文档 |
 | [44 · R-Fork](44.html) | 如何从已经运行的模型实例装载同一权重，而不是重新经过完整 checkpoint 读取？ | 双 SVG + MathML + CPU rfork_readiness | 固定 commit 源码与官方文档 |
 | [45 · SGLang Simulator](45.html) | 如何用真实 scheduler/cache 与替代 forward latency，在无模型权重情况下比较 serving 策略？ | 双 SVG + MathML + CPU serving_simulation | 固定 commit 源码与官方文档 |
+| [46 · Logits Processor & Sampler](46.html) | 从 LM head 的 logits 到实际 token，采样分布与返回的 logprob 为什么可能不同？ | 双 SVG + MathML + CPU sampling_distribution | 固定 commit 源码与官方文档 |
+| [47 · Model Loading](47.html) | 磁盘 checkpoint 怎样变成各 TP/PP rank 可运行的模型参数，为什么读取 shard 不等于 TP 切分？ | 双 SVG + MathML + CPU checkpoint_shards | 固定 commit 源码与官方文档 |
+| [48 · Tokenizer Manager & Detokenizer](48.html) | 如何避免 CPU tokenization 堵塞事件循环，并保证流式文本不乱码、不重复？ | 双 SVG + MathML + CPU streaming_detokenize | 固定 commit 源码与官方文档 |
+| [49 · Reasoning Control](49.html) | 怎样区分提示模型少思考、强制 token budget、结构化答案和输出解析？ | 双 SVG + MathML + CPU reasoning_budget | 固定 commit 源码与官方文档 |
+| [50 · SGLang × Kubernetes / llm-d](50.html) | 多个 SGLang replicas 如何在 Gateway、Endpoint Picker、KV locality 与 autoscaler 之间协作？ | 双 SVG + MathML + CPU fleet_routing | 固定 commit 源码与官方文档 |
 
 ## 第二批源码基线
 
@@ -224,3 +229,16 @@ python3 examples/checkpoint_engine.py
 - [SGLang Simulator：真实调度逻辑、预测时钟与容量规划](45.html) · [上游入口](https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/docs/docs/advanced_features/sglang_simulator.mdx) · [CPU 实验](examples/serving_simulation.py) · [evidence](evidence/45.json)
 
 回归目标：45 HTML、90 SVG、45 evidence、46 filters、40 CPU labs；Chromium 1440/768/390/360 × 46 pages = 184 views。GPU 和实际多卡仿真未实测；CI / Pages 以运行记录为准。
+
+
+## 第十批（46–50）
+
+固定上游 SGLang `b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7`，llm-d `9059ad4050a3e1713d14b954685dac87cfe932cc`；历史 evidence 保留原 revision。Sampling distribution 与 API logprob 区分；checkpoint 文件与 TP layout 区分；token、文本和 SSE 片段区分；reasoning 生成约束与输出 parser 分离；集群级 EPP 与引擎内部 scheduler 分离。
+
+- [Logits Processor & Sampler：概率分布、截断与 Logprob 语义](46.html) · [上游入口](https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/python/sglang/srt/layers/logits_processor.py#L680-L838) · [CPU 实验](examples/sampling_distribution.py) · [evidence](evidence/46.json)
+- [Model Loading：Checkpoint、Safetensors、Weight Loader 与分片](47.html) · [上游入口](https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/docs/docs/advanced_features/model_loading.mdx) · [CPU 实验](examples/checkpoint_shards.py) · [evidence](evidence/47.json)
+- [Tokenizer Manager & Detokenizer：异步分词、增量解码与流式响应](48.html) · [上游入口](https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/python/sglang/srt/managers/tokenizer_manager.py#L1065-L1161) · [CPU 实验](examples/streaming_detokenize.py) · [evidence](evidence/48.json)
+- [Reasoning Control：Thinking Budget、Reasoning Parser 与 Grammar 状态](49.html) · [上游入口](https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/docs/docs/advanced_features/thinking_budget.mdx) · [CPU 实验](examples/reasoning_budget.py) · [evidence](evidence/49.json)
+- [SGLang × Kubernetes / llm-d：集群级推理调度与弹性部署](50.html) · [上游入口](https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/docs/docs/advanced_features/llm-d.mdx) · [CPU 实验](examples/fleet_routing.py) · [evidence](evidence/50.json)
+
+回归目标：50 HTML、100 SVG、50 evidence、51 filters、45 CPU labs；Chromium 1440/768/390/360 × 51 pages = 204 views。GPU、真实模型和 Kubernetes 未部署/实测；CI / Pages 以运行记录为准。

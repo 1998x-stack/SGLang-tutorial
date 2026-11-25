@@ -171,3 +171,12 @@ python3 examples/speculative_sampling.py
 - R-Fork：remote_instance loading 不复制进程/KV；NCCL 对应 ranks、TransferEngine registration、ModelExpress discovery 区分。ready gate 示例是工程不变量，不声称完整事务；admin endpoints 不暴露凭证。
 - Simulator：真实 scheduler/cache 与 mock forward/sample 区分；logical time、wall clock、预测误差独立。当前 single-worker runtime 不等于 predictor 目标拓扑；不得把模拟数当真实 GPU 性能。
 - 固定上游 b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7；45 章、90 SVG、45 evidence、46 filters、40 CPU labs、184 browser views。CI 通过后合并并检查 Pages；未执行检查如实标记。
+
+
+## 第十批专属工程约束（46–50）
+- Sampler：固定实现的 penalty / grammar / bias / watermark / custom processor / sanitize 顺序和旁路分别标注。temperature=0 用 greedy；严格说明 top-p 边界和后端差异；API logprob 不假定等于截断后 behavior distribution。
+- Loader：checkpoint file shard 与 TP/PP 参数布局分开；default iterator 与 sharded_state load 顺序不同；memory peak 分 host/device；校验 revision、dtype、shape、missing keys。可信 checkpoint 与代码边界不可省略。
+- Tokenizer：单字符串动态批处理空队列立即处理；kwargs 不一致逐条执行。增量解码区分 token offsets、sent offsets、UTF-8 holdback、stop trim 与取消。非 beam continuity 生产 warning 与 CI exception 不混淆。
+- Reasoning：模板 hint、grammar hard budget、custom processor、parser 分层。多 token terminator、partial match、reasoning_in_grammar 交集、total output limit 分开；native require_reasoning 与 chat 参数映射须依据固定文档。
+- llm-d：SGLang scheduler 与 EPP 集群层分开；precise index 不是 KV tensor；SGLang reference dedicated render pool；区分 community 与 validated，不能移用 vLLM 实测。固定 llm-d 9059ad4050a3e1713d14b954685dac87cfe932cc 推荐 KEDA+EPP，WVA deprecated；不声称真实集群已部署。
+- 固定 SGLang b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7；50 章、100 SVG、50 evidence、51 filters、45 CPU labs、204 browser views。CI 通过方合并，独立验证 Pages；未执行检查如实标记。

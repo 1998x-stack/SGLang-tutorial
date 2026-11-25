@@ -1,0 +1,48 @@
+{
+  "article": "47.html",
+  "source_revision": "b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7",
+  "claims": [
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/docs/docs/advanced_features/model_loading.mdx",
+      "locator": "How loading works / Load formats",
+      "claim": "Auto format defaults to safetensors then PyTorch bin; sharded_state and layered formats have distinct loading paths.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/python/sglang/srt/model_loader/loader.py#L4229",
+      "locator": "get_model_loader",
+      "claim": "The loader factory dispatches by load configuration.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/python/sglang/srt/model_loader/weight_utils.py#L1320-L1359",
+      "locator": "safetensors_weights_iterator",
+      "claim": "The iterator reads tensors by name, with optional prefetch, mmap or whole-file loading and cache drop.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/python/sglang/srt/model_loader/loader.py#L1070-L1134",
+      "locator": "load_weights_only / postprocess_weights",
+      "claim": "Model-specific load_weights consumes the named tensors; quant methods may repack after loading.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/python/sglang/srt/model_loader/loader.py#L1582-L1731",
+      "locator": "ShardedStateLoader",
+      "claim": "Pre-sharded loader selects rank-specific files and checks missing state keys.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/docs/docs/advanced_features/model_loading.mdx",
+      "locator": "Numbered teaching derivation and CPU lab",
+      "claim": "All numerical cases and readiness/capacity estimates are simplified teaching abstractions, not measured production performance.",
+      "kind": "derivation",
+      "status": "derived"
+    }
+  ]
+}

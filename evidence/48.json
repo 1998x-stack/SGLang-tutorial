@@ -1,0 +1,48 @@
+{
+  "article": "48.html",
+  "source_revision": "b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7",
+  "claims": [
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/python/sglang/srt/managers/tokenizer_manager.py#L1065-L1161",
+      "locator": "TokenizerManager.generate_request",
+      "claim": "Request generation is an async lifecycle entry point.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/python/sglang/srt/managers/async_dynamic_batch_tokenizer.py#L17-L164",
+      "locator": "AsyncDynamicbatchTokenizer",
+      "claim": "Dynamic queue batches single-string requests; identical kwargs allow one batch call in a single-thread executor.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/python/sglang/srt/managers/tokenizer_manager.py#L2081-L2194",
+      "locator": "send and abort-before-dispatch checks",
+      "claim": "Dispatch paths check whether the request has been aborted.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/python/sglang/srt/managers/detokenizer_manager.py#L276-L474",
+      "locator": "DetokenizerManager batch token output",
+      "claim": "Batch token IDs are converted using per-request detokenization states.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/python/sglang/srt/managers/incremental_detokenize.py#L122-L259",
+      "locator": "DetokenizeState",
+      "claim": "State tracks token offsets, received counts, sent text and incomplete decoding; final output is trimmed.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/python/sglang/srt/managers/tokenizer_manager.py#L1065-L1161",
+      "locator": "Numbered teaching derivation and CPU lab",
+      "claim": "All numerical cases and readiness/capacity estimates are simplified teaching abstractions, not measured production performance.",
+      "kind": "derivation",
+      "status": "derived"
+    }
+  ]
+}

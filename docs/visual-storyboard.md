@@ -195,3 +195,40 @@
 - `45-real-vs-mock.svg`：Simulator 保留与替换的运行时组件。scheduler 与 cache 真实运行；model forward / sample 被 mock，predictor 产生时延。
 - `45-logical-time.svg`：FCFS 教学时序与 TTFT。A 0→8ms；B 3ms 到达、8ms 开始、10ms 首 token、12ms 完成。
 - 状态选择：低负载 → 排队 → 预测偏差；实验 `serving_simulation.py`。
+
+
+## 第十批故事板
+
+### 46 Logits Processor & Sampler：概率分布、截断与 Logprob 语义
+
+- `46-sampling-pipeline.svg`：从 LM head 到采样与状态提交。固定版本的普通路径；watermark 或 graph 已采样路径可能旁路部分操作。
+- `46-truncate-renorm.svg`：截断前概率与实际采样支持。A/B 保留；C/D 权重清零；重归一化后 A=2/3、B=1/3。
+- 状态选择：原始分布 → 截断 → 重归一化；实验 `sampling_distribution.py`。
+
+
+### 47 Model Loading：Checkpoint、Safetensors、Weight Loader 与分片
+
+- `47-index-vs-tp.svg`：Checkpoint file index 与 TP layout 的区别。同一个 W tensor 文件映射到两个 rank 的不同参数切片。
+- `47-loader-lifecycle.svg`：读取、参数落位与 post-load。迭代 named tensors，再做模型特定映射与后处理；最终运行时初始化。
+- 状态选择：文件分片 → TP 切分 → 预分片格式；实验 `checkpoint_shards.py`。
+
+
+### 48 Tokenizer Manager & Detokenizer：异步分词、增量解码与流式响应
+
+- `48-async-tokenize.svg`：异步动态分词的队列与 future。相同 kwargs 可批处理；空队列时立即执行，避免固定等待。
+- `48-utf8-stream.svg`：跨片 UTF-8 与增量输出。E4、B8、AD 合成“中”；不完整片段不独立发出。
+- 状态选择：第一个 byte fragment → 第二个 fragment → 最后 fragment；实验 `streaming_detokenize.py`。
+
+
+### 49 Reasoning Control：Thinking Budget、Reasoning Parser 与 Grammar 状态
+
+- `49-reasoning-layers.svg`：软提示、硬约束与输出解析。模板引导；grammar 在采样前约束；parser 在采样后拆分字段。
+- `49-reasoning-state.svg`：思考预算与多 token 结束序列。预算耗尽时逐 token 强制终止，完整 marker 后切入 answer grammar。
+- 状态选择：Thinking → 强制结束 → Answer；实验 `reasoning_budget.py`。
+
+
+### 50 SGLang × Kubernetes / llm-d：集群级推理调度与弹性部署
+
+- `50-fleet-path.svg`：Kubernetes 推理入口与 SGLang worker。Gateway / EPP 选择 ready worker；KV event index 反馈缓存位置。
+- `50-scaling-loop.svg`：SLO 信号驱动扩容与 Ready gate。KEDA/HPA 调整 replica；冷启动、Ready 和 drain 约束实际容量。
+- 状态选择：Warm 但拥塞 → Warm 且空闲 → Not Ready；实验 `fleet_routing.py`。

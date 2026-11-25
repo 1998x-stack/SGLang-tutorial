@@ -1,0 +1,55 @@
+{
+  "article": "49.html",
+  "source_revision": "b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7",
+  "claims": [
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/docs/docs/advanced_features/thinking_budget.mdx",
+      "locator": "Chat-template hints / Hard budget with strict thinking",
+      "claim": "Template hints are soft; strict thinking enforces budget through grammar filtering with configured reasoning parser.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/docs/docs/advanced_features/thinking_budget.mdx",
+      "locator": "Native /generate API / OpenAI chat completions API",
+      "claim": "Native budget requires require_reasoning; chat custom_params.thinking_budget is mapped through the chat path.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/python/sglang/srt/constrained/reasoner_grammar_backend.py#L43-L207",
+      "locator": "ReasonerGrammarObject initialization and transfer_state",
+      "claim": "Token-sequence matcher tracks phase transitions and optional inner grammar framing.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/python/sglang/srt/constrained/reasoner_grammar_backend.py#L303-L378",
+      "locator": "_can_think_more / fill_vocab_mask",
+      "claim": "Budget includes partial end-marker progress; filtering can narrow grammar masks and forces terminator sequence when budget exhausted.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/python/sglang/srt/parser/reasoning_parser.py#L210-L310",
+      "locator": "BaseReasoningFormatDetector.parse_streaming_increment",
+      "claim": "Parser buffers partial delimiters and separates reasoning from normal content, with optional tool-start interruption.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/python/sglang/srt/sampling/custom_logit_processor.py#L97-L180",
+      "locator": "ThinkingBudgetLogitProcessor",
+      "claim": "Built-in custom processors implement model-specific IDs and forced ending; distinct from grammar control.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/docs/docs/advanced_features/thinking_budget.mdx",
+      "locator": "Numbered teaching derivation and CPU lab",
+      "claim": "All numerical cases and readiness/capacity estimates are simplified teaching abstractions, not measured production performance.",
+      "kind": "derivation",
+      "status": "derived"
+    }
+  ]
+}
