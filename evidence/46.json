@@ -1,0 +1,48 @@
+{
+  "article": "46.html",
+  "source_revision": "b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7",
+  "claims": [
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/python/sglang/srt/layers/logits_processor.py#L680-L838",
+      "locator": "LogitsProcessor.forward",
+      "claim": "LogitsProcessor handles hidden-state selection and LM head output for forward batches.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/python/sglang/srt/sampling/sampling_pipeline.py#L38-L168",
+      "locator": "SamplingPipeline.sample / adjustment helpers",
+      "claim": "The pinned pipeline applies penalties, grammar mask and bias, optional watermark, custom processors and sanitization, then samples and commits state.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/python/sglang/srt/layers/sampler.py#L142-L348",
+      "locator": "Sampler.forward",
+      "claim": "Greedy and stochastic paths differ; return-original-logprob and RL options change logprob computation.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/python/sglang/srt/layers/sampler.py#L810-L894",
+      "locator": "top_k_top_p_min_p_filter_sorted_probs_torch",
+      "claim": "The torch fallback filters sorted probabilities using cumulative mass, top-k and min-p relative to the maximum.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/python/sglang/srt/sampling/sampling_batch_info.py#L64-L195",
+      "locator": "SamplingBatchInfo",
+      "claim": "Per-request sampler parameters, plugin state and seeds are organized into batch metadata.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/python/sglang/srt/layers/logits_processor.py#L680-L838",
+      "locator": "Numbered teaching derivation and CPU lab",
+      "claim": "All numerical cases and readiness/capacity estimates are simplified teaching abstractions, not measured production performance.",
+      "kind": "derivation",
+      "status": "derived"
+    }
+  ]
+}
