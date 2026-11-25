@@ -7,7 +7,7 @@ from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
 WIDTHS = (1440, 768, 390, 360)
-PAGES = ["index.html"] + [f"{i:02}.html" for i in range(1, 51)]
+PAGES = ["index.html"] + [f"{i:02}.html" for i in range(1, 56)]
 
 
 def main():
@@ -87,9 +87,9 @@ def main():
                     if page.locator(".course-card:not([hidden])").count() != 1:
                         fail.append("Mooncake category filter failed")
                     page.locator("[data-filter='all']").click()
-                    if page.locator(".course-grid .course-card").count() != 50:
-                        fail.append("course grid must contain all 50 chapter cards")
-                    for category in ("quantization", "kv-quantization", "cuda-graph", "multimodal-pipeline", "observability", "structured-output", "tool-parser", "deterministic", "adaptive-spec", "checkpoint-engine", "hisparse", "hybrid-kv", "kv-sharing", "paged-experts", "sglang-rl", "prefill-cp", "decode-cp", "session-radix", "unified-memory", "reasoning-compression", "pipeline-runtime", "engram", "radix-eviction", "rfork", "simulator", "sampling-runtime", "model-loading", "tokenizer-stream", "reasoning-control", "llmd-kubernetes"):
+                    if page.locator(".course-grid .course-card").count() != 55:
+                        fail.append("course grid must contain all 55 chapter cards")
+                    for category in ("quantization", "kv-quantization", "cuda-graph", "multimodal-pipeline", "observability", "structured-output", "tool-parser", "deterministic", "adaptive-spec", "checkpoint-engine", "hisparse", "hybrid-kv", "kv-sharing", "paged-experts", "sglang-rl", "prefill-cp", "decode-cp", "session-radix", "unified-memory", "reasoning-compression", "pipeline-runtime", "engram", "radix-eviction", "rfork", "simulator", "sampling-runtime", "model-loading", "tokenizer-stream", "reasoning-control", "llmd-kubernetes", "kernel-architecture", "layer-boundary", "hybrid-checkpoints", "hicache-dynamic", "object-storage"):
                         page.locator(f"[data-filter='{category}']").click()
                         if page.locator(".course-card:not([hidden])").count() != 1:
                             fail.append(f"{category} category filter failed")

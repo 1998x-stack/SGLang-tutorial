@@ -1,0 +1,41 @@
+{
+  "article": "51.html",
+  "source_revision": "0fde0356cc44bca9a7727a3a2e2c2d10cd5bd30f",
+  "claims": [
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/0fde0356cc44bca9a7727a3a2e2c2d10cd5bd30f/python/sglang/kernels/README.md",
+      "locator": "Layout / RFC #29630",
+      "claim": "Unified kernel namespace reorganizes operators, AOT and JIT; legacy sglang.jit_kernel removed.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/0fde0356cc44bca9a7727a3a2e2c2d10cd5bd30f/python/sglang/kernels/registry.py",
+      "locator": "KernelRegistry / register_kernel",
+      "claim": "Registry records specifications by operation.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/0fde0356cc44bca9a7727a3a2e2c2d10cd5bd30f/python/sglang/kernels/selector.py",
+      "locator": "select_kernel / get_kernel",
+      "claim": "Selector resolves implementation for an operation and platform.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/0fde0356cc44bca9a7727a3a2e2c2d10cd5bd30f/docs/docs/developer_guide/development_jit_kernel_guide.mdx",
+      "locator": "Tensor Checking / Kernel Launching",
+      "claim": "JIT uses TVM-FFI TensorView, TensorMatcher, LaunchKernel and runtime compilation.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/0fde0356cc44bca9a7727a3a2e2c2d10cd5bd30f/python/sglang/kernels/README.md",
+      "locator": "Teaching example and CPU lab",
+      "claim": "All numerical examples are derived teaching abstractions, not measured GPU or cluster performance.",
+      "kind": "derivation",
+      "status": "derived"
+    }
+  ]
+}

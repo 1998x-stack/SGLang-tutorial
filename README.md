@@ -60,6 +60,11 @@
 | [48 · Tokenizer Manager & Detokenizer](48.html) | 如何避免 CPU tokenization 堵塞事件循环，并保证流式文本不乱码、不重复？ | 双 SVG + MathML + CPU streaming_detokenize | 固定 commit 源码与官方文档 |
 | [49 · Reasoning Control](49.html) | 怎样区分提示模型少思考、强制 token budget、结构化答案和输出解析？ | 双 SVG + MathML + CPU reasoning_budget | 固定 commit 源码与官方文档 |
 | [50 · SGLang × Kubernetes / llm-d](50.html) | 多个 SGLang replicas 如何在 Gateway、Endpoint Picker、KV locality 与 autoscaler 之间协作？ | 双 SVG + MathML + CPU fleet_routing | 固定 commit 源码与官方文档 |
+| [51 · Unified Kernel Architecture](51.html) | 一个算子怎样从 Python 调用进入适配的设备实现，并保证 shape、dtype、stride 与 stream 契约？ | 双 SVG + MathML + CPU kernel_contract | 固定 commit 源码与官方文档 |
+| [52 · Layer Boundary](52.html) | Attention、FFN 与 MoE 之间如何保证 token rows、partial sums 和 residual 更新正确衔接？ | 双 SVG + MathML + CPU layer_boundary_contract | 固定 commit 源码与官方文档 |
+| [53 · Hybrid Cache Checkpoints](53.html) | Full KV 命中更长前缀时，为什么 recurrent-state checkpoint 仍可能限制实际可复用长度？ | 双 SVG + MathML + CPU hybrid_checkpoint_reuse | 固定 commit 源码与官方文档 |
+| [54 · HiCache Dynamic Storage](54.html) | 怎样在不重启的前提下安全切换 L3 后端，避免未完成写入、host lock 泄漏与 DP 状态分裂？ | 双 SVG + MathML + CPU storage_lifecycle | 固定 commit 源码与官方文档 |
+| [55 · Model Object Storage](55.html) | 怎样从对象存储流式读取模型权重，控制启动时延、并发与峰值内存？ | 双 SVG + MathML + CPU object_streaming_budget | 固定 commit 源码与官方文档 |
 
 ## 第二批源码基线
 
@@ -242,3 +247,16 @@ python3 examples/checkpoint_engine.py
 - [SGLang × Kubernetes / llm-d：集群级推理调度与弹性部署](50.html) · [上游入口](https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/docs/docs/advanced_features/llm-d.mdx) · [CPU 实验](examples/fleet_routing.py) · [evidence](evidence/50.json)
 
 回归目标：50 HTML、100 SVG、50 evidence、51 filters、45 CPU labs；Chromium 1440/768/390/360 × 51 pages = 204 views。GPU、真实模型和 Kubernetes 未部署/实测；CI / Pages 以运行记录为准。
+
+
+## 第十一批（51–55）
+
+固定上游 0fde0356cc44bca9a7727a3a2e2c2d10cd5bd30f。统一 kernel namespace、boundary contract、hybrid checkpoint、runtime L3 和 object streaming；保留历史证据版本。
+
+- [Unified Kernel Architecture：AOT、JIT、Registry 与 Backend Selection](51.html) · [CPU lab](examples/kernel_contract.py) · [evidence](evidence/51.json)
+- [Layer Boundary：布局契约、延迟归约与 Residual Stream](52.html) · [CPU lab](examples/layer_boundary_contract.py) · [evidence](evidence/52.json)
+- [Hybrid Cache Checkpoints：Level 2/3、分叉与 Recurrent State 恢复](53.html) · [CPU lab](examples/hybrid_checkpoint_reuse.py) · [evidence](evidence/53.json)
+- [HiCache Dynamic Storage：运行时 Attach/Detach 与一致性门禁](54.html) · [CPU lab](examples/storage_lifecycle.py) · [evidence](evidence/54.json)
+- [Model Object Storage：Metadata、Safetensors Streaming 与分布式 I/O](55.html) · [CPU lab](examples/object_streaming_budget.py) · [evidence](evidence/55.json)
+
+回归目标：55 HTML、110 SVG、55 evidence、56 filters、50 CPU labs、224 browser views。GPU、真实存储及 Kubernetes 未实测。
