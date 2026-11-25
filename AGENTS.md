@@ -103,3 +103,12 @@ python3 examples/prefix_match.py
 - Unified Memory：共享 arena 不是 CUDA UVM；区分 virtual/physical ID、vector demand、capacity estimate 和可达布局。Pending、network、fixed page 的 hazard clearance 必须先满足；PP 各 stage 共同可行。具体支持组合见 pinned docs。
 - RAC：prompt + dense on-policy decode calibration 与 pruning solver 分离；不能把权重剪枝等同于生成 token 剪枝或 RL。比较 accuracy、completion length、wall clock；toy 不是 SparseGPT benchmark。
 - 固定上游 b1ef3a60797aa6c29bcfa4cc3bc135dd2f19ec22，历史 claims 不重写。40 章、80 SVG、40 evidence、41 filters、35 CPU labs、164 browser views。所有 QA 未执行时标 not verified；CI 通过后合并并检查 Pages。
+
+
+## 第九批专属工程约束（41–45）
+- PP：stage 与 chunk 依赖均保留；理想 bubble 公式不含通信；动态 chunk 的二次方程、平滑、对齐、容量门分开。P2PWork 需在消费/缓冲复用前等待。
+- Engram：静态 table rows 与请求 KV、MoE 权重分开。token 窗口、boundary pad、hash IDs、placement、replication、lookup 独立解释；不得承诺 collision-free 或任意 topology。
+- Eviction：先筛 eligible leaves，再排序；parent 重新入候选。T-LRU high-water history 不随 tail trim 下降；state_cost 仅 recurrent checkpoints，joint_lru 和 session 兼容性按固定文档。
+- R-Fork：remote_instance loading 不复制进程/KV；NCCL 对应 ranks、TransferEngine registration、ModelExpress discovery 区分。ready gate 示例是工程不变量，不声称完整事务；admin endpoints 不暴露凭证。
+- Simulator：真实 scheduler/cache 与 mock forward/sample 区分；logical time、wall clock、预测误差独立。当前 single-worker runtime 不等于 predictor 目标拓扑；不得把模拟数当真实 GPU 性能。
+- 固定上游 b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7；45 章、90 SVG、45 evidence、46 filters、40 CPU labs、184 browser views。CI 通过后合并并检查 Pages；未执行检查如实标记。

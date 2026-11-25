@@ -61,6 +61,11 @@ jobs:
           python3 examples/session_eviction.py
           python3 examples/unified_arena.py
           python3 examples/rac_calibration.py
+          python3 examples/pipeline_chunking.py
+          python3 examples/engram_lookup.py
+          python3 examples/radix_policy.py
+          python3 examples/rfork_readiness.py
+          python3 examples/serving_simulation.py
       - name: Install Playwright Chromium
         run: |
           python3 -m pip install playwright
@@ -129,12 +134,17 @@ jobs:
           test -f _site/examples/session_eviction.py
           test -f _site/examples/unified_arena.py
           test -f _site/examples/rac_calibration.py
+          test -f _site/examples/pipeline_chunking.py
+          test -f _site/examples/engram_lookup.py
+          test -f _site/examples/radix_policy.py
+          test -f _site/examples/rfork_readiness.py
+          test -f _site/examples/serving_simulation.py
           test -f _site/evidence/21.json
           test -f _site/evidence/22.json
           test -f _site/evidence/23.json
           test -f _site/evidence/24.json
           test -f _site/evidence/25.json
-          for i in $(seq -w 1 40); do test -f _site/$i.html; test -f _site/evidence/$i.json; done
+          for i in $(seq -w 1 45); do test -f _site/$i.html; test -f _site/evidence/$i.json; done
       - uses: actions/upload-pages-artifact@v4
         with:
           path: _site

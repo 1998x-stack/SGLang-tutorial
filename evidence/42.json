@@ -1,0 +1,48 @@
+{
+  "article": "42.html",
+  "source_revision": "b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7",
+  "claims": [
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/docs/docs/advanced_features/engram.mdx",
+      "locator": "Engram Tables / Usage",
+      "claim": "Engram stores static tables and exposes placement, replication and lookup policies via --engram-config.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/python/sglang/srt/layers/engram.py#L257-L277",
+      "locator": "compute_engram_hash_ids",
+      "claim": "Compressed token windows, multipliers, running XOR, modulus and offsets produce row IDs.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/python/sglang/srt/layers/engram.py#L280-L367",
+      "locator": "EngramHasher",
+      "claim": "Hasher maintains request history and computes hash IDs.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/docs/docs/advanced_features/engram.mdx",
+      "locator": "How auto picks / Requirements and limits",
+      "claim": "Peer reads and collectives have topology and layout prerequisites; group_shards has distinct deployment restrictions.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/python/sglang/srt/layers/engram.py#L857-L1005",
+      "locator": "_PeerShards / lookup",
+      "claim": "Peer shard views and row lookup are separated from hash generation.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/docs/docs/advanced_features/engram.mdx",
+      "locator": "Numbered teaching derivation and CPU lab",
+      "claim": "Numerical examples and readiness/capacity models are explicitly simplified teaching abstractions, not measured production performance.",
+      "kind": "derivation",
+      "status": "derived"
+    }
+  ]
+}

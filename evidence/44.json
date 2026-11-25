@@ -1,0 +1,48 @@
+{
+  "article": "44.html",
+  "source_revision": "b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7",
+  "claims": [
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/docs/docs/advanced_features/rfork.mdx",
+      "locator": "Usage / NCCL as backend",
+      "claim": "remote_instance load format supports NCCL, TransferEngine and ModelExpress; NCCL seed admin endpoints require matching admin credentials.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/python/sglang/srt/model_loader/remote_instance_weight_loader_utils.py#L16-L89",
+      "locator": "seed admin headers / trigger send group and transfer",
+      "claim": "NCCL control requests create corresponding TP rank pair groups and trigger weight transfer.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/python/sglang/srt/model_loader/loader.py#L3197-L3316",
+      "locator": "RemoteInstanceModelLoader",
+      "claim": "The loader chooses remote weight transport by backend.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/python/sglang/srt/model_loader/remote_instance_weight_loader_utils.py#L90-L145",
+      "locator": "get_remote_instance_transfer_engine_info_per_rank / register_memory_region",
+      "claim": "TransferEngine uses per-rank transport info and model parameter memory registration.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/docs/docs/advanced_features/rfork.mdx",
+      "locator": "ModelExpress as backend",
+      "claim": "ModelExpress registry lets instances discover compatible ready sources; if none exists, native load and publication are supported.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/docs/docs/advanced_features/rfork.mdx",
+      "locator": "Numbered teaching derivation and CPU lab",
+      "claim": "Numerical examples and readiness/capacity models are explicitly simplified teaching abstractions, not measured production performance.",
+      "kind": "derivation",
+      "status": "derived"
+    }
+  ]
+}

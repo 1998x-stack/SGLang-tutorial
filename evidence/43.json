@@ -1,0 +1,48 @@
+{
+  "article": "43.html",
+  "source_revision": "b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7",
+  "claims": [
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/docs/docs/advanced_features/radix_eviction_policy.mdx",
+      "locator": "How eviction picks a victim",
+      "claim": "Only evictable unlocked leaves are candidates; lower score is evicted first; parent may become eligible afterward.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/python/sglang/srt/mem_cache/evict_policy.py#L17-L49",
+      "locator": "LRUStrategy / LFUStrategy / PriorityStrategy",
+      "claim": "LRU and LFU use recency and hit counts; priority uses request priority and recency.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/python/sglang/srt/mem_cache/evict_policy.py#L50-L84",
+      "locator": "TLRUStrategy.get_priority",
+      "claim": "T-LRU uses history high-water length, remaining cached prefix and node length to identify TEL-safe nodes.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/python/sglang/srt/mem_cache/evict_policy.py#L85-L132",
+      "locator": "StateCostStrategy / SLRUStrategy",
+      "claim": "State cost models reconstruction; SLRU ranks probationary before protected based on a hit threshold.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/docs/docs/advanced_features/radix_eviction_policy.mdx",
+      "locator": "Available policies / Tuning a policy",
+      "claim": "Joint LRU and state cost have component-specific behavior and compatibility restrictions.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/docs/docs/advanced_features/radix_eviction_policy.mdx",
+      "locator": "Numbered teaching derivation and CPU lab",
+      "claim": "Numerical examples and readiness/capacity models are explicitly simplified teaching abstractions, not measured production performance.",
+      "kind": "derivation",
+      "status": "derived"
+    }
+  ]
+}

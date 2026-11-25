@@ -50,6 +50,11 @@
 | [38 · Session-Aware Radix Cache](38.html) | 如何保护活跃 Agent 的缓存，同时不把整个 KV 池锁死？ | 双 SVG + MathML + CPU session_eviction | 固定 commit 源码与官方文档 |
 | [39 · Unified Memory](39.html) | 如何让 Hybrid 模型的 full KV、window KV 和 recurrent state 动态共享显存？ | 双 SVG + MathML + CPU unified_arena | 固定 commit 源码与官方文档 |
 | [40 · Reasoning-Aware Compression](40.html) | 为什么剪枝后的模型可能更慢？怎样用实际生成轨迹校准激活？ | 双 SVG + MathML + CPU rac_calibration | 固定 commit 源码与官方文档 |
+| [41 · Pipeline Parallelism](41.html) | 同一个长 Prompt 怎样让多个模型 stage 同时工作，而不破坏因果依赖？ | 双 SVG + MathML + CPU pipeline_chunking | 固定 commit 源码与官方文档 |
+| [42 · Engram](42.html) | 大规模静态记忆如何从 token 历史得到 row IDs，并在 GPU/Host/Peer 间查表？ | 双 SVG + MathML + CPU engram_lookup | 固定 commit 源码与官方文档 |
+| [43 · Radix Eviction Policies](43.html) | 缓存不足时应该先回收哪个 leaf？如何把重算代价和延迟目标变成可解释策略？ | 双 SVG + MathML + CPU radix_policy | 固定 commit 源码与官方文档 |
+| [44 · R-Fork](44.html) | 如何从已经运行的模型实例装载同一权重，而不是重新经过完整 checkpoint 读取？ | 双 SVG + MathML + CPU rfork_readiness | 固定 commit 源码与官方文档 |
+| [45 · SGLang Simulator](45.html) | 如何用真实 scheduler/cache 与替代 forward latency，在无模型权重情况下比较 serving 策略？ | 双 SVG + MathML + CPU serving_simulation | 固定 commit 源码与官方文档 |
 
 ## 第二批源码基线
 
@@ -206,3 +211,16 @@ python3 examples/checkpoint_engine.py
 - [Reasoning-Aware Compression：On-policy CoT 校准与模型剪枝](40.html) · [上游入口](https://github.com/sgl-project/sglang/blob/b1ef3a60797aa6c29bcfa4cc3bc135dd2f19ec22/docs/docs/advanced_features/reasoning_aware_compression.mdx) · [CPU 实验](examples/rac_calibration.py) · [evidence](evidence/40.json)
 
 回归目标：40 HTML、80 SVG、40 evidence、41 filters、35 CPU labs；Chromium 1440/768/390/360 × 41 pages = 164 views。真实 GPU benchmark 未执行；CI / Pages 以实际运行记录为准。
+
+
+## 第九批（41–45）
+
+固定上游 SGLang `b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7`；前 40 章历史 evidence 保留原 revision。PP 研究 stage/chunk 依赖；Engram 是静态表；eviction 先筛可回收叶，再评分；R-Fork 是 remote weight loader；Simulator 复用调度并替换计算时延。
+
+- [Pipeline Parallelism：Microbatch、动态 Chunking 与异步 P2P](41.html) · [上游入口](https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/docs/docs/advanced_features/pipeline_parallelism.mdx) · [CPU 实验](examples/pipeline_chunking.py) · [evidence](evidence/41.json)
+- [Engram：条件记忆表、N-gram Hash 与分布式 Lookup](42.html) · [上游入口](https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/docs/docs/advanced_features/engram.mdx) · [CPU 实验](examples/engram_lookup.py) · [evidence](evidence/42.json)
+- [Radix Eviction Policies：从 LRU 到 Tail Latency 与 State Cost](43.html) · [上游入口](https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/docs/docs/advanced_features/radix_eviction_policy.mdx) · [CPU 实验](examples/radix_policy.py) · [evidence](evidence/43.json)
+- [R-Fork：Seed 实例、GPU-to-GPU 权重传输与 Ready Gate](44.html) · [上游入口](https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/docs/docs/advanced_features/rfork.mdx) · [CPU 实验](examples/rfork_readiness.py) · [evidence](evidence/44.json)
+- [SGLang Simulator：真实调度逻辑、预测时钟与容量规划](45.html) · [上游入口](https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/docs/docs/advanced_features/sglang_simulator.mdx) · [CPU 实验](examples/serving_simulation.py) · [evidence](evidence/45.json)
+
+回归目标：45 HTML、90 SVG、45 evidence、46 filters、40 CPU labs；Chromium 1440/768/390/360 × 46 pages = 184 views。GPU 和实际多卡仿真未实测；CI / Pages 以运行记录为准。

@@ -7,7 +7,7 @@ from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
 WIDTHS = (1440, 768, 390, 360)
-PAGES = ["index.html"] + [f"{i:02}.html" for i in range(1, 41)]
+PAGES = ["index.html"] + [f"{i:02}.html" for i in range(1, 46)]
 
 
 def main():
@@ -87,9 +87,9 @@ def main():
                     if page.locator(".course-card:not([hidden])").count() != 1:
                         fail.append("Mooncake category filter failed")
                     page.locator("[data-filter='all']").click()
-                    if page.locator(".course-grid .course-card").count() != 40:
-                        fail.append("course grid must contain all 40 chapter cards")
-                    for category in ("quantization", "kv-quantization", "cuda-graph", "multimodal-pipeline", "observability", "structured-output", "tool-parser", "deterministic", "adaptive-spec", "checkpoint-engine", "hisparse", "hybrid-kv", "kv-sharing", "paged-experts", "sglang-rl", "prefill-cp", "decode-cp", "session-radix", "unified-memory", "reasoning-compression"):
+                    if page.locator(".course-grid .course-card").count() != 45:
+                        fail.append("course grid must contain all 45 chapter cards")
+                    for category in ("quantization", "kv-quantization", "cuda-graph", "multimodal-pipeline", "observability", "structured-output", "tool-parser", "deterministic", "adaptive-spec", "checkpoint-engine", "hisparse", "hybrid-kv", "kv-sharing", "paged-experts", "sglang-rl", "prefill-cp", "decode-cp", "session-radix", "unified-memory", "reasoning-compression", "pipeline-runtime", "engram", "radix-eviction", "rfork", "simulator"):
                         page.locator(f"[data-filter='{category}']").click()
                         if page.locator(".course-card:not([hidden])").count() != 1:
                             fail.append(f"{category} category filter failed")

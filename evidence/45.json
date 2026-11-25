@@ -1,0 +1,48 @@
+{
+  "article": "45.html",
+  "source_revision": "b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7",
+  "claims": [
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/docs/docs/advanced_features/sglang_simulator.mdx",
+      "locator": "Supported scope",
+      "claim": "Simulator reuses scheduler/request/cache; runtime scope is single simulated worker TP/EP/DP/PP=1.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/docs/docs/advanced_features/sglang_simulator.mdx",
+      "locator": "Start a simulator server / Read the results",
+      "claim": "OFFLINE advances logical time without sleeping; BLOCKING also sleeps; metrics, request and iteration logs are separate.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/tools/sglang-simulator/src/sglang_simulator/simulation/sglang/model_runner.py#L38-L126",
+      "locator": "C_ModelRunnerHook",
+      "claim": "Model loading and GPU forward are mocked; native initialization and memory pool lifecycle retained; sample returns placeholder token IDs.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/tools/sglang-simulator/src/sglang_simulator/simulation/sglang/scheduler.py#L85-L247",
+      "locator": "ReqDispatcher",
+      "claim": "Request dispatcher handles logical arrival time and request dispatch.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/tools/sglang-simulator/README.md",
+      "locator": "Requirements / Estimator SDK",
+      "claim": "The simulator uses the same monorepo SGLang and predictor dependencies, including AISimulate SDK.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b323e8e6e3aacfe606b11a2ef51ae73bc8b283a7/docs/docs/advanced_features/sglang_simulator.mdx",
+      "locator": "Numbered teaching derivation and CPU lab",
+      "claim": "Numerical examples and readiness/capacity models are explicitly simplified teaching abstractions, not measured production performance.",
+      "kind": "derivation",
+      "status": "derived"
+    }
+  ]
+}
