@@ -7,7 +7,8 @@
       "locator": "ICLR 2026 abstract",
       "claim": "RAC jointly reconstructs activations from input and on-policy chain-of-thought traces during pruning.",
       "kind": "paper",
-      "status": "verified"
+      "status": "verified",
+      "notes": "ICLR proceedings URL cross-checked against arXiv:2509.12464 on 2026-11-25."
     },
     {
       "source_url": "https://github.com/sgl-project/sglang/blob/b1ef3a60797aa6c29bcfa4cc3bc135dd2f19ec22/docs/docs/advanced_features/reasoning_aware_compression.mdx",
