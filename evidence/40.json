@@ -1,0 +1,48 @@
+{
+  "article": "40.html",
+  "source_revision": "b1ef3a60797aa6c29bcfa4cc3bc135dd2f19ec22",
+  "claims": [
+    {
+      "source_url": "https://proceedings.iclr.cc/paper_files/paper/2026/hash/e70ffb3f05096e62b5077d8e1b62e668-Abstract-Conference.html",
+      "locator": "ICLR 2026 abstract",
+      "claim": "RAC jointly reconstructs activations from input and on-policy chain-of-thought traces during pruning.",
+      "kind": "paper",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b1ef3a60797aa6c29bcfa4cc3bc135dd2f19ec22/docs/docs/advanced_features/reasoning_aware_compression.mdx",
+      "locator": "The problem / The fix",
+      "claim": "The reconstruction objective uses prompt and model-generated decode activations; conventional pruning can increase reasoning length.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b1ef3a60797aa6c29bcfa4cc3bc135dd2f19ec22/examples/usage/reasoning_aware_compression/rac_collect_traces.py#L242-L327",
+      "locator": "rollout / collect_traces",
+      "claim": "Phase I collects model-generated calibration traces with SGLang.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b1ef3a60797aa6c29bcfa4cc3bc135dd2f19ec22/examples/usage/reasoning_aware_compression/rac_prune.py#L100-L173",
+      "locator": "load_calibration_sequences / build_recipe",
+      "claim": "Phase II builds calibration input and delegates pruning to llm-compressor.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://github.com/sgl-project/sglang/blob/b1ef3a60797aa6c29bcfa4cc3bc135dd2f19ec22/examples/usage/reasoning_aware_compression/rac_serve_and_eval.py#L157-L222",
+      "locator": "evaluate / report",
+      "claim": "Phase III serves checkpoints and reports accuracy, completion length and elapsed time.",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "source_url": "https://proceedings.iclr.cc/paper_files/paper/2026/hash/e70ffb3f05096e62b5077d8e1b62e668-Abstract-Conference.html",
+      "locator": "Teaching derivation in article; see numbered sections and CPU lab",
+      "claim": "The numerical toy example uses explicit simplified assumptions and is not a production benchmark.",
+      "kind": "derivation",
+      "status": "derived"
+    }
+  ]
+}

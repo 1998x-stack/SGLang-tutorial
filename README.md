@@ -45,6 +45,11 @@
 | [33 · KV Cache Sharing](33.html) | 相同 prefix 如何跨请求复用？CP ranks 如何只保存每页的一份持久副本？ | 双 SVG + MathML + CPU kv_sharing_pages | 固定 commit 官方文档与源码 |
 | [34 · Paged Experts](34.html) | MoE 专家超出 GPU 容量时，如何按路由装载权重而不改变计算？ | 双 SVG + MathML + CPU paged_expert_waves | 固定 commit 官方文档与源码 |
 | [35 · SGLang for RL](35.html) | 从采样到 trainer 再到 weight refit，如何保护 logprob、KV 与策略版本的一致性？ | 双 SVG + MathML + CPU rl_rollout_versions | 固定 commit 官方文档与源码 |
+| [36 · Prefill Context Parallelism](36.html) | 长 Prompt 的 query 计算如何沿序列维分布，同时保留完整因果语义？ | 双 SVG + MathML + CPU prefill_cp_layout | 固定 commit 源码与官方文档 |
+| [37 · Decode Context Parallelism](37.html) | 每个 GPU 只读取局部 KV，为什么还能得到完整 attention 输出？ | 双 SVG + MathML + CPU dcp_lse_merge | 固定 commit 源码与官方文档 |
+| [38 · Session-Aware Radix Cache](38.html) | 如何保护活跃 Agent 的缓存，同时不把整个 KV 池锁死？ | 双 SVG + MathML + CPU session_eviction | 固定 commit 源码与官方文档 |
+| [39 · Unified Memory](39.html) | 如何让 Hybrid 模型的 full KV、window KV 和 recurrent state 动态共享显存？ | 双 SVG + MathML + CPU unified_arena | 固定 commit 源码与官方文档 |
+| [40 · Reasoning-Aware Compression](40.html) | 为什么剪枝后的模型可能更慢？怎样用实际生成轨迹校准激活？ | 双 SVG + MathML + CPU rac_calibration | 固定 commit 源码与官方文档 |
 
 ## 第二批源码基线
 
@@ -188,3 +193,16 @@ python3 examples/checkpoint_engine.py
 - 35 [SGLang for RL：Rollout 数据、权重版本与引擎协同](35.html) · [上游文档](https://github.com/sgl-project/sglang/blob/75ed36d976113c693f8e6f64925e119573a93fda/docs/docs/advanced_features/sglang_for_rl.mdx) · [实验](examples/rl_rollout_versions.py) · [证据](evidence/35.json)
 
 回归目标：35 HTML、70 SVG、35 evidence、36 个首页筛选按钮、30 CPU labs；Chromium 4 个宽度共 144 views。GPU benchmark 未执行；CI 和 Pages 结果以实际运行记录为准。
+
+
+## 第八批（36–40）
+
+固定上游 SGLang `b1ef3a60797aa6c29bcfa4cc3bc135dd2f19ec22`；前 35 章历史 evidence 保留原 revision。PCP 切 query 计算；DCP 切 KV 位置并精确 LSE 合并；session references 是软保护；Unified Memory 是共享 device arena 非 CUDA UVM；RAC 是离线剪枝校准。
+
+- [Prefill Context Parallelism：Zigzag 与 Interleave](36.html) · [上游入口](https://github.com/sgl-project/sglang/blob/b1ef3a60797aa6c29bcfa4cc3bc135dd2f19ec22/docs/docs/advanced_features/prefill_cp.mdx) · [CPU 实验](examples/prefill_cp_layout.py) · [evidence](evidence/36.json)
+- [Decode Context Parallelism：MLA 分片与精确 LSE 合并](37.html) · [上游入口](https://github.com/sgl-project/sglang/blob/b1ef3a60797aa6c29bcfa4cc3bc135dd2f19ec22/docs/docs/advanced_features/dcp.mdx) · [CPU 实验](examples/dcp_lse_merge.py) · [evidence](evidence/37.json)
+- [Session-Aware Radix Cache：多轮会话的软保护与淘汰](38.html) · [上游入口](https://github.com/sgl-project/sglang/blob/b1ef3a60797aa6c29bcfa4cc3bc135dd2f19ec22/docs/docs/advanced_features/session_radix_cache.mdx) · [CPU 实验](examples/session_eviction.py) · [evidence](evidence/38.json)
+- [Unified Memory：共享 Arena、动态 Bands 与安全 Compaction](39.html) · [上游入口](https://github.com/sgl-project/sglang/blob/b1ef3a60797aa6c29bcfa4cc3bc135dd2f19ec22/docs/docs/advanced_features/unified_memory.mdx) · [CPU 实验](examples/unified_arena.py) · [evidence](evidence/39.json)
+- [Reasoning-Aware Compression：On-policy CoT 校准与模型剪枝](40.html) · [上游入口](https://github.com/sgl-project/sglang/blob/b1ef3a60797aa6c29bcfa4cc3bc135dd2f19ec22/docs/docs/advanced_features/reasoning_aware_compression.mdx) · [CPU 实验](examples/rac_calibration.py) · [evidence](evidence/40.json)
+
+回归目标：40 HTML、80 SVG、40 evidence、41 filters、35 CPU labs；Chromium 1440/768/390/360 × 41 pages = 164 views。真实 GPU benchmark 未执行；CI / Pages 以实际运行记录为准。
