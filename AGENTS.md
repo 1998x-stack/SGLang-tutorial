@@ -86,3 +86,11 @@ python3 examples/prefix_match.py
 - 第六批源码基线：`sgl-project/sglang@563813c0d60282fa848382fec600b40d28ddec98`。evidence/26.json–evidence/30.json 的每条 claim 必须含可定位 URL、locator、kind 和 status；研究论文贡献与当前 SGLang 实现分开写。
 - 第六批 CPU labs：grammar_mask.py、tool_parser.py、deterministic_inference.py、adaptive_spec.py、checkpoint_engine.py。只验证有限状态 grammar、增量 parser、float32 reduction order、EMA policy 和 rank readiness；不得声称实现真实 GPU bitmask、真实模型 tool parser、CUDA batch-invariant kernel、EAGLE worker 或 IPC transport。
 - 第六批回归：30 篇文章、60 张独立 SVG、30 份 evidence、31 个首页 filter buttons；Chromium 1440/768/390/360 × 31 pages（首页 + 30 章），共 124 views。Pages staging 与 public smoke check 覆盖 30 HTML、60 SVG、全部 examples 与 30 evidence。
+
+## 第七批专属工程约束（31–35）
+- HiSparse：模型原生 sparse top-k 与设备驻留分开。PD decode-only；DeepSeek V4 C4 direct-to-host 不等同于所有 KV/索引；共享 index 预取 eligibility 单独核对。任何 miss plan 必须在消费前完成。
+- Hybrid：SWA full-to-window 映射与 Mamba/GDN/KDA recurrent state 是不同对象。state:KV ratio 是字节比；复用需同一边界的 KV 和 checkpoint，计入 idle session 和 draft slots。
+- KV Sharing：明确 request prefix reuse、L3 cross-instance sharing、prefill CP page sharding 三种范围。owner/local row 公式必须保留 page_size；gather scratch 与通信成本计入，PD 与 HiCache ownership 遵守 pinned docs。
+- Paged Experts：逻辑 expert ID 与物理 slot 分开，wave 不可重复或漏算 routed entry；原始 gate weights 不在 wave 内重新归一化。K 与 KV 预算竞争；tokens×top_k≤K 是有界 graph 路径的充分条件。
+- RL：行为 logprob 与采样语义及 token mask 对齐；weight_versions 为 output 半开区间，prefill attribution 独立。pause/refit/resume 区分 abort/retract/in_place；更新返回失败不保证权重回滚。Admin endpoints 不暴露凭证。确定性不等于训练推理一致。
+- 固定上游 75ed36d976113c693f8e6f64925e119573a93fda；新增 5 个 CPU toy labs、10 SVG、5 evidence。回归 35 章、70 SVG、35 evidence、36 filters、144 browser views、30 labs。CI 通过后方合并；独立验证 Pages；未执行的检查不得声称通过。

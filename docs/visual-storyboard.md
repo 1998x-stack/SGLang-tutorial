@@ -88,3 +88,36 @@
 | 30 | Checkpoint shards 如何跨节点进入 SGLang Ready 状态？ | loader workers → Parameter Server → Broadcast/P2P → inference ranks | dummy init → IPC → post-load → rank barrier → Ready | broadcast / p2p / all；checkpoint_engine.py |
 
 关键不变量：grammar mask 只约束结构，不保证语义；Tool Parser 只规范化协议，不执行工具；temperature=0 不代表跨 batch 的 logits 完全一致；adaptive speculative 当前支持范围受 EAGLE/EAGLE3 与 topk=1 限制；Checkpoint Engine admin endpoint 必须保护，Ready 需要真实权重与 post-load 全部完成。
+
+
+## 第七批故事板
+
+### 31 HiSparse：从完整 Host KV 到 GPU Working Set
+
+- `31-working-set.svg`：逻辑 top-k 与 GPU 槽映射。历史 KV 在 Host；当前选中 1、4、6，其中 4、6 缺失，换入后 attention 只读取所选槽。
+- `31-direct-host.svg`：PD direct-to-host 与 layer 预取。Prefill 的可卸载 KV 先入 Decode Host；anchor 产生 miss plan，后续层可提前搬运，消费前等待。
+- 交互：全部命中 → 部分命中 → 工作集切换；CPU lab `hisparse_working_set.py`；不以 toy 推断真实 GPU 性能。
+
+### 32 Hybrid KV Cache：全局 KV、滑窗与循环状态
+
+- `32-layer-state.svg`：三类层的状态布局。Full KV 保存历史行；SWA 只保留窗口；循环层保存边界 checkpoint 和当前状态。
+- `32-budget-split.svg`：双池预算与两个瓶颈。同一 120 MiB 预算下，增加 state 份额可提高状态槽并发，却减少 token 容量。
+- 交互：r=0.5 → r=1 → r=2；CPU lab `hybrid_pool_budget.py`；不以 toy 推断真实 GPU 性能。
+
+### 33 KV Cache Sharing：前缀复用与 CP 页分片
+
+- `33-page-ownership.svg`：相同逻辑前缀和 CP 页所有权。八页交错分给四个 rank；逻辑页顺序不因物理分片而改变。
+- `33-gather-pipeline.svg`：分层恢复、Gather 与 Attention。本 rank 页先恢复，四 rank 贡献各自页到 scratch；双 buffer 交替用于下一层。
+- 交互：跨请求前缀 → CP4 分片 → 命名空间不符；CPU lab `kv_sharing_pages.py`；不以 toy 推断真实 GPU 性能。
+
+### 34 Paged Experts：逻辑专家、物理槽与 Waves
+
+- `34-expert-slots.svg`：专家权重逻辑 ID 与物理槽。Host 保存 E=8；GPU 仅 K=3 slots，专家 6 被调入并替换不属于 wave 的专家。
+- `34-wave-merge.svg`：按专家分波并恢复 token 输出。两个 wave 各自计算其 token-expert entries；同一 token 的加权项在统一 merge buffer 归并。
+- 交互：U=2，K=3 → U=5，K=3 → K 增至 5；CPU lab `paged_expert_waves.py`；不以 toy 推断真实 GPU 性能。
+
+### 35 SGLang for RL：Rollout 数据、权重版本与引擎协同
+
+- `35-rollout-data.svg`：Rollout 到 Trainer 的数据与权重回路。推理输出 token/logprob/version，reward/advantage 由训练侧添加；更新后的权重再注入 rollout engine。
+- `35-version-barrier.svg`：暂停、权重更新、缓存与版本门槛。先建立 quiescence；refit 后校验 cache/version，成功才恢复；partial rollout 的 token 版本分段。
+- 交互：单一版本 → 跨版本续跑 → 错误覆盖；CPU lab `rl_rollout_versions.py`；不以 toy 推断真实 GPU 性能。

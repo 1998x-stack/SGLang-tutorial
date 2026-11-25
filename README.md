@@ -41,6 +41,12 @@
 | [29 · Adaptive Speculative Decoding](29.html) | 接受长度 EMA、batch-size slots 与预构建 graph state 如何共同调整 EAGLE steps？ | 双 SVG + MathML + 交互 / CPU adaptive policy | Adaptive Speculative docs、adaptive_spec_params、AdaptiveController、BanditSpec |
 | [30 · Distributed Checkpoint Engine](30.html) | 多节点 checkpoint 如何经 Parameter Server、Broadcast/P2P 和 IPC 进入 Ready 状态？ | 双 SVG + MathML + 交互 / CPU shard/readiness 实验 | Checkpoint Engine docs、checkpoint worker、weight updater 与 IPC endpoint |
 
+| [31 · HiSparse](31.html) | 稀疏模型怎样按 top-k 调入活跃 KV，并把搬运藏在计算之后？ | 双 SVG + MathML + CPU hisparse_working_set | 固定 commit 官方文档与源码 |
+| [32 · Hybrid KV Cache](32.html) | 混合模型为什么要分别为 token KV 和 recurrent checkpoints 分配内存？ | 双 SVG + MathML + CPU hybrid_pool_budget | 固定 commit 官方文档与源码 |
+| [33 · KV Cache Sharing](33.html) | 相同 prefix 如何跨请求复用？CP ranks 如何只保存每页的一份持久副本？ | 双 SVG + MathML + CPU kv_sharing_pages | 固定 commit 官方文档与源码 |
+| [34 · Paged Experts](34.html) | MoE 专家超出 GPU 容量时，如何按路由装载权重而不改变计算？ | 双 SVG + MathML + CPU paged_expert_waves | 固定 commit 官方文档与源码 |
+| [35 · SGLang for RL](35.html) | 从采样到 trainer 再到 weight refit，如何保护 logprob、KV 与策略版本的一致性？ | 双 SVG + MathML + CPU rl_rollout_versions | 固定 commit 官方文档与源码 |
+
 ## 第二批源码基线
 
 第二批（06–10）以 SGLang 上游 `sgl-project/sglang@6a4e10a0ee643dfbe5f59a98b60293bc11fc1bdd` 为实现快照。该 SHA 仅表示核查时的主分支状态，不代表后续版本的默认行为。
@@ -170,3 +176,16 @@ python3 examples/checkpoint_engine.py
 ```
 
 这些实验均为 CPU-only 教学抽象，不依赖 GPU、真实 SGLang server、ZMQ/IPC 或外部工具执行。
+
+
+## 第七批（31–35）
+
+固定上游 SGLang 快照 `75ed36d976113c693f8e6f64925e119573a93fda`。HiSparse 仅卸载合适稀疏 KV；Hybrid 区分 SWA/full 与 recurrent state；官方 KV Sharing 指 prefill CP 页分片，不等于跨请求 radix prefix reuse；Paged Experts 管理权重而非 activation；RL rollout 需要 token-level behavior logprob、版本区间和缓存一致性。教学数字不代表实测。所有历史 evidence 保留原快照。
+
+- 31 [HiSparse：从完整 Host KV 到 GPU Working Set](31.html) · [上游文档](https://github.com/sgl-project/sglang/blob/75ed36d976113c693f8e6f64925e119573a93fda/docs/docs/advanced_features/hisparse_guide.mdx) · [实验](examples/hisparse_working_set.py) · [证据](evidence/31.json)
+- 32 [Hybrid KV Cache：全局 KV、滑窗与循环状态](32.html) · [上游文档](https://github.com/sgl-project/sglang/blob/75ed36d976113c693f8e6f64925e119573a93fda/docs/docs/advanced_features/hybrid_model_memory.mdx) · [实验](examples/hybrid_pool_budget.py) · [证据](evidence/32.json)
+- 33 [KV Cache Sharing：前缀复用与 CP 页分片](33.html) · [上游文档](https://github.com/sgl-project/sglang/blob/75ed36d976113c693f8e6f64925e119573a93fda/docs/docs/advanced_features/kv_cache_sharing.mdx) · [实验](examples/kv_sharing_pages.py) · [证据](evidence/33.json)
+- 34 [Paged Experts：逻辑专家、物理槽与 Waves](34.html) · [上游文档](https://github.com/sgl-project/sglang/blob/75ed36d976113c693f8e6f64925e119573a93fda/docs/docs/advanced_features/paged_experts.mdx) · [实验](examples/paged_expert_waves.py) · [证据](evidence/34.json)
+- 35 [SGLang for RL：Rollout 数据、权重版本与引擎协同](35.html) · [上游文档](https://github.com/sgl-project/sglang/blob/75ed36d976113c693f8e6f64925e119573a93fda/docs/docs/advanced_features/sglang_for_rl.mdx) · [实验](examples/rl_rollout_versions.py) · [证据](evidence/35.json)
+
+回归目标：35 HTML、70 SVG、35 evidence、36 个首页筛选按钮、30 CPU labs；Chromium 4 个宽度共 144 views。GPU benchmark 未执行；CI 和 Pages 结果以实际运行记录为准。

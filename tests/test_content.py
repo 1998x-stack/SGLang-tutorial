@@ -43,6 +43,7 @@ REV_THIRD = "ac0380c7faf9cece3ca32ffe75815af7c585acea"
 REV_FOURTH = "ac0243723b0dcba177f8792979daaa2f8d6ee6ea"
 REV_FIFTH = "563813c0d60282fa848382fec600b40d28ddec98"
 REV_SIXTH = "563813c0d60282fa848382fec600b40d28ddec98"
+REV_SEVENTH = "75ed36d976113c693f8e6f64925e119573a93fda"
 
 
 class Reader(HTMLParser):
@@ -70,11 +71,11 @@ class ArticleTest(unittest.TestCase):
     def test_course_map(self):
         page = read("index.html")
         self.assertEqual(len(page.tags.get("h1", [])), 1)
-        self.assertEqual(sum("data-category" in x for x in page.tags.get("article", [])), 30)
-        self.assertEqual(sum("data-filter" in x for x in page.tags.get("button", [])), 31)
+        self.assertEqual(sum("data-category" in x for x in page.tags.get("article", [])), 35)
+        self.assertEqual(sum("data-filter" in x for x in page.tags.get("button", [])), 36)
 
     def test_depth_and_interaction_contract(self):
-        for i in range(1, 31):
+        for i in range(1, 36):
             name = f"{i:02}.html"
             with self.subTest(article=name):
                 page = read(name)
@@ -95,7 +96,7 @@ class ArticleTest(unittest.TestCase):
                 self.assertNotIn("<script src=\"https:", html)
 
     def test_local_links_are_resolved(self):
-        names = ["index.html"] + [f"{i:02}.html" for i in range(1, 31)]
+        names = ["index.html"] + [f"{i:02}.html" for i in range(1, 36)]
         for name in names:
             page = read(name)
             for link in page.links:
@@ -112,7 +113,7 @@ class ArticleTest(unittest.TestCase):
 
     def test_svg_manifest(self):
         files = list((ROOT / "assets/diagrams").glob("*.svg"))
-        self.assertEqual(len(files), 60)
+        self.assertEqual(len(files), 70)
         ns = "{http://www.w3.org/2000/svg}"
         for path in files:
             with self.subTest(svg=path.name):
@@ -128,11 +129,11 @@ class ArticleTest(unittest.TestCase):
                 self.assertFalse(root.findall(".//" + ns + "script"))
 
     def test_evidence_revision_and_claims(self):
-        for i in range(1, 31):
+        for i in range(1, 36):
             n = f"{i:02}"
             evidence = json.loads((ROOT / "evidence" / f"{n}.json").read_text())
             self.assertEqual(evidence["article"], n + ".html")
-            expected = REV_FIRST if i <= 5 else (REV_ADVANCED if i <= 10 else (REV_THIRD if i <= 15 else (REV_FOURTH if i <= 20 else (REV_FIFTH if i <= 25 else REV_SIXTH))))
+            expected = REV_FIRST if i <= 5 else (REV_ADVANCED if i <= 10 else (REV_THIRD if i <= 15 else (REV_FOURTH if i <= 20 else (REV_FIFTH if i <= 25 else (REV_SIXTH if i <= 30 else REV_SEVENTH)))))
             self.assertEqual(evidence["source_revision"], expected)
             self.assertGreaterEqual(len(evidence["claims"]), 4)
             for claim in evidence["claims"]:
@@ -542,3 +543,25 @@ class CheckpointEngineTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class SeventhBatchTest(unittest.TestCase):
+    def test_hisparse_working_set(self):
+        from hisparse_working_set import selftest
+        selftest()
+
+    def test_hybrid_pool_budget(self):
+        from hybrid_pool_budget import selftest
+        selftest()
+
+    def test_kv_sharing_pages(self):
+        from kv_sharing_pages import selftest
+        selftest()
+
+    def test_paged_expert_waves(self):
+        from paged_expert_waves import selftest
+        selftest()
+
+    def test_rl_rollout_versions(self):
+        from rl_rollout_versions import selftest
+        selftest()

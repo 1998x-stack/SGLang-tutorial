@@ -1,0 +1,41 @@
+{
+  "article": "32.html",
+  "source_revision": "75ed36d976113c693f8e6f64925e119573a93fda",
+  "claims": [
+    {
+      "claim": "Hybrid linear-attention models allocate distinct recurrent-state and full-attention KV pools at startup; ratio r is state bytes to KV bytes.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/75ed36d976113c693f8e6f64925e119573a93fda/docs/docs/advanced_features/hybrid_model_memory.mdx",
+      "locator": "Pool table / Size the pools",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "MambaPool and HybridReqToTokenPool provide recurrent state storage and request mapping.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/75ed36d976113c693f8e6f64925e119573a93fda/python/sglang/srt/mem_cache/memory_pool.py#L521",
+      "locator": "MambaPool / HybridReqToTokenPool",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "The SWA pool registers a full-to-window mapping and routes access by layer.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/75ed36d976113c693f8e6f64925e119573a93fda/python/sglang/srt/mem_cache/swa_memory_pool.py#L193-L310",
+      "locator": "SWAKVPool / translate_loc_from_full_to_swa",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "State slots cap running concurrency and retained checkpoints; a KV hit alone is insufficient if the recurrent checkpoint is unavailable.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/75ed36d976113c693f8e6f64925e119573a93fda/docs/docs/advanced_features/hybrid_model_memory.mdx",
+      "locator": "Two ways to run out",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "Toy formula and examples use simplified memory/placement/probability assumptions, not measured performance.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/75ed36d976113c693f8e6f64925e119573a93fda/docs/docs/advanced_features/hybrid_model_memory.mdx",
+      "locator": "Teaching abstraction in article section 4 or 3",
+      "kind": "derivation",
+      "status": "derived"
+    }
+  ]
+}

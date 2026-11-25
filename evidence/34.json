@@ -1,0 +1,41 @@
+{
+  "article": "34.html",
+  "source_revision": "75ed36d976113c693f8e6f64925e119573a93fda",
+  "claims": [
+    {
+      "claim": "Paged Experts uses K physical device expert slots per layer and host-backed expert tensors; GPU computation remains on the GPU.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/75ed36d976113c693f8e6f64925e119573a93fda/docs/docs/advanced_features/paged_experts.mdx",
+      "locator": "The K-slot table and the host store",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "Residency planning partitions routed experts into waves and uses LRU placement.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/75ed36d976113c693f8e6f64925e119573a93fda/python/sglang/srt/layers/moe/paged_experts/residency.py#L17-L68",
+      "locator": "Wave / LRUPolicy / plan_waves",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "The eager executor runs waves and merges routed entries.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/75ed36d976113c693f8e6f64925e119573a93fda/python/sglang/srt/layers/moe/paged_experts/executor.py#L66-L131",
+      "locator": "EagerExecutor._run / _run_waves",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "Captured single-wave decode has sufficient condition tokens × top_k ≤ K; optional disk tier and graph constraints are version-specific.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/75ed36d976113c693f8e6f64925e119573a93fda/docs/docs/advanced_features/paged_experts.mdx",
+      "locator": "Captured decode / Disk tier",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "Toy formula and examples use simplified memory/placement/probability assumptions, not measured performance.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/75ed36d976113c693f8e6f64925e119573a93fda/docs/docs/advanced_features/paged_experts.mdx",
+      "locator": "Teaching abstraction in article section 4 or 3",
+      "kind": "derivation",
+      "status": "derived"
+    }
+  ]
+}

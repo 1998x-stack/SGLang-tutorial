@@ -1,0 +1,48 @@
+{
+  "article": "35.html",
+  "source_revision": "75ed36d976113c693f8e6f64925e119573a93fda",
+  "claims": [
+    {
+      "claim": "Memory release/resume is admin-controlled; releasing KV flushes cache and requires idle engine.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/75ed36d976113c693f8e6f64925e119573a93fda/docs/docs/advanced_features/sglang_for_rl.mdx",
+      "locator": "Fine-Grained Engine Sleep and Wake Up",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "Output weight_versions spans are half-open token indices; optional prefill_weight_versions exposes older prefix KV attribution.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/75ed36d976113c693f8e6f64925e119573a93fda/docs/docs/advanced_features/sglang_for_rl.mdx#L602-L615",
+      "locator": "Per-Token Weight Version Attribution",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "Pause, refit and continue; abort/retract/in_place have distinct request-state and cache semantics.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/75ed36d976113c693f8e6f64925e119573a93fda/docs/docs/advanced_features/sglang_for_rl.mdx#L617-L665",
+      "locator": "Easy To Postpone Generation / Modes",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "A weight update may already have occurred when requested cache flush fails due to running or queued requests.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/75ed36d976113c693f8e6f64925e119573a93fda/python/sglang/srt/managers/scheduler_components/weight_updater.py#L164-L179",
+      "locator": "flush_cache_after_weight_update",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "Scheduler processes output token logprobs for response metadata.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/75ed36d976113c693f8e6f64925e119573a93fda/python/sglang/srt/managers/scheduler_components/logprob_result_processor.py#L343-L416",
+      "locator": "add_logprob_return_values / append_output_token_logprobs",
+      "kind": "implementation",
+      "status": "verified"
+    },
+    {
+      "claim": "Toy formula and examples use simplified memory/placement/probability assumptions, not measured performance.",
+      "source_url": "https://github.com/sgl-project/sglang/blob/75ed36d976113c693f8e6f64925e119573a93fda/docs/docs/advanced_features/sglang_for_rl.mdx",
+      "locator": "Teaching abstraction in article section 4 or 3",
+      "kind": "derivation",
+      "status": "derived"
+    }
+  ]
+}
